@@ -1,0 +1,71 @@
+spring:
+  profiles:
+    active: dv1
+mybatis:
+  mapper-locations: classpath:com/shj/eids/dao/*.xml]
+  type-aliases-package: com.shj.eids.domain
+---
+spring:
+  profiles: dv1
+  datasource:
+    #   数据源基本配置
+    username: ${jdbc.username}
+    password: ${jdbc.password}
+    driver-class-name: ${jdbc.driver}
+    url: ${jdbc.url}
+    type: ${jdbc.source}
+    #   数据源其他配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    #   配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+server:
+  servlet:
+    context-path: /EIDS
+---
+spring:
+  datasource:
+    #   数据源基本配置
+    username: root
+    password: 111111
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/eids?serverTimezone=Asia/Shanghai
+    type: com.alibaba.druid.pool.DruidDataSource
+    #   数据源其他配置
+    #Spring Boot 默认是不注入这些属性值的，需要自己绑定
+    #druid 数据源专有配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+
+    #配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
+    #如果允许时报错  java.lang.ClassNotFoundException: org.apache.log4j.Priority
+    #则导入 log4j 依赖即可，Maven 地址： https://mvnrepository.com/artifact/log4j/log4j
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+    server:
+      servlet:
+        context-path: /EIDS
+  profiles: dv2
