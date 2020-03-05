@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shj.eids.dao.RecordAdminEpidemicmsg">
+    <insert id="addRecord" parameterType="RecordAdminEpidemicmsg">
+        insert into record_admin_epidemicmsg(admin_id, msg_id, record_time, record_type) VALUES (#{admin.id}, #{msg.id}, #{recordTime}, #{recordType})
+    </insert>
+    <select id="getRecords" parameterType="map" resultMap="Record_Admin_EpidemicMsg">
+        select * from record_admin_epidemicmsg
+        <where>
+            <if test="adminId!=null">
+                and admin_id=#{adminId}
+            </if>
+            <if test="MsgId !=null">
+                and msg_id=#{MsgId}
+            </if>
+            <if test="recordType!= null">
+                and record_type=#{recordType}
+            </if>
+        </where>
+        order by record_time
+        <if test="start!=null and length!=null">
+            limit #{start}, #{length}
+        </if>
+    </select>
+    <resultMap id="Record_Admin_EpidemicMsg" type="RecordAdminEpidemicMsg">
+        <result column="id" property="id"/>
+        <result column="record_type" property="recordType"/>
+        <result column="record_time" property="recordTime"/>
+        <association column="admin_id" property="admin" javaType="Admin" select="getAdmin"/>
+        <association column="msg_id" property="msg" javaType="EpidemicMsg" select="getMsg"/>
+    </resultMap>
+    <select id="getAdmin" resultType="Admin">
+        select * from admin where id=#{id}
+    </select>
+    <!-- 未封装EpidemicMsg的author属性 -->
+    <select id="getMsg" resultType="EpidemicMsg">
+        select id, title, content, release_date, weight from epidemic_msg where id=#{id}
+    </select>
+</mapper>

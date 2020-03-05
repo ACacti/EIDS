@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shj.eids.dao.BrowseHistoryMapper">
+    <insert id="addHistory" parameterType="BrowseHistory">
+        insert into browse_history(user_id, browse_time) values (#{user.id}, #{browseTime})
+    </insert>
+    <select id="getHistories" parameterType="map" resultType="BrowseHistory">
+        select * from browse_history
+        <where>
+            <if test="userId!=null">
+                user_id=#{userId}
+            </if>
+        </where>
+        order by browse_time
+        <if test="start!=null and length!=null">
+            limit #{start}, #{length}
+        </if>
+    </select>
+</mapper>

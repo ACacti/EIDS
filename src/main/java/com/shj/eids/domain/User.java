@@ -14,6 +14,7 @@ import org.apache.ibatis.type.Alias;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+//别名需要配置文件扫描的支持
 @Alias("User")
 public class User {
     private Integer id;

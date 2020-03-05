@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shj.eids.dao.EpidemicMsgMapper">
+    <insert id="addEpidemicMsg" parameterType="EpidemicMsg">
+        insert into epidemic_msg(title, content, release_date, weight) VALUES (#{title}, #{content}, #{releaseDate}, #{weight})
+    </insert>
+    <delete id="deleteEpidemicMsg" parameterType="EpidemicMsg">
+        delete from epidemic_msg where id=#{id};
+    </delete>
+    <update id="updateEpidemicMsg" parameterType="EpidemicMsg">
+        update epidemic_msg
+        <set>
+            <if test="title!=null">
+                title=#{title},
+            </if>
+            <if test="content!= null">
+                content=#{content},
+            </if>
+            <if test="weight!= null">
+                weight=#{weight}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <select id="getEpidemic" resultType="EpidemicMsg" resultMap="Epidemic_User">
+        select * from epidemic_msg
+        <where>
+            <if test="id!=null">
+                and id=#{id}
+            </if>
+            <if test="content!= null">
+                and content like CONCAT('%', #{content}, '%')
+            </if>
+            <if test="authorId!=null">
+                and author_id=#{authorId}
+            </if>
+        </where>
+        order by weight, release_date
+        <if test="start!=null and length!=null">
+            limit #{start}, #{length}
+        </if>
+    </select>
+</mapper>

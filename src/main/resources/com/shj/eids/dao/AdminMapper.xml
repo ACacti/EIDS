@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shj.eids.dao.AdminMapper">
+    <insert id="addAdmin" parameterType="Admin">
+        insert into admin(email, password, level)
+        VALUES (#{email}, #{password}, #{level})
+    </insert>
+    <delete id="deleteAdminById" parameterType="int">
+        delete
+        from admin
+        where id = #{id}
+    </delete>
+    <delete id="deleteAdminByEmail" parameterType="string">
+        delete
+        from admin
+        where email = #{email}
+    </delete>
+    <update id="updateAdmin" parameterType="Admin">
+        update admin
+        <set>
+            <if test="email!=null">
+                email=#{email},
+            </if>
+            <if test="password!=null">
+                password=#{password},
+            </if>
+            <if test="level!=null">
+                level=#{level},
+            </if>
+        </set>
+    </update>
+    <select id="getAdminById" parameterType="int" resultType="Admin">
+        select * from admin where id=#{id}
+    </select>
+    <select id="getAdminByEmail" parameterType="string" resultType="Admin">
+        select * from admin where email = #{email}
+    </select>
+</mapper>

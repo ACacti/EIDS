@@ -22,5 +22,6 @@ public class EpidemicMsg {
     private String tile;
     private String content;
     private Date releaseDate;
+    private Integer weight;
     private User author;
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shj.eids.dao.RecordAdminAidinfoMapper">
+    <insert id="addRecord" parameterType="RecordAdminAidinfo">
+        insert into record_admin_aidinfo(admin_id, aid_info_id, record_time, record_type) VALUES (#{admin.id}, #{aidInformation.id}, #{recordTime}, #{recordType});
+    </insert>
+    <select id="getRecords" parameterType="map" resultType="RecordAdminAidinfo" resultMap="Record_Admin_AidInformation">
+        select * from record_admin_aidinfo
+        <where>
+            <if test="adminId!=null">
+                and adminId=#{adminId}
+            </if>
+            <if test="aidInfoId!=null">
+                and aid_info_id=#{aidInfoId}
+            </if>
+            <if test="recordType!=null">
+                and record_type=#{recordType}
+            </if>
+            <if test="startDate != null and endDate!=null">
+                and (record_time between #{startDate} and #{endDate})
+            </if>
+        </where>
+        order by record_time
+        <if test="start!=null and length!=null">
+            limit #{start}, #{length}
+        </if>
+    </select>
+    <resultMap id="Record_Admin_AidInformation" type="RecordAdminAidinfo">
+        <result property="id" column="id"/>
+        <result property="recordTime" column="record_time"/>
+        <result property="recordType" column="record_type"/>
+        <association property="admin" column="admin_id" javaType="Admin" select="getAdmin"/>
+        <association property="aidInformation" column="aid_info_id" javaType="AidInformation" select="getAidInformation"/>
+    </resultMap>
+    <select id="getAdmin" resultType="Admin">
+        select * from admin where id=#{id}
+    </select>
+    <select id="getAidInformation" resultType="AidInformation">
+        select * from aid_informaion where id=#{id}
+    </select>
+</mapper>
