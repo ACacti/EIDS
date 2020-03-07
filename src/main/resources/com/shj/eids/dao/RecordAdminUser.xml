@@ -3,6 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shj.eids.dao.RecordAdminUser">
+    <cache
+            eviction="FIFO"
+            flushInterval="60000"
+            size="512"
+            readOnly="true"/>
     <insert id="addRecord" parameterType="RecordAdminUser">
         insert into record_admin_user(admin_id, user_id, record_time, record_type) VALUES (#{admin.id}, #{user.id}, #{recordTime}, #{recordType})
     </insert>

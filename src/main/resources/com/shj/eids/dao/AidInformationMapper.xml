@@ -31,12 +31,16 @@
         <result column="release_time" property="releaseTime"/>
         <association column="id" property="publisher" javaType="Admin" select="getAdmin"/>
     </resultMap>
-    <select id="getAdmin" resultMap="Admin">
+    <select id="getAdmin" resultType="Admin">
         select a.id id, a.email email, a.level level, a.password password from record_admin_aidinfo r inner join admin a on r.admin_id = a.id where r.aid_info_id=#{id} and record_type='发布'
     </select>
 
     <select id="getInformationByContent" resultMap="AidInformation_Admin">
         select * from aid_informaion where title like concat('%',#{content}, '%') or content like concat('%',#{content}, '%')
     </select>
-
+    <cache
+            eviction="FIFO"
+            flushInterval="60000"
+            size="512"
+            readOnly="true"/>
 </mapper>

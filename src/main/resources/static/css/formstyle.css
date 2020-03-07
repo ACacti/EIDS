@@ -1,0 +1,17 @@
+.formstyle{
+    width: 700px;
+    margin: 0 auto;
+    padding: 50px 200px;
+    border-bottom: solid;
+    border-bottom-color: lightskyblue;
+    border-top-style: groove;
+    border-radius: .8em;
+    border-top-color: lightskyblue;
+}
+.font-style{
+    margin:0px;
+    padding:0px;
+    font-family:"微软雅黑","黑体","宋体";
+    font-size:20px;
+    height:36px;
+}

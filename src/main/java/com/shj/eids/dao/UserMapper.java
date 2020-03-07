@@ -19,8 +19,13 @@ public interface UserMapper {
     /*
      * @Title: getUsers
      * @Description: 此方法从数据库User表中获取符合条件的信息封装成User类返回
-     * @param args: 类型为Map, key的值可以取值为user表中列名，value即为查询要求的属性，
-     *              此外key的值还可以设为start和length, 表示SQL语句 limit后面的两个参数
+     * @param args: 类型为Map, key的值可以取值为
+     *              id:要查询用户的ID
+     *              email:要查询用户的邮箱地址
+     *              password: 要查询用户的密码
+     *              level: 要查询用户的密码
+     *              introduction:要查询用户的个人简介
+     *              start和length: 用于分页的开始位置和长度
      * @return java.util.List<com.shj.eids.domain.User>
      * @Author: ShangJin
      * @Date: 2020/3/5

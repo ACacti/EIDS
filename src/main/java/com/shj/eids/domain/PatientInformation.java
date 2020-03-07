@@ -26,4 +26,5 @@ public class PatientInformation {
     private String locationDetail;
     private String face_date;
     private Date reportingTime;
+    private EpidemicEvent epidemicEvent;
 }

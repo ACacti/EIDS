@@ -18,4 +18,9 @@
             limit #{start}, #{length}
         </if>
     </select>
+    <cache
+            eviction="FIFO"
+            flushInterval="60000"
+            size="512"
+            readOnly="true"/>
 </mapper>

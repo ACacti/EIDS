@@ -37,4 +37,9 @@
     <select id="getAdminByEmail" parameterType="string" resultType="Admin">
         select * from admin where email = #{email}
     </select>
+    <cache
+            eviction="FIFO"
+            flushInterval="60000"
+            size="512"
+            readOnly="true"/>
 </mapper>

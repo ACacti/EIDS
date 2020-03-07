@@ -19,6 +19,8 @@ public class MybatisConfig {
             public void customize(org.apache.ibatis.session.Configuration configuration) {
                 //开启驼峰命名
                 configuration.setMapUnderscoreToCamelCase(true);
+                //开启二级缓存
+                configuration.setCacheEnabled(true);
             }
         };
     }

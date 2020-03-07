@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shj.eids.dao.EpidemicEventMapper">
+    <cache
+            eviction="FIFO"
+            flushInterval="60000"
+            size="512"
+            readOnly="true"/>
+    <sql id="limit">
+        <if test="start!= null and length!=null">
+            limit #{start}, #{length}
+        </if>
+    </sql>
+    <select id="getEpidemicEvents" resultType="EpidemicEvent" parameterType="map" resultMap="EpidemicEvent_Admin">
+        select * from epidemic_event
+        <where>
+            <if test="id!=null">
+                and id=#{id}
+            </if>
+            <if test="name != null">
+                and name=#{name}
+            </if>
+            <if test="publisherId!=null">
+                and publisher_id=#{publisherId}
+            </if>
+        </where>
+        order by release_time
+        <include refid="limit"/>
+    </select>
+    <select id="getEpidemicEventsByPubulisherId" resultType="EpidemicEvent" resultMap="EpidemicEvent_Admin">
+        select * from epidemic_event where publisher_id=#{id}
+        <include refid="limit"/>
+    </select>
+    <resultMap id="EpidemicEvent_Admin" type="EpidemicEvent">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="releaseTime" column="realease_time"/>
+        <association property="publisher" column="publisher_id" javaType="Admin" select="getAdmin"/>
+    </resultMap>
+    <select id="getAdmin" resultType="Admin">
+        select * from admin where id=#{id}
+    </select>
+</mapper>

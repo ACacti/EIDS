@@ -1,36 +1,32 @@
 package com.shj.eids;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.shj.eids.dao.BrowseHistoryMapper;
-import com.shj.eids.dao.UserMapper;
-import com.shj.eids.domain.BrowseHistory;
-import com.shj.eids.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
-import javax.sql.DataSource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 
 @SpringBootTest
 class EidsApplicationTests {
     @Autowired
-    BrowseHistoryMapper mapper;
-    @Autowired
-    UserMapper userMapper;
-    @Test
-    void contextLoad(){
-        BrowseHistory browseHistory = new BrowseHistory();
-        User user = new User();
-        browseHistory.setBrowseTime(new Date());
-        Map<String, Object> map = new HashMap<>();
-        map.put("email", "shangjinv6@163.com");
-        user = userMapper.getUsers(map).get(0);
-        browseHistory.setUser(user);
-        mapper.addHistory(browseHistory);
+    JavaMailSenderImpl mailSender;
+//    @Test
+        //复杂的邮件
+    void complexMail() throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        //组装
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true);//true: 开启多文件
+        mimeMessageHelper.setSubject("复杂邮件测试");
+        mimeMessageHelper.setText("<h1>这是一封复杂邮件</h1>", true);//true: 支持html内容
+        mimeMessageHelper.setTo("1694634080@qq.com");
+        mimeMessageHelper.setFrom("shangjinv6@163.com");
+        mailSender.send(message);
+
     }
 
 }
