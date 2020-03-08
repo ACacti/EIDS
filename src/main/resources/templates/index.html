@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>疫情信息展示系统|登录</title>
+    <title>疫情信息展示系统|主页</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/layui/src/css/layui.css}"/>
     <script th:src="@{/webjars/layui/src/layui.js}"></script>
     <script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
@@ -10,71 +10,12 @@
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
-    <!--    rgb(0,194,146)-->
-    <div class="layui-header layui-bg-cyan">
-        <div class="layui-logo">layui 后台布局</div>
-        <!-- 头部区域（可配合layui已有的水平导航） -->
-        <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="">控制台</a></li>
-            <li class="layui-nav-item"><a href="">商品管理</a></li>
-            <li class="layui-nav-item"><a href="">用户</a></li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">其它系统</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="">邮件管理</a></dd>
-                    <dd><a href="">消息管理</a></dd>
-                    <dd><a href="">授权管理</a></dd>
-                </dl>
-            </li>
-        </ul>
-        <ul class="layui-nav layui-layout-right">
-            <li class="layui-nav-item">
-                <a href="javascript:;">
-                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-                    贤心
-                </a>
-                <dl class="layui-nav-child">
-                    <dd><a href="">基本资料</a></dd>
-                    <dd><a href="">安全设置</a></dd>
-                </dl>
-            </li>
-            <li class="layui-nav-item"><a href="">退了</a></li>
-        </ul>
-    </div>
-
-    <div class="layui-body" style="left: 0">
-        <!-- 内容主体区域 -->
-        <div style="padding: 15px;">内容主体区域</div>
-    </div>
 
     <div class="layui-footer" style="left: 0">
         <!-- 底部固定区域 -->
         © layui.com - 底部固定区域
     </div>
 </div>
-<script>
-    //JavaScript代码区域
-    layui.use(['element', 'layer'], function(){
-        var element = layui.element;
-        var layer = layui.layer;
-        var path = $("p[name=contextpath]").text() + "/test";
-
-        // iframe窗
-        layer.open({
-
-            type: 2,
-            title: false,
-            closeBtn: 0, //不显示关闭按钮
-            shade: [0],
-            area: ['340px', '215px'],
-            offset: 'auto', //右下角弹出
-            time: 2000, //2秒后自动关闭
-            anim: 2,
-            content: [, 'no'], //iframe的url，no代表不显示滚动条
-        });
-
-    });
-</script>
 </body>
-
+<p class="contextpath" style="display:none" th:text="${#servletContext.contextPath}"></p>
 </html>

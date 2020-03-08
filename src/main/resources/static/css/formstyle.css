@@ -9,9 +9,6 @@
     border-top-color: lightskyblue;
 }
 .font-style{
-    margin:0px;
-    padding:0px;
-    font-family:"微软雅黑","黑体","宋体";
-    font-size:20px;
-    height:36px;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:18px;
 }

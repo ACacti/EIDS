@@ -16,7 +16,7 @@
                 title=#{title},
             </if>
             <if test="content !=null">
-                content=#{content}
+                content=#{content},
             </if>
         </set>
         where id=#{id}

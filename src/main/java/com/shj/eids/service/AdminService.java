@@ -18,14 +18,13 @@ public class AdminService {
 
     public boolean loginIdentify(String email, String password){
         Admin admin = adminMapper.getAdminByEmail(email);
-        if(admin.getPassword().equals(password)){
+        if(admin != null && admin.getPassword().equals(password)){
             return true;
         }
         else {
             return false;
         }
     }
-
     public Admin getAdminByEmail(String email){
         return adminMapper.getAdminByEmail(email);
     }
