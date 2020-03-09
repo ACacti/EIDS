@@ -39,9 +39,4 @@ public class RegisterController {
             return "register";
         }
     }
-
-    @PostMapping("/ttest")
-    public String test(){
-        return "test";
-    }
 }

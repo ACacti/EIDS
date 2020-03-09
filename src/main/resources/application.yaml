@@ -7,6 +7,14 @@ spring:
 mybatis:
   mapper-locations: classpath:com/shj/eids/dao/*.xml]
   type-aliases-package: com.shj.eids.domain
+# 日志配置
+logging:
+  pattern:
+    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n'
+  file:
+    path: applicationLog
+  level:
+    com.shj.eids: debug
 ---
 spring:
   # 开发环境
