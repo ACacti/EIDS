@@ -29,7 +29,7 @@
         order by release_time
         <include refid="limit"/>
     </select>
-    <select id="getEpidemicEventsByPubulisherId" resultType="EpidemicEvent" resultMap="EpidemicEvent_Admin">
+    <select id="getEpidemicEventsByPublisherId" resultType="EpidemicEvent" resultMap="EpidemicEvent_Admin">
         select * from epidemic_event where publisher_id=#{id}
         <include refid="limit"/>
     </select>
@@ -42,4 +42,11 @@
     <select id="getAdmin" resultType="Admin">
         select * from admin where id=#{id}
     </select>
+    <insert id="addEpidemicEvent" parameterType="EpidemicEvent">
+        insert into epidemic_event (name, release_time, publisher_id)
+        values (#{name}, #{releaseTime}, #{publisher.id});
+    </insert>
+    <delete id="deleteEpidemicEventById" parameterType="int">
+        delete from epidemic_event where id=#{id}
+    </delete>
 </mapper>

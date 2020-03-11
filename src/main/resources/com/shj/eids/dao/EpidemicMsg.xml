@@ -9,7 +9,7 @@
             size="512"
             readOnly="true"/>
     <insert id="addEpidemicMsg" parameterType="EpidemicMsg">
-        insert into epidemic_msg(title, content, release_date, weight) VALUES (#{title}, #{content}, #{releaseDate}, #{weight})
+        insert into epidemic_msg(title, content, release_date, weight, author_id) VALUES (#{title}, #{content}, #{releaseDate}, #{weight}, #{author.id})
     </insert>
     <delete id="deleteEpidemicMsg" parameterType="EpidemicMsg">
         delete from epidemic_msg where id=#{id};
@@ -29,7 +29,7 @@
         </set>
         where id=#{id}
     </update>
-    <select id="getEpidemic" resultType="EpidemicMsg" resultMap="Epidemic_User">
+    <select id="getEpidemicMsg" resultType="EpidemicMsg" resultMap="EpidemicMsg_User">
         select * from epidemic_msg
         <where>
             <if test="id!=null">
@@ -39,12 +39,23 @@
                 and content like CONCAT('%', #{content}, '%')
             </if>
             <if test="authorId!=null">
-                and author_id=#{authorId}
+                and author_id=#{author}
             </if>
         </where>
         order by weight, release_date
         <if test="start!=null and length!=null">
             limit #{start}, #{length}
         </if>
+    </select>
+    <resultMap id="EpidemicMsg_User" type="EpidemicMsg">
+        <result column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="release_date" property="releaseDate"/>
+        <result column="weight" property="weight"/>
+        <association property="author" column="author_id" select="getUser" javaType="User"/>
+    </resultMap>
+    <select id="getUser" resultMap="User">
+        select * from user where id=#{id}
     </select>
 </mapper>

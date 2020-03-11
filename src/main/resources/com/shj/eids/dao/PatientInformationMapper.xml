@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shj.eids.dao.PatientInformationMapper">
+    <cache
+            eviction="FIFO"
+            flushInterval="60000"
+            size="512"
+            readOnly="true"/>
+
+    <insert id="addPatientInformation" parameterType="PatientInformation">
+        insert into patient_information(name, location_province, location_city, location_detail, face_data, reporting_time, epidemic_id, status, id_number)
+        VALUES(#{name}, #{locationProvince}, #{locationCity}, #{locationDetail}, #{faceDate}, #{reportingTime}, #{epidemicEvent.id}, #{status}, #{idNumber});
+
+    </insert>
+    <delete id="deletePatientInformationById" parameterType="int">
+        delete from patient_information where id=#{id};
+    </delete>
+    <update id="updatePatientInformation" parameterType="PatientInformation">
+        update patient_information
+        <set>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="location_province!=null">
+                location_province=#{locationProvince},
+            </if>
+            <if test="locationCity!=null">
+                location_city=#{locationCity},
+            </if>
+            <if test="locationDetail!= null">
+                location_detail=#{locationDetail},
+            </if>
+            <if test="faceDate!=null">
+                face_date=#{faceDate},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+        </set>
+    </update>
+    <select id="getPatientInformationByIdNumber" resultType="PatientInformation">
+        select * from patient_information where id_number=#{idNumber}
+    </select>
+    <select id="getPatientInformation" resultType="PatientInformation" parameterType="map">
+        select * from patient_information
+        <where>
+            <if test="status!=null">
+                and
+                <foreach collection="status" item="s" open="(" close=")" separator=" or ">
+                    status=#{s}
+                </foreach>
+            </if>
+            <if test="locationProvince!=null">
+                and location_province=#{locationProvince}
+            </if>
+            <if test="locationCity!=null">
+                and location_city=#{locationCity}
+            </if>
+            <if test="startTime!=null and endTime!=null">
+                and reporting_time between #{startTime} and #{endTime}
+            </if>
+            <if test="epidemicId!= null">
+                and epidemic_id=#{epidemicId}
+            </if>
+        </where>
+        order by reporting_time
+        <if test="start!=null and length!=null">
+            limit #{start}, #{length}
+        </if>
+    </select>
+    <select id="getCount" parameterType="map" resultType="int">
+        select count(*) from patient_information
+        <where>
+            <if test="status!=null">
+                and
+                <foreach collection="status" item="s" open="(" close=")" separator=" or ">
+                    status=#{s}
+                </foreach>
+            </if>
+            <if test="locationProvince!=null">
+                and location_province=#{locationProvince}
+            </if>
+            <if test="locationCity!=null">
+                and location_city=#{locationCity}
+            </if>
+            <if test="startTime!=null and endTime!=null">
+                and reporting_time between #{startTime} and #{endTime}
+            </if>
+            <if test="epidemicId!= null">
+                and epidemic_id=#{epidemicId}
+            </if>
+        </where>
+        order by reporting_time
+        <if test="start!=null and length!=null">
+            limit #{start}, #{length}
+        </if>
+    </select>
+</mapper>
