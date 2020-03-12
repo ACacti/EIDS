@@ -1,10 +1,12 @@
 package com.shj.eids.service;
 
 import com.shj.eids.dao.EpidemicEventMapper;
+import com.shj.eids.dao.EveryDayCountMapper;
 import com.shj.eids.dao.PatientInformationMapper;
+import com.shj.eids.domain.DataItem;
+import com.shj.eids.domain.EpidemicEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.awt.geom.AreaOp;
 
 import java.util.*;
 
@@ -15,11 +17,13 @@ import java.util.*;
  * @Create: 2020-03-10 22:07
  **/
 @Service
-public class EpidemcInfoService {
+public class EpidemicInfoService {
     @Autowired
     private EpidemicEventMapper eventMapper;
     @Autowired
     private PatientInformationMapper patientInformationMapper;
+    @Autowired
+    private EveryDayCountMapper everyDayCountMapper;
 
     static private String []provinces={"南海诸岛", "北京", "天津", "上海", "重庆", "河北",
     "河南", "云南", "辽宁", "黑龙江", "湖南", "安徽", "山东","新疆", "江苏", "浙江", "江西",
@@ -50,28 +54,6 @@ public class EpidemcInfoService {
         return patientInformationMapper.getCount(args);
     }
 
-
-    /*
-     * @Title: getPresentPatientCount
-     * @Description: 获取今天零时到现在新增的确诊人数
-     * @param epidemicId: 疫情事件id
-     * @param province: 所在省
-     * @param city: 所在市（直辖市为空）
-     * @param status: 患者状态
-     * @return java.lang.Integer
-     * @Author: ShangJin
-     * @Date: 2020/3/11
-     */
-    public Integer getIncreasedCountToday(Integer epidemicId, String province, String city){
-        Calendar cal = Calendar.getInstance();
-        Date endTime = cal.getTime();
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        Date startTime = cal.getTime();
-        return getPatientCount(epidemicId, province, city, null, startTime, endTime);
-    }
-
     /*
      * @Title: getAllPatientCount
      * @Description: 获取所有被确诊过的人数
@@ -100,52 +82,73 @@ public class EpidemcInfoService {
     public Integer getPatientCountByStatus(Integer epidemicId, String province, String city, List<String> status){
         return getPatientCount(epidemicId, province, city, status, null, null);
     }
-    class MapDataItem{
-        String name;
-        Integer value;
-
-        public MapDataItem(String name, Integer value) {
-            this.name = name;
-            this.value = value;
-        }
-
-        public MapDataItem() {
-        }
-
-        public String getName(){
-            return name;
-        }
-        public void setName(String name){
-            this.name = name;
-        }
-
-        public Integer getValue() {
-            return value;
-        }
-
-        public void setValue(Integer value) {
-            this.value = value;
-        }
-    }
-    public List<MapDataItem> getMapDataAll(Integer epidemicId){
-        List<MapDataItem> list = new ArrayList<>();
+    public List<DataItem> getMapDataAll(Integer epidemicId){
+        List<DataItem> list = new ArrayList<>();
         for(String province: provinces){
             Integer value = getAllPatientCount(epidemicId, province, null);
-            list.add(new MapDataItem(province, value));
+            list.add(new DataItem(province, value));
         }
         return list;
     }
 
-    public List<MapDataItem> getMapDataPresent(Integer epidemicId){
-        List<MapDataItem> list = new ArrayList<>();
+    /*
+     * 获取当前确诊患者分布疫情地图的数据
+     */
+    public List<DataItem> getMapDataPresent(Integer epidemicId){
+        List<DataItem> list = new ArrayList<>();
         List<String> status = new ArrayList<>();
         status.add("轻微");
         status.add("危重");
         for(String province: provinces){
             Integer value = getPatientCountByStatus(epidemicId, province, null,status);
-            list.add(new MapDataItem(province, value));
+            list.add(new DataItem(province, value));
         }
         return list;
+    }
+
+    /*
+     * 获取现在状态为status的患者的数量
+     */
+    public Integer getPatientCountByStatus(Integer epidemicId, String province, String city, String status){
+        List<String> list = new ArrayList<>();
+        list.add(status);
+        return getPatientCount(epidemicId, province, city, list, null, null);
+    }
+
+
+    /*
+     * 获取疫情事件的开始时间
+     */
+    public Date getStartTime(Integer epidemicId){
+        Map<String, Object> args = new HashMap<>();
+        args.put("id", epidemicId);
+        EpidemicEvent event = eventMapper.getEpidemicEvents(args).get(0);
+        if(event != null){
+            return event.getReleaseTime();
+        }
+        return new Date();
+    }
+
+    /*
+     * 获取一段时间区间内，当天的累计确诊人数统计
+     * 返回格式： [yyyy-MM-dd, n1, n2, ...]
+     */
+    public List<Object> getConfirmedPatientCount(Integer epidemicId, String province, Date s, Date e){
+        return null;
+    }
+    /*
+     * 获取一段时间区间内，累计死亡人数统计
+     * 返回格式： [yyyy-MM-dd, n1, n2, ...]
+     */
+    public List<Object> getDeadPatientCount(Integer epidemicId, String province, Date s, Date e){
+        return null;
+    }
+    /*
+     * 获取一段时间区间内，每天新增确诊人数统计
+     * 返回格式： [yyyy-MM-dd, n1, n2, ...]
+     */
+    public List<Object> getIncreasedPatientCount(Integer epidemicId, String province, Date s, Date e){
+        return null;
     }
 
 }
