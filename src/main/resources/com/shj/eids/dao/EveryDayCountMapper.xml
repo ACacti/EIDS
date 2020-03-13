@@ -2,13 +2,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shj.eids.dao.EpidemicEventMapper">
+<mapper namespace="com.shj.eids.dao.EveryDayCountMapper">
     <insert id="addEveryDayCount" parameterType="EveryDayCount">
         insert into every_day_count(epidemic_event_id, province, date, status, amount) VALUES (#{epidemicEventId}, #{province}, #{date}, #{status}, #{amount})
     </insert>
 
-    <select id="getCounts" parameterType="map" resultType="int">
-        select amount from every_day_count
+    <select id="getIntervalCount" parameterType="map" resultType="int">
+        select sum(amount) from every_day_count
         <where>
             <if test="epidemicEventId!=null">
                 and epidemic_event_id=#{epidemicEventId}
@@ -16,14 +16,16 @@
             <if test="province!=null">
                 and province=#{province}
             </if>
-            <if test="date !=null">
-                and date = #{date}
+            <if test="startDate !=null and endDate !=null">
+                and (date between #{startDate} and #{endDate})
             </if>
             <if test="status!=null">
+                and
                 <foreach collection="status" item="s" open="(" close=")" separator=" or ">
                     status=#{s}
                 </foreach>
             </if>
+            group by date
             order by date
         </where>
     </select>

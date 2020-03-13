@@ -28,4 +28,5 @@ public class PatientInformation {
     private Date reportingTime;
     private EpidemicEvent epidemicEvent;
     private String status;
+    private String idNumber;
 }

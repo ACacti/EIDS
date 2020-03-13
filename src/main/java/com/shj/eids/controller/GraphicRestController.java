@@ -66,6 +66,14 @@ public class GraphicRestController {
         return JSON.toJSONString(res);
     }
 
+    /*
+     * @Title: getPieGraphic
+     * @Description: 根据疫情事件ID获取饼图需要的数据，加上了所在省的限制：死亡人数、治愈人数、危重人数、轻微人数
+     * @param epidemicId:
+     * @return java.lang.String
+     * @Author: ShangJin
+     * @Date: 2020/3/12
+     */
     @PostMapping("/graphic/pieGraphic/{epidemicId}/{province}")
     public String getPieGraphicByProvince(@PathVariable("epidemicId") Integer epidemicId, @PathVariable("province") String province){
         ArrayList<DataItem> res = new ArrayList<>();
@@ -77,31 +85,22 @@ public class GraphicRestController {
         return JSON.toJSONString(res);
     }
 
+    /*
+     * 获取折线图和柱状图所需要的数据
+     */
     @PostMapping("/graphic/lineAndBarGraphic/{epidemicId}")
     public String getBarAndLineGraphicData(@PathVariable("epidemicId") Integer epidemicId){
         final Date startTime = epidemicInfoService.getStartTime(epidemicId);
-        Date now = new Date();
-        List<Object> increased = epidemicInfoService.getIncreasedPatientCount(epidemicId, null, startTime, now);
-        List<Object> confirmed = epidemicInfoService.getConfirmedPatientCount(epidemicId, null, startTime, now);
-        List<Object> dead = epidemicInfoService.getDeadPatientCount(epidemicId, null, startTime, now);
-        List<List<Object>> res = new ArrayList<>();
-        res.add(increased);
-        res.add(confirmed);
-        res.add(dead);
+        List<List<Object>> res = epidemicInfoService.getLineAndBarGraphicData(epidemicId, null);
         return JSON.toJSONString(res);
     }
-
+    /*
+     * 获取折线图和柱状图所需要的数据，加上了所在省的限制
+     */
     @PostMapping("/graphic/lineAndBarGraphic/{epidemicId}/{province}")
     public String getBarAndLineGraphicDataByProvince(@PathVariable("epidemicId") Integer epidemicId, @PathVariable("province") String province){
         final Date startTime = epidemicInfoService.getStartTime(epidemicId);
-        Date now = new Date();
-        List<Object> increased = epidemicInfoService.getIncreasedPatientCount(epidemicId, province, startTime, now);
-        List<Object> confirmed = epidemicInfoService.getConfirmedPatientCount(epidemicId, province, startTime, now);
-        List<Object> dead = epidemicInfoService.getDeadPatientCount(epidemicId, province, startTime, now);
-        List<List<Object>> res = new ArrayList<>();
-        res.add(increased);
-        res.add(confirmed);
-        res.add(dead);
+        List<List<Object>> res = epidemicInfoService.getLineAndBarGraphicData(epidemicId, province);
         return JSON.toJSONString(res);
     }
 }

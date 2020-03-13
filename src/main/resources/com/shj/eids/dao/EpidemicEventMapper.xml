@@ -36,7 +36,7 @@
     <resultMap id="EpidemicEvent_Admin" type="EpidemicEvent">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
-        <result property="releaseTime" column="realease_time"/>
+        <result property="releaseTime" column="release_time"/>
         <association property="publisher" column="publisher_id" javaType="Admin" select="getAdmin"/>
     </resultMap>
     <select id="getAdmin" resultType="Admin">

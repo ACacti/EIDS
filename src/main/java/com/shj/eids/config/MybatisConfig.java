@@ -1,6 +1,7 @@
 package com.shj.eids.config;
 
 import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +22,7 @@ public class MybatisConfig {
                 configuration.setMapUnderscoreToCamelCase(true);
                 //开启二级缓存
                 configuration.setCacheEnabled(true);
+//                configuration.setLogImpl(LoggerFactory.);
             }
         };
     }

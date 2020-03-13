@@ -16,7 +16,7 @@ import java.util.Map;
 @Repository
 @Mapper
 public interface PatientInformationMapper {
-    public void addPatientInformation(PatientInformationMapper information);
+    public void addPatientInformation(PatientInformation information);
     public void deletePatientInformationById(Integer id);
     public void updatePatientInformation(PatientInformation information);
     public PatientInformation getPatientInformationByIdNumber(String idNumber);

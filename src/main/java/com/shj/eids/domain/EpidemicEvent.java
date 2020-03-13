@@ -1,6 +1,5 @@
 package com.shj.eids.domain;
 
-import jdk.nashorn.internal.ir.IdentNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
