@@ -51,30 +51,32 @@ public class GenerateData {
         Calendar now = Calendar.getInstance();
         Calendar start = Calendar.getInstance();
         start.setTime(startTime);
-        Random random = new Random();
+        MyRandom myRandom = new MyRandom();
         LocalUtil localUtil = LocalUtil.getInstance();
         Integer count = 0;//累加模拟身份证号
         Map<String, List<String>> cityMap = new HashMap<>();
         while (start.compareTo(now) <= 0) {
-            //随机生成60条患者数据，并添加到数据库
-            for (int i = 0; i < 60; i++) {
+            PatientInformation info[] = new PatientInformation[200];
+            //随机生成20条患者数据，并添加到数据库
+            for (int i = 0; i < 200; i++) {
                 String name = defaultKaptcha.createText();
-                String province = provinces[random.nextInt(provinces.length)];
+                String province = provinces[myRandom.nextInt(provinces.length)];
                 List<String> cities = cityMap.get(province);
                 if(cities == null){
                     cities = localUtil.getCities("中国", province);
                     cityMap.put(province, cities);
                 }
-
                 if(cities.size() == 0) continue;
-                String city = cities.get(random.nextInt(cities.size()));
+                String city = cities.get(myRandom.nextInt(cities.size()));
                 Date reportingTime = start.getTime();
-                String s = status[random.nextInt(status.length)];
+                String s = status[myRandom.nextInt(status.length)];
                 String idNumber = count.toString();
                 count++;
                 PatientInformation patientInformation = new PatientInformation(null, name, province, city, null, null, reportingTime, event, s, idNumber);
+                info[i] = patientInformation;
                 patientInformationMapper.addPatientInformation(patientInformation);
             }
+
             //模拟每日归档统计
             everyDayCountService.makeEveryDayCount(start.getTime());
             start.add(Calendar.DAY_OF_YEAR, 1);

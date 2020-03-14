@@ -30,9 +30,11 @@ public class GraphicRestController {
      * @Author: ShangJin
      * @Date: 2020/3/12
      */
-    @PostMapping("/graphic/mapGraphicDataAll/{epidemicId}")
-    public String getCityStatusCountAll(@PathVariable("epidemicId") Integer epidemicId){
-        return JSON.toJSONString(epidemicInfoService.getMapDataAll(epidemicId));
+    @PostMapping("/graphic/mapGraphicDataAll/{epidemicId}/{regionName}")
+    public String getCityStatusCountAll(@PathVariable("epidemicId") Integer epidemicId,
+                                        @PathVariable("regionName") String regionName){
+        String province = ("china".equals(regionName) ? null: regionName);
+        return JSON.toJSONString(epidemicInfoService.getMapDataAll(epidemicId,province));
     }
     /*
      * @Title: getMapGraphicDataPresent
@@ -42,9 +44,11 @@ public class GraphicRestController {
      * @Author: ShangJin
      * @Date: 2020/3/12
      */
-    @PostMapping("/graphic/mapGraphicDataPresent/{epidemicId}")
-    public String getMapGraphicDataPresent(@PathVariable("epidemicId") Integer epidemicId){
-        return JSON.toJSONString(epidemicInfoService.getMapDataPresent(epidemicId));
+    @PostMapping("/graphic/mapGraphicDataPresent/{epidemicId}/{regionName}")
+    public String getMapGraphicDataPresent(@PathVariable("epidemicId") Integer epidemicId,
+                                           @PathVariable("regionName") String regionName){
+        String province = ("china".equals(regionName) ? null: regionName);
+        return JSON.toJSONString(epidemicInfoService.getMapDataPresent(epidemicId, province));
     }
 
     /*
@@ -55,27 +59,10 @@ public class GraphicRestController {
      * @Author: ShangJin
      * @Date: 2020/3/12
      */
-    @PostMapping("/graphic/pieGraphic/{epidemicId}")
-    public String getPieGraphic(@PathVariable("epidemicId") Integer epidemicId){
-        ArrayList<DataItem> res = new ArrayList<>();
-        epidemicInfoService.getPatientCountByStatus(epidemicId, null, null, "死亡");
-        res.add(new DataItem("死亡人数",  epidemicInfoService.getPatientCountByStatus(epidemicId, null, null, "死亡")));
-        res.add(new DataItem("治愈人数",  epidemicInfoService.getPatientCountByStatus(epidemicId, null, null, "治愈")));
-        res.add(new DataItem("危重人数",  epidemicInfoService.getPatientCountByStatus(epidemicId, null, null, "危重")));
-        res.add(new DataItem("轻微人数",  epidemicInfoService.getPatientCountByStatus(epidemicId, null, null, "轻微")));
-        return JSON.toJSONString(res);
-    }
-
-    /*
-     * @Title: getPieGraphic
-     * @Description: 根据疫情事件ID获取饼图需要的数据，加上了所在省的限制：死亡人数、治愈人数、危重人数、轻微人数
-     * @param epidemicId:
-     * @return java.lang.String
-     * @Author: ShangJin
-     * @Date: 2020/3/12
-     */
-    @PostMapping("/graphic/pieGraphic/{epidemicId}/{province}")
-    public String getPieGraphicByProvince(@PathVariable("epidemicId") Integer epidemicId, @PathVariable("province") String province){
+    @PostMapping("/graphic/pieGraphic/{epidemicId}/{regionName}")
+    public String getPieGraphic(@PathVariable("epidemicId") Integer epidemicId,
+                                @PathVariable("regionName") String regionName){
+        String province = (regionName.equals("china")? null:regionName);
         ArrayList<DataItem> res = new ArrayList<>();
         epidemicInfoService.getPatientCountByStatus(epidemicId, null, null, "死亡");
         res.add(new DataItem("死亡人数",  epidemicInfoService.getPatientCountByStatus(epidemicId, province, null, "死亡")));
@@ -86,20 +73,13 @@ public class GraphicRestController {
     }
 
     /*
-     * 获取折线图和柱状图所需要的数据
+     * 获取折线图和柱状图所需要的数据,
      */
-    @PostMapping("/graphic/lineAndBarGraphic/{epidemicId}")
-    public String getBarAndLineGraphicData(@PathVariable("epidemicId") Integer epidemicId){
+    @PostMapping("/graphic/lineAndBarGraphic/{epidemicId}/{regionName}")
+    public String getBarAndLineGraphicData(@PathVariable("epidemicId") Integer epidemicId,
+                                           @PathVariable("regionName") String regionName){
         final Date startTime = epidemicInfoService.getStartTime(epidemicId);
-        List<List<Object>> res = epidemicInfoService.getLineAndBarGraphicData(epidemicId, null);
-        return JSON.toJSONString(res);
-    }
-    /*
-     * 获取折线图和柱状图所需要的数据，加上了所在省的限制
-     */
-    @PostMapping("/graphic/lineAndBarGraphic/{epidemicId}/{province}")
-    public String getBarAndLineGraphicDataByProvince(@PathVariable("epidemicId") Integer epidemicId, @PathVariable("province") String province){
-        final Date startTime = epidemicInfoService.getStartTime(epidemicId);
+        String province = ("china".equals(regionName)? null: regionName);
         List<List<Object>> res = epidemicInfoService.getLineAndBarGraphicData(epidemicId, province);
         return JSON.toJSONString(res);
     }

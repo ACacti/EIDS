@@ -48,7 +48,7 @@ class EidsApplicationTests {
     @Autowired
     DefaultKaptcha defaultKaptcha;
 
-    @Test
+//    @Test
     void localUtilTest(){
         LocalUtil util = LocalUtil.getInstance();
         System.out.println(util.getCities("中国", "上海"));

@@ -11,7 +11,7 @@
     <script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
     <script th:src="@{/js/md5.js}"></script>
     <script th:src="@{/js/echarts.js}"></script>
-    <script th:src="@{/js/map/js/china.js}"></script>
+    <script th:src="@{'/js/map/js/' + ${regionName == 'china' ? 'china': 'province/' + regionName} + '.js'}"></script>
     <script th:src="@{/js/graphic.js}"></script>
 </head>
 <body class="layui-layout-body">
@@ -19,101 +19,85 @@
     <!--    rgb(0,194,146)-->
     <!-- header 开始 -->
     <div class="layui-header layui-bg-cyan">
-        <div class="layui-logo">layui 后台布局</div>
+        <div class="layui-logo"><strong>EIDS</strong>信息发布</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="">控制台</a></li>
+            <li class="layui-nav-item"><a href="">商品管理</a></li>
+            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">疫情事件</a>
+                <dl class="layui-nav-child">
+                    <dd th:each="event:${events}">
+                        <a th:href="@{'/index/' + ${event.name} + '/china'}">[[${event.name}]]</a>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
     </div>
-    <div class="layui-body" style="left: 0; padding-top: 30px;background-color:#f2f2f2;">
+
+
+    <div class="layui-body" style="left: 0; padding-top: 30px;">
         <div class="layui-container">
-            <div class="layui-row layui-col-space30">
-                <!-- FF5722 -->
-                <div class="layui-col-md3">
-                    <div class="layui-row">
-                        <div class="layui-col-md8 layui-col-md-offset2">
-                            <div class="layui-card">
-                                <div class="layui-card-header cardHeaderStyle" style="color: #FF5722">
-                                    <i class="iconStyle iconfont icon-quezhenrenshu1"
-                                       style="font-size: 40px"></i><br>
-                                    <span style="position: relative; bottom:10px">3434</span>
-                                </div>
-                                <div class="layui-card-body cardBodyStyle" style="background-color: #FF5722;">
-                                    <strong>累计确诊</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- FFB800 -->
-                <div class="layui-col-md3">
-                    <div class="layui-row">
-                        <div class="layui-col-md8 layui-col-md-offset2">
-                            <div class="layui-card">
-                                <div class="layui-card-header cardHeaderStyle" style="color: #FFB800;">
-                                    <i class="iconfont icon-xiancunquezhennew iconStyle"
-                                       style="font-size: 50px"></i><br>
-
-                                    <span style="position: relative; bottom:10px">3434</span>
-                                </div>
-                                <div class="layui-card-body cardBodyStyle" style="background-color: #FFB800;">
-                                    <strong>当前确诊</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 5FB878 -->
-                <div class="layui-col-md3">
-                    <div class="layui-row">
-                        <div class="layui-col-md8 layui-col-md-offset2">
-                            <div class="layui-card">
-                                <div class="layui-card-header cardHeaderStyle" style="color: #5FB878;">
-                                    <i class="iconfont icon-zhiyu iconStyle" style="font-size: 50px"></i><br>
-                                    <span style="position: relative; bottom:10px">3434</span>
-                                </div>
-                                <div class="layui-card-body cardBodyStyle" style="background-color: #5FB878;">
-                                    <strong>累计治愈</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 2F4056 -->
-                <div class="layui-col-md3">
-                    <div class="layui-row">
-                        <div class="layui-col-md8 layui-col-md-offset2">
-                            <div class="layui-card">
-                                <div class="layui-card-header cardHeaderStyle" style="color: #2F4056;">
-                                    <i class="iconfont icon-siwang iconStyle" style="font-size: 50px"></i><br>
-                                    <span style="position: relative; bottom:10px">3434</span>
-                                </div>
-                                <div class="layui-card-body cardBodyStyle" style="background-color: #2F4056;">
-                                    <strong>累计死亡</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
             <div class="layui-row">
                 <div class="layui-col-md8">
-                    <div style="width: 100%; height: 700px" id="map1">
+                    <div class="layui-tab-item layui-show" style="width:100%; height: 500px" id="map1">
                         <!-- 地图DOM -->
                     </div>
+<!--                    <div class="layui-tab-item" style="width: 940px; height: 500px" id="map2">-->
+<!--                        &lt;!&ndash; 地图DOM &ndash;&gt;-->
+<!--                    </div>-->
                 </div>
                 <div class="layui-col-md4">
                     <div class="layui-row">
                         <div class="layui-col-md12">
                             <div style="width: 100%; height: 300px" id="pie">
-
+<!--                                饼图-->
                             </div>
                         </div>
-                        <div class="layui-row">
-                            <div class="layui-col-md12">
-                                <div style="width: 100%; height: 300px" id="lineAndBar">
-
-                                </div>
-                            </div>
+                    </div>
+                    <div class="layui-row">
+                        <div class="layui-col-md10">
+                            <table class="layui-table" lay-even lay-skin="line">
+                                <colgroup>
+                                    <col width="70%">
+                                    <col width="30%">
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <span style="color: #FF5722"><li class="layui-inline iconfont icon-quezhenrenshu1"></li>&nbsp;&nbsp;累计确诊</span>
+                                    </td>
+                                    <td><span style="color: #FF5722"><strong th:text="${allConfirmed}"></strong></span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <span style="color: #FFB800"><li class="layui-inline iconfont icon-xiancunquezhennew"></li>&nbsp;&nbsp;现有确诊</span>
+                                    </td>
+                                    <td><span style="color: #FFB800"><strong th:text="${present}"></strong></span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span style="color: #5FB878"><li class="layui-inline iconfont icon-zhiyu"></li>&nbsp;&nbsp;累计治愈</span>
+                                    </td>
+                                    <td><span style="color: #5FB878"><strong th:text="${allCured}"></strong></span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span style="color: #2F4056"><li class="layui-inline iconfont icon-siwang"></li>&nbsp;&nbsp;累计死亡</span>
+                                    </td>
+                                    <td><span style="color: #2F4056"><strong th:text="${allDead}"></strong></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row" style="margin-top: 30px">
+                <div class="layui-col-md12">
+                    <div style="width: 100%; height: 500px" id="lineAndBar">
+                        <!--                        折线图和柱状图-->
                     </div>
                 </div>
             </div>
@@ -128,4 +112,5 @@
 <p class="contextpath" style="display:none" th:text="${#servletContext.contextPath}"></p>
 <p class="epidemicId" style="display: none" th:text="${epidemic.id}"></p>
 <p class="epidemicName" style="display: none" th:text="${epidemic.name}"></p>
+<p class="regionName" style="display: none" th:text="${regionName}"></p>
 </html>

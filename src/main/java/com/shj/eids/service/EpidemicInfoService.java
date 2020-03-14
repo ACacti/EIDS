@@ -5,9 +5,12 @@ import com.shj.eids.dao.EveryDayCountMapper;
 import com.shj.eids.dao.PatientInformationMapper;
 import com.shj.eids.domain.DataItem;
 import com.shj.eids.domain.EpidemicEvent;
+import com.shj.eids.utils.LocalUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -68,7 +71,7 @@ public class EpidemicInfoService {
      * @Author: ShangJin
      * @Date: 2020/3/11
      */
-    public Integer getAllPatientCount(Integer epidemicId, String province, String city){
+    public Integer getAllPatientCount(@NonNull Integer epidemicId, @Nullable String province, @Nullable String city){
         return getPatientCount(epidemicId, province, city, null, null, null);
     }
 
@@ -86,26 +89,53 @@ public class EpidemicInfoService {
     public Integer getPatientCountByStatus(Integer epidemicId, String province, String city, List<String> status){
         return getPatientCount(epidemicId, province, city, status, null, null);
     }
-    public List<DataItem> getMapDataAll(Integer epidemicId){
+
+    /*
+     * 获取累计确诊人数疫情地图数据
+     * province参数表示要查询的省， province为null时表示获取的是全国疫情地图的数据
+     */
+    public List<DataItem> getMapDataAll(Integer epidemicId, @Nullable String province){
         List<DataItem> list = new ArrayList<>();
-        for(String province: provinces){
-            Integer value = getAllPatientCount(epidemicId, province, null);
-            list.add(new DataItem(province, value));
+        if(province == null){
+            //查询所有省的累计确诊人数
+            for(String p: provinces){
+                Integer value = getAllPatientCount(epidemicId, p, null);
+                list.add(new DataItem(p, value));
+            }
+        }else{
+            //查询所在省各市的累计确诊人数
+            LocalUtil instance = LocalUtil.getInstance();
+            List<String> cities = instance.getCities("中国", province);
+            for(String city: cities){
+                Integer value = getAllPatientCount(epidemicId, province, city);
+                list.add(new DataItem(city, value));
+            }
         }
         return list;
     }
 
     /*
      * 获取patient_information表当前确诊患者分布疫情地图的数据
+     * province不为空时，表示获取某省的当前确诊患者数目疫情地图的数据
+     * province为空时，表示获取全国的疫情地图数据
      */
-    public List<DataItem> getMapDataPresent(Integer epidemicId){
+    public List<DataItem> getMapDataPresent(@NonNull Integer epidemicId, @Nullable String province){
         List<DataItem> list = new ArrayList<>();
         List<String> status = new ArrayList<>();
         status.add("轻微");
         status.add("危重");
-        for(String province: provinces){
-            Integer value = getPatientCountByStatus(epidemicId, province, null,status);
-            list.add(new DataItem(province, value));
+        if(province==null){
+            //获取全国的疫情地图数据
+            for(String p: provinces){
+                Integer value = getPatientCountByStatus(epidemicId, p, null,status);
+                list.add(new DataItem(p, value));
+            }
+        }else{
+            LocalUtil instance = LocalUtil.getInstance();
+            List<String> cities = instance.getCities("中国", province);
+            for(String city: cities){
+                list.add(new DataItem(city, getPatientCountByStatus(epidemicId, province, city, status)));
+            }
         }
         return list;
     }
@@ -135,7 +165,7 @@ public class EpidemicInfoService {
 
 
     /*
-     * 对everyDayCountMapper.getIntervalCount一个包装
+     * 对everyDayCountMapper.getIntervalCount()方法的一个包装
      * 获取一段时间内，满足status要求的患者数量，统计以每天为单位，List<Integer>形式返回
      */
     public List<Integer> getIntervalCount(Integer epidemicId, String province, Date startDate, Date endDate, String ...status){
@@ -174,6 +204,11 @@ public class EpidemicInfoService {
         s.setTime(startDate);
         Calendar e = Calendar.getInstance();
         e.setTime(now);
+        //日期比较的单位为天，因为统计数据是以天为单位归档的
+        s.set(Calendar.HOUR_OF_DAY, 0);
+        s.set(Calendar.MINUTE, 0);s.set(Calendar.SECOND, 0);s.set(Calendar.MILLISECOND, 0);
+        e.set(Calendar.HOUR_OF_DAY, 0);
+        e.set(Calendar.MINUTE, 0);e.set(Calendar.SECOND, 0);e.set(Calendar.MILLISECOND, 0);
         List<List<Object>> res = new ArrayList<>();
         int i = 0;
         //统计的时间范围为：疫情事件发布那天 -> 昨天(今天的数据需到23：59分时统计)
