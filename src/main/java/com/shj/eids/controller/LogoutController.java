@@ -23,8 +23,9 @@ import javax.servlet.http.HttpSession;
 public class LogoutController {
     @RequestMapping("/user/m-logout")
     public String logout(HttpSession session, HttpServletRequest request, HttpServletResponse response){
-        session.removeAttribute("loginUser");
+        session.removeAttribute("loginAccount");
         Cookie cookie = new Cookie("login", null);
+        response.addCookie(cookie);
         return "redirect:/";
     }
 }

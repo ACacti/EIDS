@@ -64,11 +64,11 @@ public class LoginController {
                 response.addCookie(cookie);
             }
             logger.debug("登录成功！");
-            return "index";
+            return "redirect:/index";
         }else{
             logger.debug("登录失败！");
             model.addAttribute("msg", "邮箱未注册或密码错误.");
-            return "login";
+            return "redirect:/login";
         }
     }
 }

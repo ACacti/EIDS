@@ -122,7 +122,6 @@ $(function () {
                         layer.close(loading);
                         layer.msg("服务器出了点小问题，请稍后再试");
                     }
-
                 });//$.ajax
             });
         });

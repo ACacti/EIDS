@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>疫情信息展示系统|防疫资讯</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/layui/src/css/layui.css}"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1687011_w335yuvfmm.css" type="text/css">
+    <script th:src="@{/webjars/layui/src/layui.js}"></script>
+    <script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+
+    <!-- header 开始 -->
+    <div class="layui-header layui-bg-cyan">
+        <div class="layui-logo"><strong>EIDS</strong>信息发布</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="">控制台</a></li>
+            <li class="layui-nav-item"><a href="">商品管理</a></li>
+            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">疫情数据</a>
+                <dl class="layui-nav-child">
+                    <dd th:each="event:${events}">
+                        <a th:href="@{'/index/' + ${event.name} + '/china'}">[[${event.name}]]</a>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <i class="iconfont icon-zhanghao"></i>
+                    <span th:text="${session.loginAccount} ? ${session.loginAccount.email} : '游客访问'"></span>
+                </a>
+                <dl class="layui-nav-child" th:if="!${session.loginAccount}">
+                    <dd><a th:href="@{/login}">登录账号</a></dd>
+                    <dd><a th:href="@{/register}">注册账号</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item" th:if="${session.loginAccount}"><a th:href="@{/user/m-logout}">注销</a></li>
+        </ul>
+    </div>
+    <div class="layui-body" style="left: 0; padding-top: 30px;">
+        <div class="layui-container">
+            <div class="layui-row">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="text-align: left"><h2>标题</h2></label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <textarea name="" id="edit" cols="30" rows="10"></textarea>
+            <div class="layui-btn-group" style="margin-top: 10px">
+                <button class="layui-btn" lay-event="getContent">获取内容</button>
+            </div>
+        </div>
+        <div class="layui-footer" style="left: 0">
+            <!-- 底部固定区域 -->
+            © layui.com - 底部固定区域
+        </div>
+    </div>
+</div>
+<script>
+    layui.extend({
+        tinymce: "[[${#servletContext.contextPath} + '/layui_exts/tinymce/tinymce']]"
+    }).use(['tinymce', 'util', 'layer'], function () {
+        var tinymce = layui.tinymce
+        var util = layui.util;
+        var edit = tinymce.render({
+            elem: "#edit"
+            , height: 600
+        });
+        util.event('lay-event', {
+            getContent: function () {
+                layer.msg('发表中', {
+                    icon: 16
+                    ,shade: 0.01
+                });
+                $.ajax({
+                    url: "[[${#servletContext.contextPath} + '/user/article/publish']]",
+                    data:{
+                        title: $('input[name=title]').val(),
+                        article: edit.getContent()
+                    },
+                    dataType:'JSON',
+                    type:'POST',
+                    success: function (data, status) {
+                        if(data.msg === 'success'){
+                            layer.msg("发表成功!");
+
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    },
+                    error: function () {
+                        layer.msg("服务器异常");
+                    }
+                })
+            }
+        });
+    });
+    layui.use('element', function () {
+        let element = layui.element;
+    });
+</script>
+</body>
+<p class="contextpath" style="display:none" th:text="${#servletContext.contextPath}"></p>
+<p class="epidemicId" style="display: none" th:text="${epidemic?.id}"></p>
+<p class="epidemicName" style="display: none" th:text="${epidemic?.name}"></p>
+<p class="regionName" style="display: none" th:text="${regionName}"></p>
+</html>

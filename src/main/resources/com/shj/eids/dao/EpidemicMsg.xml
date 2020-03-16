@@ -26,11 +26,13 @@
             <if test="weight!= null">
                 weight=#{weight}
             </if>
+            <if test="views != null">
+                views=#{views}
+            </if>
         </set>
         where id=#{id}
     </update>
-    <select id="getEpidemicMsg" resultType="EpidemicMsg" resultMap="EpidemicMsg_User">
-        select * from epidemic_msg
+    <sql id="where-if">
         <where>
             <if test="id!=null">
                 and id=#{id}
@@ -41,11 +43,27 @@
             <if test="authorId!=null">
                 and author_id=#{author}
             </if>
+            <if test="weight!=null">
+                and weight=#{weight}
+            </if>
         </where>
-        order by weight, release_date
+    </sql>
+    <sql id="limit">
         <if test="start!=null and length!=null">
             limit #{start}, #{length}
         </if>
+    </sql>
+    <select id="getEpidemicMsg" resultType="EpidemicMsg" resultMap="EpidemicMsg_User">
+        select * from epidemic_msg
+        <include refid="where-if"></include>
+        order by weight, release_date
+        <include refid="limit"></include>
+    </select>
+    <select id="getEpidemicMsgOrderByViews">
+        select * from epidemic_msg
+        <include refid="where-if"></include>
+        order by views
+        <include refid="limit"></include>
     </select>
     <resultMap id="EpidemicMsg_User" type="EpidemicMsg">
         <result column="id" property="id"/>

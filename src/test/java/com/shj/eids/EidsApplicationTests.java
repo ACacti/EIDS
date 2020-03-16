@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.xml.crypto.Data;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -108,6 +109,12 @@ class EidsApplicationTests {
         for(String str : list){
             System.out.println(str);
         }
+    }
+//    @Test
+    public void pathTest(){
+        String str = "C:\\Users\\ShangJin\\Desktop\\WorkSpace\\EpidemicInformationDisseminationSystem\\EIDS\\uploadImage\\log\\6\\";
+        File file = new File(str);
+        file.mkdir();
     }
 
 

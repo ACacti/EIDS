@@ -27,10 +27,27 @@ public interface EpidemicMsgMapper {
      *              id: 要查询资讯的id
      *              content:要查询资讯所包含的内容（模糊查询)
      *              authorId: 要查询资讯的作者id
+     *              weight: 文章的权重
      *              start和length：分页的起始位置和长度
+     *              返回结果按权重和发布日期排序
      * @return java.util.List<com.shj.eids.domain.EpidemicMsg>
      * @Author: ShangJin
      * @Date: 2020/3/5
      */
     public List<EpidemicMsg> getEpidemicMsg(Map<String, Object> args);
+    /*
+     * @Title: getEpidemicMsgOrderByViews
+     * @Description:
+     * @param args: args的key可以的取值：
+     *              id: 要查询资讯的id
+     *              content:要查询资讯所包含的内容（模糊查询)
+     *              authorId: 要查询资讯的作者id
+     *              weight: 文章的权重
+     *              start和length：分页的起始位置和长度
+     *              返回结果按阅读量排序
+     * @return java.util.List<com.shj.eids.domain.EpidemicMsg>
+     * @Author: ShangJin
+     * @Date: 2020/3/5
+     */
+    public List<EpidemicMsg> getEpidemicMsgOrderByViews(Map<String, Object> args);
 }

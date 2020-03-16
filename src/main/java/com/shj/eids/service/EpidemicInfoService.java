@@ -211,8 +211,12 @@ public class EpidemicInfoService {
         e.set(Calendar.MINUTE, 0);e.set(Calendar.SECOND, 0);e.set(Calendar.MILLISECOND, 0);
         List<List<Object>> res = new ArrayList<>();
         int i = 0;
+        int boundary = curedDates.size();
         //统计的时间范围为：疫情事件发布那天 -> 昨天(今天的数据需到23：59分时统计)
         while(s.compareTo(e) < 0){
+            if(i >= boundary) {
+                break;
+            }
             String date = s.get(Calendar.YEAR) + "-" + (s.get(Calendar.MONTH) + 1) + "-" + s.get(Calendar.DAY_OF_MONTH);
             List<Object> line = Arrays.asList(date, curedDates.get(i), mildDates.get(i), seriousDates.get(i), deadDates.get(i),
                     confirmedDates.get(i) , increaseDates.get(i));

@@ -24,4 +24,5 @@ public class EpidemicMsg {
     private Date releaseDate;
     private Integer weight;
     private User author;
+    private Integer views;
 }
