@@ -1,0 +1,48 @@
+.article{
+    background-color:white;
+    width: 95%;
+    margin: 10px auto 10px;
+    padding: 5px 5px;
+    border-radius: 1em;
+}
+.article .p{
+    color: rgb(160,160,160);
+    letter-spacing:1px;
+    line-height: 25px;
+    margin: 0 15px 10px;
+}
+.article .article-title{
+    margin: 20px 15px 10px;
+}
+.article .article-content{
+    color: rgb(160,160,160);
+    letter-spacing:1px;
+    line-height: 25px;
+    margin: 0 15px 10px;
+}
+.article .article-info{
+    color: rgb(160,160,160);
+    margin-left: 20px;
+
+}
+
+.article .article-info .info-item{
+    margin-right: 15px;
+    font-size: smaller;
+}
+.hotArticles{
+    border-top-color: #393D49;
+    border-top-width: 3px;
+    border-top-style: solid;
+    background-color: rgb(241,243,244);
+    margin-left: 10px;
+    padding: 5px 15px;
+}
+.hotArticles .title{
+    margin: 10px 15px 15px;
+    font-size: large;
+    font-weight: bold;
+}
+.hotArticles .hotArticles-item{
+    margin: 10px 5px;
+}

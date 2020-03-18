@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,13 +41,14 @@ public class IndexController {
     @RequestMapping("/index/{epidemicName}/{regionName}")
     String preIndexProcedures(@PathVariable("epidemicName") String name,
                               @PathVariable("regionName") String regionName,
-                              Model model){
+                              Model model,
+                              HttpSession session){
         List<EpidemicEvent> list = epidemicEventService.getAllEvent();
         EpidemicEvent event = epidemicEventService.getEpidemicEventByName(name);
         if(event == null){
             return "redirect:/index";
         }
-        model.addAttribute("events", list);
+        session.setAttribute("events", list);
         model.addAttribute("epidemic", event);
         model.addAttribute("regionName", regionName);
         String provinceArg = "china".equals(regionName) ? null: regionName;

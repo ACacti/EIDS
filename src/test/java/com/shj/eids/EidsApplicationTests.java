@@ -1,16 +1,15 @@
 package com.shj.eids;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.shj.eids.dao.EpidemicEventMapper;
 import com.shj.eids.dao.EveryDayCountMapper;
 import com.shj.eids.dao.PatientInformationMapper;
-import com.shj.eids.domain.Admin;
-import com.shj.eids.domain.EpidemicEvent;
-import com.shj.eids.domain.EveryDayCount;
-import com.shj.eids.domain.PatientInformation;
+import com.shj.eids.domain.*;
 import com.shj.eids.service.EpidemicEventService;
 import com.shj.eids.service.EpidemicInfoService;
+import com.shj.eids.service.EpidemicMsgService;
 import com.shj.eids.service.EveryDayCountService;
 import com.shj.eids.utils.LocalUtil;
 import org.junit.jupiter.api.Test;
@@ -45,7 +44,8 @@ class EidsApplicationTests {
     PatientInformationMapper patientInformationMapper;
     @Autowired
     EveryDayCountService everyDayCountService;
-
+    @Autowired
+    EpidemicMsgService msgService;
     @Autowired
     DefaultKaptcha defaultKaptcha;
 
@@ -115,6 +115,16 @@ class EidsApplicationTests {
         String str = "C:\\Users\\ShangJin\\Desktop\\WorkSpace\\EpidemicInformationDisseminationSystem\\EIDS\\uploadImage\\log\\6\\";
         File file = new File(str);
         file.mkdir();
+    }
+//    @Test
+    public void test1(){
+        int page = 1;
+
+        List<EpidemicMsg> list = msgService.getArticlesAbstract((page - 1) * 8, 8);
+        for(EpidemicMsg m : list){
+            System.out.println(m.getAuthor());
+        }
+        System.out.println(JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect));
     }
 
 

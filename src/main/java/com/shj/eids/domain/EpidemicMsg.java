@@ -19,7 +19,7 @@ import java.util.Date;
 @Alias("EpidemicMsg")
 public class EpidemicMsg {
     private Integer id;
-    private String tile;
+    private String title;
     private String content;
     private Date releaseDate;
     private Integer weight;

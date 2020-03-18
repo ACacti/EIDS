@@ -24,10 +24,10 @@
                 content=#{content},
             </if>
             <if test="weight!= null">
-                weight=#{weight}
+                weight=#{weight},
             </if>
             <if test="views != null">
-                views=#{views}
+                views=#{views},
             </if>
         </set>
         where id=#{id}
@@ -59,7 +59,7 @@
         order by weight, release_date
         <include refid="limit"></include>
     </select>
-    <select id="getEpidemicMsgOrderByViews">
+    <select id="getEpidemicMsgOrderByViews" resultMap="EpidemicMsg_User">
         select * from epidemic_msg
         <include refid="where-if"></include>
         order by views
@@ -73,7 +73,30 @@
         <result column="weight" property="weight"/>
         <association property="author" column="author_id" select="getUser" javaType="User"/>
     </resultMap>
-    <select id="getUser" resultMap="User">
+    <select id="getUser" resultType="User">
         select * from user where id=#{id}
     </select>
+
+    <select id="getCount" resultType="int">
+        select count(*) from epidemic_msg
+        <where>
+            <if test="content!= null">
+                and content like CONCAT('%', #{content}, '%')
+            </if>
+            <if test="authorId!=null">
+                and author_id=#{author}
+            </if>
+            <if test="weight!=null">
+                and weight=#{weight}
+            </if>
+        </where>
+    </select>
+
+    <select id="getEpidemicAbstract" resultType="EpidemicMsg" resultMap="EpidemicMsg_User" parameterType="map">
+        select id, title, SUBSTRING(content,1, 249) content, release_date,weight, author_id, views from epidemic_msg
+        <include refid="where-if"></include>
+        order by weight,release_date
+        <include refid="limit"></include>
+    </select>
+
 </mapper>

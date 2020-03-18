@@ -50,4 +50,35 @@ public interface EpidemicMsgMapper {
      * @Date: 2020/3/5
      */
     public List<EpidemicMsg> getEpidemicMsgOrderByViews(Map<String, Object> args);
+
+    /*
+     * @Title: getEpidemicMsgOrderByViews
+     * @Description:获取简要版的防疫资讯，content长度固定为最多250个字符
+     * @param args: args的key可以的取值：
+     *              id: 要查询资讯的id
+     *              content:要查询资讯所包含的内容（模糊查询)
+     *              authorId: 要查询资讯的作者id
+     *              weight: 文章的权重
+     *              abstract: 获取的content的长度
+     *              start和length：分页的起始位置和长度
+     *              返回结果按阅读量排序, 并只显示
+     * @return java.util.List<com.shj.eids.domain.EpidemicMsg>
+     * @Author: ShangJin
+     * @Date: 2020/3/5
+     */
+    public List<EpidemicMsg> getEpidemicAbstract(Map<String, Object> args);
+
+    /*
+     * @Title: getCount
+     * @Description: 获取符合条件的资讯的数目
+     * @param content: 模糊查询资讯的内容
+	 * @param weight: 资讯的权重
+	 * @param authorId: 资讯的作者
+     * @return java.lang.Integer
+     * @Author: ShangJin
+     * @Date: 2020/3/18
+     */
+    public Integer getCount(@Param("content") String content,
+                            @Param("weight") Integer weight,
+                            @Param("authorId") Integer authorId);
 }

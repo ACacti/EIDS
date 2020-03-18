@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url('../fonts/sourcesanspro/sourcesanspro-light.woff') format('woff');
+}
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url('../fonts/sourcesanspro/sourcesanspro.woff') format('woff');
+}
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url('../fonts/sourcesanspro/sourcesanspro-bold.woff') format('woff');
+}
+
+.article{
+    font-family: "Source Sans Pro";
+}
+
+.article .title{
+    font-style: normal;
+    font-family: "Source Sans Pro";
+    font-weight: 300;
+}
+.article .info{
+    margin:15px 5px 10px;
+}
+
+.article .info .info-item{
+    font-size: small;
+    margin-right: 20px;
+    color: rgb(160, 160, 160);
+}
+.article .position{
+    font-size: 12px;
+    margin: 15px 20px 0;
+    background-color: white;
+    padding: 7px 10px;
+    border-radius: .7em;
+}
+.article .content{
+    background-color:rgb(241,243,244);
+    background-color: white;
+    margin: 20px 30px;
+    padding: 7px 10px;
+    letter-spacing:1px;
+    line-height: 25px;
+    border-radius: .7em;
+}
+
