@@ -2,29 +2,31 @@ package com.shj.eids;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.baidu.aip.face.AipFace;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.shj.eids.dao.EpidemicEventMapper;
 import com.shj.eids.dao.EveryDayCountMapper;
 import com.shj.eids.dao.PatientInformationMapper;
-import com.shj.eids.domain.*;
-import com.shj.eids.service.EpidemicEventService;
-import com.shj.eids.service.EpidemicInfoService;
+import com.shj.eids.domain.EpidemicMsg;
+import com.shj.eids.domain.PatientInformation;
 import com.shj.eids.service.EpidemicMsgService;
 import com.shj.eids.service.EveryDayCountService;
+import com.shj.eids.utils.AipFaceUtils;
+import com.shj.eids.utils.Base64Util;
 import com.shj.eids.utils.LocalUtil;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.xml.crypto.Data;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -127,5 +129,20 @@ class EidsApplicationTests {
         System.out.println(JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect));
     }
 
+//    @Test
+    public void faceApiTest() throws IOException {
+        //人脸注册
+        String path = "C:\\Users\\ShangJin\\Desktop\\1.jpg";
+        File img = new File(path);
+        String base64Code = Base64Util.encode(img);
+        System.out.println(base64Code);
+        HashMap<String, String> options = new HashMap<>();
+        options.put("user_info", "网络图片");
+        AipFace client = AipFaceUtils.getClient();
+
+        JSONObject res = client.addUser(base64Code, "BASE64", "TestFaceRepository", "webImage1", options);
+        System.out.println(res.toString(2));
+        //人脸搜索
+    }
 
 }

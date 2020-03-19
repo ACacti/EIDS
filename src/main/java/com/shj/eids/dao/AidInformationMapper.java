@@ -22,4 +22,5 @@ public interface AidInformationMapper {
     public void updateAidInformation(AidInformation info);
     public List<AidInformation> getInformation(@Param("start") Integer start, @Param("length") Integer length);
     public List<AidInformation> getInformationByContent(String content);
+    public Integer getCount();
 }

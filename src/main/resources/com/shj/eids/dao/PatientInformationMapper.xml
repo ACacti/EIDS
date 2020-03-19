@@ -43,7 +43,7 @@
     <select id="getPatientInformationByIdNumber" resultType="PatientInformation">
         select * from patient_information where id_number=#{idNumber}
     </select>
-    <select id="getPatientInformation" resultType="PatientInformation" parameterType="map">
+    <select id="getPatientInformation" resultType="PatientInformation" parameterType="map" resultMap="PatientInformation_EpidemicEvent">
         select * from patient_information
         <where>
             <if test="status!=null">
@@ -65,10 +65,23 @@
                 and epidemic_id=#{epidemicId}
             </if>
         </where>
-        order by reporting_time
         <if test="start!=null and length!=null">
             limit #{start}, #{length}
         </if>
+    </select>
+    <resultMap id="PatientInformation_EpidemicEvent" type="PatientInformation">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="location_province" property="locationProvince"/>
+        <result column="location_city" property="locationCity"/>
+        <result column="location_detail" property="locationDetail"/>
+        <result column="reporting_time" property="reportingTime"/>
+        <result column="status" property="status"/>
+        <result column="id_number" property="idNumber"/>
+        <association property="epidemicEvent" column="epidemic_id" select="getEpidemicEvent"/>
+    </resultMap>
+    <select id="getEpidemicEvent" resultType="EpidemicEvent">
+        select * from epidemic_event where id=#{id}
     </select>
     <select id="getCount" parameterType="map" resultType="int">
         select count(*) from patient_information
@@ -92,7 +105,6 @@
                 and epidemic_id=#{epidemicId}
             </if>
         </where>
-        order by reporting_time
         <if test="start!=null and length!=null">
             limit #{start}, #{length}
         </if>

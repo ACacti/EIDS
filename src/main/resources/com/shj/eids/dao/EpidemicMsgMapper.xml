@@ -56,13 +56,13 @@
     <select id="getEpidemicMsg" resultType="EpidemicMsg" resultMap="EpidemicMsg_User">
         select * from epidemic_msg
         <include refid="where-if"></include>
-        order by weight, release_date
+        order by weight DESC , release_date DESC
         <include refid="limit"></include>
     </select>
     <select id="getEpidemicMsgOrderByViews" resultMap="EpidemicMsg_User">
         select * from epidemic_msg
         <include refid="where-if"></include>
-        order by views
+        order by views DESC
         <include refid="limit"></include>
     </select>
     <resultMap id="EpidemicMsg_User" type="EpidemicMsg">
@@ -95,7 +95,7 @@
     <select id="getEpidemicAbstract" resultType="EpidemicMsg" resultMap="EpidemicMsg_User" parameterType="map">
         select id, title, SUBSTRING(content,1, 249) content, release_date,weight, author_id, views from epidemic_msg
         <include refid="where-if"></include>
-        order by weight,release_date
+        order by weight DESC ,release_date DESC
         <include refid="limit"></include>
     </select>
 

@@ -22,7 +22,7 @@
         where id=#{id}
     </update>
     <select id="getInformation" resultType="AidInformation" resultMap="AidInformation_Admin">
-        select * from aid_informaion order by release_time limit #{start}, #{length}
+        select * from aid_informaion order by release_time DESC limit #{start}, #{length}
     </select>
     <resultMap id="AidInformation_Admin" type="AidInformation">
         <result column="id" property="id"/>
@@ -37,6 +37,10 @@
 
     <select id="getInformationByContent" resultMap="AidInformation_Admin">
         select * from aid_informaion where title like concat('%',#{content}, '%') or content like concat('%',#{content}, '%')
+    </select>
+
+    <select id="getCount" resultType="int">
+        select count(*) from aid_informaion;
     </select>
     <cache
             eviction="FIFO"

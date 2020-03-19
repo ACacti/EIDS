@@ -29,21 +29,18 @@ $(function () {
             ,done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
                 let lis = [];
 
-                $.post(contextPath + '/user/articles/' +page, function(res){
+                $.post(contextPath + '/user/help/' +page, function(res){
                     console.log("请求成功");
                     out = res;
                     //假设你的列表返回在data集合中
                     layui.each(res.data,function(index, item){
                         let jDom = $(dom.cloneNode(true));
-                        jDom.find('#title').html(item.weight >= 2 ? item.title + '&nbsp;&nbsp;<span class="layui-badge-rim">置顶</span>': item.title);
-                        jDom.find('#title').attr("href",contextPath + '/user/article/display/' + item.id);
-                        jDom.find('.article-content').html(item.content.length < 250? item.content: item.content + '...');
+                        jDom.find('#title').html(item.weight >= 2 ? item.title + '&nbsp;&nbsp;<span class="layui-badge">加急</span>': item.title);
+                        jDom.find('.article-content').html(item.content);
                         jDom.find('p').addClass("article-content");
-                        jDom.find('#authorName').text(item.author.introduction);
-                        let dateStr = dateFormat('YYYY-mm-dd HH:MM',new Date(item.releaseDate));
+                        let dateStr = dateFormat('YYYY-mm-dd HH:MM',new Date(item.releaseTime));
                         jDom.find("#publishTime").text(dateStr);
-                        jDom.find("#views").text(item.views);
-                        console.log(jDom.html());
+                        jDom.find('#authorName').text(item.publisher.email);
                         lis.push(jDom.html());
                     });
                     //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
