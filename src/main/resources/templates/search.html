@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>疫情信息展示系统|查找患者</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/layui/src/css/layui.css}"/>
+    <script th:src="@{/webjars/layui/src/layui.js}"></script>
+    <script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
+    <script th:src="@{/js/search.js}"></script>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+
+    <!-- header 开始 -->
+    <div class="layui-header layui-bg-cyan">
+        <div class="layui-logo"><a th:href="@{/index}" class="layui-logo"><strong>EIDS</strong>信息发布</a></div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a th:href="@{/user/article}">防疫资讯</a></li>
+            <li class="layui-nav-item"><a th:href="@{/user/search}">查找患者</a></li>
+            <li class="layui-nav-item"><a th:href="@{/user/help}">社会求助信息</a></li>
+            <li class="layui-nav-item"><a th:if="${session.loginAccount!= null and session.loginAccount.level >= 2}" th:href="@{/user/article/edit}">发文章</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">疫情数据</a>
+                <dl class="layui-nav-child">
+                    <dd th:each="event:${session.events}">
+                        <a th:href="@{'/index/' + ${event.name} + '/china'}">[[${event.name}]]</a>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <i class="iconfont icon-zhanghao"></i>
+                    <span th:text="${session.loginAccount} ? ${session.loginAccount.email} : '游客访问'"></span>
+                </a>
+                <dl class="layui-nav-child" th:if="!${session.loginAccount}">
+                    <dd><a th:href="@{/login}">登录账号</a></dd>
+                    <dd><a th:href="@{/register}">注册账号</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item" th:if="${session.loginAccount}"><a th:href="@{/user/m-logout}">注销</a></li>
+        </ul>
+    </div>
+    <div class="layui-body" style="left: 0">
+        <div class="layui-form">
+            <div class="layui-form-item" style="margin-top: 40px; margin-left: 150px">
+                <label class="layui-form-label" style="weight: 100px">查询区域</label>
+                <div class="layui-input-inline">
+                    <select name="province" lay-filter="province" lay-search>
+                        <option value="">所在省/直辖市</option>
+                        <option th:each="province, stat: ${provinces}" th:value="${province}" th:text="${province}">
+                        </option>
+                    </select>
+                </div>
+                <div class="layui-input-inline" style="margin-left: 20px">
+                    <select name="city" lay-filter="city" lay-search>
+                        <option value="">所在市/区</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <button class="layui-btn" id="confirm">确定</button>
+                </div>
+                <div style="position: absolute; display: inline; right: 300px">
+                    <button class="layui-btn layui-btn-radius layui-btn-normal" id="btn-face-recognition">人脸识别</button>
+                </div>
+            </div>
+            <hr class="layui-bg-gray">
+        </div>
+        <!-- 数据表格 -->
+        <div style="width: 1075px; margin: 0 auto">
+            <table id="dataTable" lay-filter="dateTable"></table>
+        </div>
+        <div class="layui-footer" style="left: 0">
+            <!-- 底部固定区域 -->
+            © layui.com - 底部固定区域
+        </div>
+    </div>
+</div>
+</body>
+<p class="contextpath" style="display:none" th:text="${#servletContext.contextPath}"></p>
+</html>
