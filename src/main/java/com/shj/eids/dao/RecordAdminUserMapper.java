@@ -1,6 +1,8 @@
 package com.shj.eids.dao;
 
 import com.shj.eids.domain.RecordAdminUser;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.Map;
  * @Author: ShangJin
  * @Create: 2020-03-05 13:57
  **/
+@Repository
+@Mapper
 public interface RecordAdminUserMapper {
     public void addRecord(RecordAdminUser record);
 
@@ -27,4 +31,6 @@ public interface RecordAdminUserMapper {
      * @Date: 2020/3/5
      */
     public List<RecordAdminUser> getRecords(Map<String, Object> args);
+
+    public Integer getCount(Map<String, Object> args);
 }

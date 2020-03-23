@@ -1,6 +1,8 @@
 package com.shj.eids.dao;
 
 import com.shj.eids.domain.RecordAdminEpidemicMsg;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.Map;
  * @Author: ShangJin
  * @Create: 2020-03-05 13:50
  **/
+@Repository
+@Mapper
 public interface RecordAdminEpidemicmsgMapper {
     public void addRecord(RecordAdminEpidemicMsg record);
     /*

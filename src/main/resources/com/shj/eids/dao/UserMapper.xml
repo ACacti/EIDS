@@ -8,8 +8,7 @@
             flushInterval="60000"
             size="512"
             readOnly="true"/>
-    <select id="getUsers" resultType="User" parameterType="map">
-        select * from user
+    <sql id="where-if">
         <where>
             <if test="id != null">
                 and id=#{id}
@@ -27,16 +26,28 @@
                 and introduction=#{introduction}
             </if>
         </where>
+    </sql>
+    <select id="getUsers" resultType="User" parameterType="map">
+        select * from user
+        <include refid="where-if"></include>
         <if test="start!=null and length!=null">
             limit #{start}, #{length}
         </if>
     </select>
+
+    <select id="getCount" resultType="int">
+        select count(*) from user
+        <include refid="where-if"></include>
+    </select>
+
     <select id="getPasswordByEmail" resultType="string">
         select password from user where email=#{email}
     </select>
+
     <insert id="addUser" parameterType="User">
         insert into user(email, password, level, introduction) values (#{email}, #{password}, #{level}, #{introduction})
     </insert>
+
     <update id="updateUser" parameterType="User">
         update user
         <set>
@@ -55,9 +66,11 @@
         </set>
         where id=#{id}
     </update>
+
     <delete id="deleteUserById" parameterType="int">
         delete from user where id=#{id}
     </delete>
+
     <delete id="deleteUserByEmail" parameterType="int">
         delete from user where email=#{email}
     </delete>

@@ -24,7 +24,10 @@ public class LogoutController {
     @RequestMapping("/user/m-logout")
     public String logout(HttpSession session, HttpServletRequest request, HttpServletResponse response){
         session.removeAttribute("loginAccount");
-        Cookie cookie = new Cookie("login", null);
+        session.removeAttribute("isAdmin");
+        Cookie cookie = new Cookie("login", "");
+        cookie.setMaxAge(0);
+        cookie.setPath(request.getContextPath());
         response.addCookie(cookie);
         return "redirect:/";
     }

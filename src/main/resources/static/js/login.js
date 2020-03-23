@@ -11,6 +11,10 @@ $(function () {
         let rawPasswordInput = $("input[name=password1]");
         let passwordInput = $("input[name=password]");
         let emailRex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
+        let msg = $('p.msg').text();
+        if(msg != ''){
+            layer.msg(msg);
+        }
         rawPasswordInput.val("");
         rawPasswordInput.on("blur", function () {
             let email = emailInput.val();

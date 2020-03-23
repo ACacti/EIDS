@@ -1,5 +1,8 @@
 package com.shj.eids.config;
 
+import com.shj.eids.interceptor.AdminAuthentication;
+import com.shj.eids.interceptor.CookieLoginIntercepter;
+import com.shj.eids.interceptor.EpidemicEventInterceptor;
 import com.shj.eids.interceptor.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -17,14 +20,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
-    LoginInterceptor loginInterceptor;
+    private LoginInterceptor loginInterceptor;
+    @Autowired
+    private EpidemicEventInterceptor epidemicEventInterceptor;
+    @Autowired
+    private CookieLoginIntercepter cookieLoginIntercepter;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        //registry.addInterceptor(loginInterceptor).addPathPatterns("/index");
+        registry.addInterceptor(cookieLoginIntercepter).addPathPatterns("/**");
+        registry.addInterceptor(loginInterceptor).addPathPatterns("/user/search", "/user/article/edit",
+                "/user/img/doUpload", "/user/article/publish", "/user/search**", "/admin**");
+        registry.addInterceptor(new AdminAuthentication()).addPathPatterns("/admin**");
+        registry.addInterceptor(epidemicEventInterceptor).addPathPatterns("/**");
     }
 
     @Override
@@ -34,5 +45,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/register").setViewName("register");
         registry.addViewController("/user/help").setViewName("help");
+        registry.addViewController("/admin/event").setViewName("admin/event");
+        registry.addViewController("/admin").setViewName("admin/adminindex");
     }
 }

@@ -49,14 +49,27 @@ public class UserService {
             return false;
         }
     }
+
     public List<User> getUsers(Map<String, Object> args){
         return userMapper.getUsers(args);
     }
+
     public User getUserByEmail(String email){
         HashMap<String, Object> map = new HashMap<>();
         map.put("email", email);
+        List<User> list = userMapper.getUsers(map);
+        if(list.size() >= 1){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    public User getUserById(Integer id){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", id);
         return userMapper.getUsers(map).get(0);
     }
+
     public boolean hasEmail(String email){
         String passwd = userMapper.getPasswordByEmail(email);
         if(passwd == null){
@@ -64,5 +77,9 @@ public class UserService {
         }else {
             return true;
         }
+    }
+
+    public Integer getCount(Map<String, Object> args){
+        return userMapper.getCount(args);
     }
 }

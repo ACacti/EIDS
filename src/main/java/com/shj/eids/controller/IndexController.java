@@ -43,12 +43,10 @@ public class IndexController {
                               @PathVariable("regionName") String regionName,
                               Model model,
                               HttpSession session){
-        List<EpidemicEvent> list = epidemicEventService.getAllEvent();
         EpidemicEvent event = epidemicEventService.getEpidemicEventByName(name);
         if(event == null){
             return "redirect:/index";
         }
-        session.setAttribute("events", list);
         model.addAttribute("epidemic", event);
         model.addAttribute("regionName", regionName);
         String provinceArg = "china".equals(regionName) ? null: regionName;

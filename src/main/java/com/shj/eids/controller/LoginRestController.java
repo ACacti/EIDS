@@ -2,6 +2,7 @@ package com.shj.eids.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.shj.eids.domain.Admin;
 import com.shj.eids.domain.User;
 import com.shj.eids.service.AdminService;
 import com.shj.eids.service.UserService;
@@ -85,9 +86,15 @@ public class LoginRestController {
         Map<String, String> map = new HashMap<>();
         try {
             User u  = userService.getUserByEmail(email);
-            u.setEmail(email);
-            u.setPassword(newPass);
-            userService.updateUser(u);
+            if(u != null){
+                u.setEmail(email);
+                u.setPassword(newPass);
+                userService.updateUser(u);
+            }else{
+                Admin admin = adminService.getAdminByEmail(email);
+                admin.setPassword(newPass);
+                adminService.update(admin);
+            }
             map.put("result", "success");
             return JSON.toJSONString(map);
         }catch (Exception e){

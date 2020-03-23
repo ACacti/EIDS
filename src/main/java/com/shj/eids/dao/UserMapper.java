@@ -31,6 +31,7 @@ public interface UserMapper {
      * @Date: 2020/3/5
      */
     public List<User> getUsers(Map<String, Object> args);
+    public Integer getCount(Map<String, Object> args);
     public String getPasswordByEmail(String email);
     public void addUser(User u);
     public void updateUser(User u);

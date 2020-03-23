@@ -25,8 +25,8 @@
             <li class="layui-nav-item"><a th:href="@{/user/article}">防疫资讯</a></li>
             <li class="layui-nav-item"><a th:href="@{/user/search}">查找患者</a></li>
             <li class="layui-nav-item"><a th:href="@{/user/help}">社会求助信息</a></li>
-            <li class="layui-nav-item"><a th:if="${session.loginAccount!= null and session.loginAccount.level >= 2}" th:href="@{/user/article/edit}">发文章</a></li>
-            <li class="layui-nav-item">
+            <li class="layui-nav-item"><a th:if="${!session.isAdmin and session.loginAccount!= null and session.loginAccount.level >= 2}" th:href="@{/user/article/edit}">发文章</a></li>
+            <li class="layui-nav-item layui-this">
                 <a href="javascript:;">疫情数据</a>
                 <dl class="layui-nav-child">
                     <dd th:each="event:${session.events}">
@@ -34,6 +34,7 @@
                     </dd>
                 </dl>
             </li>
+            <li class="layui-nav-item" th:if="${session.isAdmin}"><a th:href="@{/admin}">管理员界面</a></li>
         </ul>
 
         <ul class="layui-nav layui-layout-right">
@@ -51,9 +52,8 @@
         </ul>
     </div>
 
-
     <div class="layui-body" style="left: 0; padding-top: 30px;">
-        <div class="layui-container">
+        <div class="layui-container" th:fragment="graphic">
             <div class="layui-row">
                 <div style="position: relative; left: -30px">
                     <h2 th:text="${regionName == 'china' ? '中国': regionName} + ${epidemic.name} + '疫情数据一览'"></h2>
@@ -78,7 +78,7 @@
                     <div class="layui-row">
                         <div class="layui-col-md12">
                             <div style="width: 100%; height: 300px" id="pie">
-<!--                                饼图-->
+                                <!--                                饼图-->
                             </div>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                    <span style="color: #FFB800"><li class="layui-inline iconfont icon-xiancunquezhennew"></li>&nbsp;&nbsp;现有确诊</span>
+                                        <span style="color: #FFB800"><li class="layui-inline iconfont icon-xiancunquezhennew"></li>&nbsp;&nbsp;现有确诊</span>
                                     </td>
                                     <td><span style="color: #FFB800"><strong th:text="${present}"></strong></span></td>
                                 </tr>

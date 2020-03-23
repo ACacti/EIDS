@@ -20,7 +20,7 @@
             <li class="layui-nav-item"><a th:href="@{/user/article}">防疫资讯</a></li>
             <li class="layui-nav-item"><a th:href="@{/user/search}">查找患者</a></li>
             <li class="layui-nav-item"><a th:href="@{/user/help}">社会求助信息</a></li>
-            <li class="layui-nav-item"><a th:if="${session.loginAccount!= null and session.loginAccount.level >= 2}" th:href="@{/user/article/edit}">发文章</a></li>
+            <li class="layui-nav-item layui-this"><a th:if="${session.loginAccount!= null and session.loginAccount.level >= 2}" th:href="@{/user/article/edit}">发文章</a></li>
             <li class="layui-nav-item">
                 <a href="javascript:;">疫情数据</a>
                 <dl class="layui-nav-child">

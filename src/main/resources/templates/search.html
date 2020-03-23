@@ -17,7 +17,7 @@
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
             <li class="layui-nav-item"><a th:href="@{/user/article}">防疫资讯</a></li>
-            <li class="layui-nav-item"><a th:href="@{/user/search}">查找患者</a></li>
+            <li class="layui-nav-item layui-this"><a th:href="@{/user/search}">查找患者</a></li>
             <li class="layui-nav-item"><a th:href="@{/user/help}">社会求助信息</a></li>
             <li class="layui-nav-item"><a th:if="${session.loginAccount!= null and session.loginAccount.level >= 2}" th:href="@{/user/article/edit}">发文章</a></li>
             <li class="layui-nav-item">
@@ -43,7 +43,7 @@
             <li class="layui-nav-item" th:if="${session.loginAccount}"><a th:href="@{/user/m-logout}">注销</a></li>
         </ul>
     </div>
-    <div class="layui-body" style="left: 0">
+    <div class="layui-body" style="left: 0" th:fragment="search">
         <div class="layui-form">
             <div class="layui-form-item" style="margin-top: 40px; margin-left: 150px">
                 <label class="layui-form-label" style="weight: 100px">查询区域</label>
