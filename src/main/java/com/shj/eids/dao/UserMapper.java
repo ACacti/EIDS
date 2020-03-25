@@ -25,6 +25,7 @@ public interface UserMapper {
      *              password: 要查询用户的密码
      *              level: 要查询用户的密码
      *              introduction:要查询用户的个人简介
+     *              fuzzy: 是否开启邮箱模糊查询，默认不开启
      *              start和length: 用于分页的开始位置和长度
      * @return java.util.List<com.shj.eids.domain.User>
      * @Author: ShangJin

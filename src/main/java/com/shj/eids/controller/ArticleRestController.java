@@ -2,6 +2,7 @@ package com.shj.eids.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.shj.eids.domain.Admin;
 import com.shj.eids.domain.EpidemicMsg;
 import com.shj.eids.domain.User;
 import com.shj.eids.exception.UserLevelException;
@@ -30,6 +31,12 @@ public class ArticleRestController {
     @Autowired
     private EpidemicMsgService msgService;
 
+    /*
+     * 处理富文本编辑器上传图片
+     * 根据session中登录的用户判断上传的图片是源自 [防疫资讯] 还是[援助请求]
+     *      如果登录的账号是普通用户，则将图片存储在 [防疫资讯]图片的文件夹下
+     *      如果登录的账号是管理员，则将图片存储在[援助请求]的图片文件夹下
+     */
     @PostMapping("/user/img/doUpload")
     public String imgUpload(@RequestParam("edit") MultipartFile file,
                             HttpServletRequest request){
@@ -38,13 +45,28 @@ public class ArticleRestController {
         String realPath = getClass().getResource("/").getPath();
 //        String realPath = "C:\\Users\\ShangJin\\Desktop\\WorkSpace\\EpidemicInformationDisseminationSystem\\EIDS\\";
         String contextPath = request.getContextPath();
-        User user = (User) request.getSession().getAttribute("loginAccount");
-        if(user == null){
-            return "error";
-        }
-        String imgLocation = null;
+        HttpSession session = request.getSession();
+        Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
+        Integer id;
         try {
-            imgLocation = TransferImageUtil.transferImage(file, realPath, contextPath, user.getId().toString());
+            String imgLocation = null;
+            if(isAdmin == null || !isAdmin){
+                //登录的账号为普通用户
+                User user = (User) session.getAttribute("loginAccount");
+                if(user == null){
+                    //未登录
+                    return "error";
+                }
+                imgLocation = TransferImageUtil.transferImage(file, realPath, contextPath, user.getId().toString(), 1);
+            }else{
+                //登录的账号为管理员
+                Admin admin = (Admin) session.getAttribute("loginAccount");
+                if(admin == null){
+                    return "error";
+                }
+                imgLocation = TransferImageUtil.transferImage(file, realPath, contextPath, admin.getId().toString(), 2);
+            }
+
             map.put("location", imgLocation);
             return JSON.toJSONString(map);
         } catch (Exception e) {

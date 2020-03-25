@@ -66,6 +66,7 @@ public class LoginController {
                 session.setAttribute("isAdmin", true);
                 return "redirect:/admin";
             }
+            session.setAttribute("isAdmin", false);
             return "redirect:/index";
         }else{
             logger.debug("登录失败！");

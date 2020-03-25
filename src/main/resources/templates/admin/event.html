@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>疫情信息展示系统|疫情事件管理</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/layui/src/css/layui.css}"/>
+    <script th:src="@{/webjars/layui/src/layui.js}"></script>
+    <script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
+    <script th:src="@{/js/adminEvent.js}"></script>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo"><a th:href="@{/index}" class="layui-logo"><strong>EIDS</strong>信息发布</a></div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <i class="iconfont icon-zhanghao"></i>
+                    <span th:text="${session.loginAccount} ? ${session.loginAccount.email} : '游客访问'"></span>
+                </a>
+                <dl class="layui-nav-child" th:if="!${session.loginAccount}">
+                    <dd><a th:href="@{/login}">登录账号</a></dd>
+                    <dd><a th:href="@{/register}">注册账号</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item" th:if="${session.loginAccount}"><a th:href="@{/user/m-logout}">注销</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item "><a th:href="@{/admin}">用户管理</a></li>
+                <li class="layui-nav-item layui-this"><a th:href="@{/admin/event}">疫情事件管理</a></li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">更新疫情数据</a>
+                    <dl class="layui-nav-child">
+                        <dd th:each="event:${application.events}"><a th:href="@{'/admin/update/' + ${event.name}}" th:text="${event.name}"></a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a th:href="@{/admin/help}">发布援助请求</a></li>
+                <li class="layui-nav-item"><a th:href="@{/admin/epidemicMsg}">防疫资讯管理</a></li>
+            </ul>
+        </div>
+    </div>
+    <!--        数据表格行工具栏组件 -->
+    <script type="text/html" id="bar">
+
+        <a class="layui-btn layui-btn-xs" lay-event="edit">修改名称</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+    <!--        数据表格头部工具栏组件   -->
+    <script type="text/html" id="toolbar">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="addEvent">发布疫情事件</button>
+        </div>
+    </script>
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding:15px">
+            <table class="layui-hide" id="eventTable" lay-filter="eventTable"></table>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+<p class="contextpath" style="display:none" th:text="${#servletContext.contextPath}"></p>
+</body>
+</html>

@@ -19,14 +19,15 @@ public class AdminAuthentication implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Logger logger = LoggerFactory.getLogger(getClass());
         logger.debug("管理员身份验证....");
-        Object isAdmin = request.getSession().getAttribute("isAdmin");
-        if(isAdmin == null){
-            logger.debug("非管理员，重定向至主页");
-            response.sendRedirect(request.getContextPath() + "/index");
-            return false;
-        }else{
+        boolean isAdmin = (boolean) request.getSession().getAttribute("isAdmin");
+        if(isAdmin){
             logger.debug("管理员，放行");
             return true;
+        }else{
+            logger.debug("非管理员，重定向至主页");
+            request.setAttribute("msg", "权限不足");
+            request.getRequestDispatcher("/index").forward(request, response);
+            return false;
         }
     }
 }

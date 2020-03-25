@@ -33,8 +33,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(cookieLoginIntercepter).addPathPatterns("/**");
         registry.addInterceptor(loginInterceptor).addPathPatterns("/user/search", "/user/article/edit",
-                "/user/img/doUpload", "/user/article/publish", "/user/search**", "/admin**");
-        registry.addInterceptor(new AdminAuthentication()).addPathPatterns("/admin**");
+                "/user/img/doUpload", "/user/article/publish", "/user/search**", "/admin**", "/admin/**");
+        registry.addInterceptor(new AdminAuthentication()).addPathPatterns("/admin**", "/admin/**");
         registry.addInterceptor(epidemicEventInterceptor).addPathPatterns("/**");
     }
 
@@ -46,6 +46,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/register").setViewName("register");
         registry.addViewController("/user/help").setViewName("help");
         registry.addViewController("/admin/event").setViewName("admin/event");
+        registry.addViewController("/admin/help").setViewName("admin/help");
         registry.addViewController("/admin").setViewName("admin/adminindex");
+        registry.addViewController("/admin/helptable/postaid").setViewName("admin/postaid");
+
     }
 }

@@ -19,6 +19,7 @@ import java.util.Map;
 public interface EpidemicEventMapper {
     public void addEpidemicEvent(EpidemicEvent event);
     public void deleteEpidemicEventById(Integer id);
+    public void updateEpidemicEvent(EpidemicEvent epidemicEvent);
     /*
      * @Title: getEpidemicEvents
      * @Description:
@@ -26,10 +27,12 @@ public interface EpidemicEventMapper {
      *              id: 疫情事件的id
      *              name: 所查询疫情事件的名字
      *              publisherId: 疫情事件发布者的Id
+     *              start、length: 分页用的limit参数
      * @return java.util.List<com.shj.eids.domain.EpidemicEvent>
      * @Author: ShangJin
      * @Date: 2020/3/10
      */
     public List<EpidemicEvent> getEpidemicEvents(Map<String, Object> args);
+    public Integer getCount();
     public List<EpidemicEvent> getEpidemicEventsByPublisherId(@Param("id") Integer id, @Param("start") Integer start, @Param("length") Integer length);
 }

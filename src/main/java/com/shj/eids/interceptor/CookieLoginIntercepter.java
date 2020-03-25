@@ -55,12 +55,14 @@ public class CookieLoginIntercepter implements HandlerInterceptor {
                     //普通用户信息，验证密码
                     if (userService.loginIdentify(info[1], info[2])) {
                         session.setAttribute("loginAccount", userService.getUserByEmail(info[1]));
+                        session.setAttribute("isAdmin", false);
                         logger.debug("本地Cookie登录，用户");
                     }
                 }
+            }else{
+                logger.debug("无本地Cookie");
             }
         }
-        logger.debug("无本地Cookie");
         return true;
     }
 }

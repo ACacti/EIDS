@@ -40,9 +40,9 @@
         <association column="user_id" property="user" javaType="Admin" select="getUser"/>
     </resultMap>
     <select id="getAdmin" resultType="Admin">
-        select * from admin where id=#{id}
+        select id, email from admin where id=#{id}
     </select>
     <select id="getUser" resultType="User">
-        select * from user where id=#{id}
+        select id, email, introduction from user where id=#{id}
     </select>
 </mapper>

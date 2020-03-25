@@ -21,6 +21,10 @@ logging:
     path: applicationLog
   level:
     com.shj.eids: debug
+#    com.shj.eids.controller: debug
+#    com.shj.eids.interceptor: debug
+#    com.shj.eids.service: debug
+
 ---
 spring:
   # 开发环境

@@ -35,7 +35,7 @@
         <association property="aidInformation" column="aid_info_id" javaType="AidInformation" select="getAidInformation"/>
     </resultMap>
     <select id="getAdmin" resultType="Admin">
-        select * from admin where id=#{id}
+        select id, email from admin where id=#{id}
     </select>
     <select id="getAidInformation" resultType="AidInformation">
         select * from aid_informaion where id=#{id}

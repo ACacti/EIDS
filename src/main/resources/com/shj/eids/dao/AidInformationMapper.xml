@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shj.eids.dao.AidInformationMapper">
     <insert id="addAidInformation" parameterType="AidInformation">
-        insert into aid_informaion(title, content, release_time) VALUES (#{title}, #{content}, #{releaseTime})
+        insert into aid_informaion(id, title, content, release_time) VALUES (#{id}, #{title}, #{content}, #{releaseTime})
     </insert>
     <delete id="deleteAidInformation" parameterType="AidInformation">
         delete from aid_informaion where id=#{id};
@@ -18,17 +18,24 @@
             <if test="content !=null">
                 content=#{content},
             </if>
+            <if test="weight != null">
+                weight = #{weight}
+            </if>
         </set>
         where id=#{id}
     </update>
     <select id="getInformation" resultType="AidInformation" resultMap="AidInformation_Admin">
-        select * from aid_informaion order by release_time DESC limit #{start}, #{length}
+        select * from aid_informaion order by weight DESC ,release_time DESC limit #{start}, #{length}
+    </select>
+    <select id="getInformationById" parameterType="string" resultType="AidInformation" resultMap="AidInformation_Admin">
+        select * from aid_informaion where id=#{id}
     </select>
     <resultMap id="AidInformation_Admin" type="AidInformation">
         <result column="id" property="id"/>
         <result column="title" property="title"/>
         <result column="content" property="content"/>
         <result column="release_time" property="releaseTime"/>
+        <result column="weight" property="weight"/>
         <association column="id" property="publisher" javaType="Admin" select="getAdmin"/>
     </resultMap>
     <select id="getAdmin" resultType="Admin">

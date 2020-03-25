@@ -31,9 +31,4 @@ public class AdminCotroller {
     private EpidemicInfoService infoService;
     @Autowired
     private EpidemicEventService epidemicEventService;
-
-    @RequestMapping("/admin")
-    String redirectTo(){
-        return "admin/adminindex";
-    }
 }

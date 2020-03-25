@@ -24,11 +24,12 @@
             <li class="layui-nav-item">
                 <a href="javascript:;">疫情数据</a>
                 <dl class="layui-nav-child">
-                    <dd th:each="event:${session.events}">
+                    <dd th:each="event:${application.events}">
                         <a th:href="@{'/index/' + ${event.name} + '/china'}">[[${event.name}]]</a>
                     </dd>
                 </dl>
             </li>
+            <li class="layui-nav-item" th:if="${session?.isAdmin}"><a th:href="@{/admin}">管理员界面</a></li>
         </ul>
 
         <ul class="layui-nav layui-layout-right">

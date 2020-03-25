@@ -32,7 +32,7 @@
         <association column="msg_id" property="msg" javaType="EpidemicMsg" select="getMsg"/>
     </resultMap>
     <select id="getAdmin" resultType="Admin">
-        select * from admin where id=#{id}
+        select id, email from admin where id=#{id}
     </select>
     <!-- 未封装EpidemicMsg的author属性 -->
     <select id="getMsg" resultType="EpidemicMsg">

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>疫情信息展示系统|防疫资讯</title>
+    <title>疫情信息展示系统|发布援助请求</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/layui/src/css/layui.css}"/>
     <link rel="stylesheet" href="http://at.alicdn.com/t/font_1687011_w335yuvfmm.css" type="text/css">
     <script th:src="@{/webjars/layui/src/layui.js}"></script>
@@ -61,7 +61,7 @@
             </div>
             <textarea name="" id="edit" cols="30" rows="10"></textarea>
             <div class="layui-btn-group" style="margin-top: 10px">
-                <button class="layui-btn" lay-event="getContent">发表</button>
+                <button class="layui-btn" lay-event="getContent">发布</button>
             </div>
         </div>
         <div class="layui-footer" style="left: 0">
@@ -74,7 +74,7 @@
     layui.extend({
         tinymce: "[[${#servletContext.contextPath} + '/layui_exts/tinymce/tinymce']]"
     }).use(['tinymce', 'util', 'layer'], function () {
-        var tinymce = layui.tinymce
+        var tinymce = layui.tinymce;
         var util = layui.util;
         var edit = tinymce.render({
             elem: "#edit"
@@ -82,38 +82,33 @@
         });
         util.event('lay-event', {
             getContent: function () {
-                let title = $('input[name=title]').val();
-                let content = edit.getContent();
-                if(title === '' || content === ''){
-                    layer.msg("标题和内容不能为空");
-                    return;
-                }
                 layer.msg('发表中', {
                     icon: 16
                     ,shade: 0.01
                 });
                 $.ajax({
-                    url: "[[${#servletContext.contextPath} + '/user/article/publish']]",
+                    url: "[[${#servletContext.contextPath} + '/admin/helptable/posthelp']]",
                     data:{
-                        title: title,
-                        article: content
+                        title: $('input[name=title]').val(),
+                        article: edit.getContent(),
                     },
                     dataType:'JSON',
                     type:'POST',
                     success: function (data, status) {
                         if(data.msg === 'success'){
-                            layer.msg("发表成功!页面即将跳转...");
+                            layer.msg("发表成功!本页面即将关闭...");
                             setTimeout(function () {
-                                window.location.href = $('p.contextpath').text() + '/user/article';
-                            }, 3000)
+                                window.close();
+                            }, 3000);
+
                         }else{
                             layer.msg(data.msg);
                         }
                     },
                     error: function () {
-                        layer.msg("网络异常");
+                        layer.msg("服务器异常");
                     }
-                })
+                });
             }
         });
     });

@@ -12,7 +12,7 @@
 <div class="layui-layout layui-layout-admin">
 
     <!-- header 开始 -->
-    <div class="layui-header layui-bg-cyan">
+    <div class="layui-header layui-bg-cyan" style="min-width: 1000px">
         <div class="layui-logo"><a th:href="@{/index}" class="layui-logo"><strong>EIDS</strong>信息发布</a></div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
@@ -23,11 +23,12 @@
             <li class="layui-nav-item">
                 <a href="javascript:;">疫情数据</a>
                 <dl class="layui-nav-child">
-                    <dd th:each="event:${session.events}">
+                    <dd th:each="event:${application.events}">
                         <a th:href="@{'/index/' + ${event.name} + '/china'}">[[${event.name}]]</a>
                     </dd>
                 </dl>
             </li>
+            <li class="layui-nav-item" th:if="${session?.isAdmin}"><a th:href="@{/admin}">管理员界面</a></li>
         </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
@@ -45,7 +46,7 @@
     </div>
     <div class="layui-body" style="left: 0" th:fragment="search">
         <div class="layui-form">
-            <div class="layui-form-item" style="margin-top: 40px; margin-left: 150px">
+            <div class="layui-form-item" style="margin-top: 40px; margin-left: 150px; min-width: 1000px">
                 <label class="layui-form-label" style="weight: 100px">查询区域</label>
                 <div class="layui-input-inline">
                     <select name="province" lay-filter="province" lay-search>
@@ -62,7 +63,7 @@
                 <div class="layui-input-inline">
                     <button class="layui-btn" id="confirm">确定</button>
                 </div>
-                <div style="position: absolute; display: inline; right: 300px">
+                <div class="layui-input-inline" style="margin-left: 50px">
                     <button class="layui-btn layui-btn-radius layui-btn-normal" id="btn-face-recognition">人脸识别</button>
                 </div>
             </div>

@@ -74,7 +74,7 @@
         <association property="author" column="author_id" select="getUser" javaType="User"/>
     </resultMap>
     <select id="getUser" resultType="User">
-        select * from user where id=#{id}
+        select id, email, level, introduction from user where id=#{id}
     </select>
 
     <select id="getCount" resultType="int">

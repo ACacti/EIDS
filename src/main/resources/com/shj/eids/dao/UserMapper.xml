@@ -14,7 +14,12 @@
                 and id=#{id}
             </if>
             <if test="email!=null">
-                and email=#{email}
+                <if test="fuzzy == null or !fuzzy">
+                    and email = #{email}
+                </if>
+                <if test="fuzzy != null and fuzzy">
+                    and email like concat('%', #{email}, '%')
+                </if>
             </if>
             <if test="password!=null">
                 and password=#{password}
@@ -22,7 +27,7 @@
             <if test="level!=null">
                 and level=#{level}
             </if>
-            <if test="introduction">
+            <if test="introduction != null">
                 and introduction=#{introduction}
             </if>
         </where>

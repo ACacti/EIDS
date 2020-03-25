@@ -13,8 +13,7 @@
             limit #{start}, #{length}
         </if>
     </sql>
-    <select id="getEpidemicEvents" resultType="EpidemicEvent" parameterType="map" resultMap="EpidemicEvent_Admin">
-        select * from epidemic_event
+    <sql id="where-if">
         <where>
             <if test="id!=null">
                 and id=#{id}
@@ -26,6 +25,13 @@
                 and publisher_id=#{publisherId}
             </if>
         </where>
+    </sql>
+    <select id="getCount" resultType="int">
+        select count(*) from epidemic_event
+    </select>
+    <select id="getEpidemicEvents" resultType="EpidemicEvent" parameterType="map" resultMap="EpidemicEvent_Admin">
+        select * from epidemic_event
+        <include refid="where-if"></include>
         order by release_time
         <include refid="limit"/>
     </select>
@@ -40,13 +46,16 @@
         <association property="publisher" column="publisher_id" javaType="Admin" select="getAdmin"/>
     </resultMap>
     <select id="getAdmin" resultType="Admin">
-        select * from admin where id=#{id}
+        select id, email from admin where id=#{id}
     </select>
     <insert id="addEpidemicEvent" parameterType="EpidemicEvent">
         insert into epidemic_event (name, release_time, publisher_id)
         values (#{name}, #{releaseTime}, #{publisher.id});
     </insert>
-    <delete id="deleteEpidemicEventById" parameterType="int">
+    <delete id="deleteEpidemicEventById" parameterType="int" flushCache="true">
         delete from epidemic_event where id=#{id}
     </delete>
+    <update id="updateEpidemicEvent" parameterType="EpidemicEvent">
+        update epidemic_event set name=#{name} where id=#{id};
+    </update>
 </mapper>

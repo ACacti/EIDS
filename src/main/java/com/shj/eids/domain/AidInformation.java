@@ -18,9 +18,10 @@ import java.util.Date;
 @NoArgsConstructor
 @Alias("AidInformation")
 public class AidInformation {
-    private Integer id;
+    private String id;
     private String title;
     private String content;
     private Date releaseTime;
+    private Integer weight;
     private Admin publisher;
 }

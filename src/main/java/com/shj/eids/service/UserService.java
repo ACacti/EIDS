@@ -4,6 +4,7 @@ import com.shj.eids.dao.UserMapper;
 import com.shj.eids.domain.User;
 import com.shj.eids.exception.LoginException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +51,19 @@ public class UserService {
         }
     }
 
+    public List<User> getUsers(@Nullable Integer id, @Nullable String email, @Nullable String password,
+                               @Nullable Integer level, @Nullable Boolean fuzzy, @Nullable Integer start,
+                               @Nullable Integer length){
+        Map<String, Object> args = new HashMap<>();
+        args.put("id", id);
+        args.put("email", email);
+        args.put("password", password);
+        args.put("level", level);
+        args.put("fuzzy", fuzzy);
+        args.put("start", start);
+        args.put("length", length);
+        return userMapper.getUsers(args);
+    }
     public List<User> getUsers(Map<String, Object> args){
         return userMapper.getUsers(args);
     }
@@ -82,4 +96,19 @@ public class UserService {
     public Integer getCount(Map<String, Object> args){
         return userMapper.getCount(args);
     }
+
+    public Integer getCount(@Nullable Integer id, @Nullable String email, @Nullable String password,
+                            @Nullable Integer level, @Nullable Boolean fuzzy, @Nullable Integer start,
+                            @Nullable Integer length){
+        Map<String, Object> args = new HashMap<>();
+        args.put("id", id);
+        args.put("email", email);
+        args.put("password", password);
+        args.put("level", level);
+        args.put("fuzzy", fuzzy);
+        args.put("start", start);
+        args.put("length", length);
+        return userMapper.getCount(args);
+    }
+
 }

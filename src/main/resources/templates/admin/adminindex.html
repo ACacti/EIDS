@@ -39,10 +39,10 @@
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;">更新疫情数据</a>
                     <dl class="layui-nav-child">
-                        <dd th:each="event:${session.events}"><a th:href="@{'/admin/update/' + ${event.name}}" th:text="${event.name}"></a></dd>
+                        <dd th:each="event:${application.events}"><a th:href="@{'/admin/update/' + ${event.name}}" th:text="${event.name}"></a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a th:href="@{/admin/postHelp}">发布援助请求</a></li>
+                <li class="layui-nav-item"><a th:href="@{/admin/help}">发布援助请求</a></li>
                 <li class="layui-nav-item"><a th:href="@{/admin/epidemicMsg}">防疫资讯管理</a></li>
             </ul>
         </div>
