@@ -49,6 +49,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/admin/help").setViewName("admin/help");
         registry.addViewController("/admin").setViewName("admin/adminindex");
         registry.addViewController("/admin/helptable/postaid").setViewName("admin/postaid");
+        registry.addViewController("/admin/article").setViewName("admin/ariticle");
+
+        
 
     }
 }

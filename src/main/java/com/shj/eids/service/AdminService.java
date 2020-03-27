@@ -1,9 +1,11 @@
 package com.shj.eids.service;
 
 import com.shj.eids.dao.AdminMapper;
+import com.shj.eids.dao.RecordAdminAidinfoMapper;
 import com.shj.eids.dao.RecordAdminUserMapper;
 import com.shj.eids.dao.UserMapper;
 import com.shj.eids.domain.Admin;
+import com.shj.eids.domain.RecordAdminAidinfo;
 import com.shj.eids.domain.RecordAdminUser;
 import com.shj.eids.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;

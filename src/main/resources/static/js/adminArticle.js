@@ -6,74 +6,97 @@ $(function(){
         let table = layui.table;
         let form = layui.form;
         let option1 = {
-            elem: '#helpTable'
-            ,url:contextPath + '/admin/helptable/help'
-            ,title: '疫情援助请求表'
+            elem: '#articleTable'
+            ,url:contextPath + '/admin/articletable/article'
+            ,title: '防疫资讯表'
             ,method:"POST"
             ,toolbar:'#toolbar'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'}
                 ,{field:'id', title:'ID', unresize: true, sort: true}
-                ,{field:'title', title:'标题'}
-                ,{field:'content', title:'内容'}
-                ,{field:'publisherEmail', title:'发布者', templet: function(res){
-                        return '<em>'+ res.publisherEmail +'</em>'
+                ,{field:'title', title:'标题',templet: function(res){
+                        return `<a href="${contextPath}/user/article/display/${res.id}" class="layui-table-link">` + res.title +'</a>'
                     }}
-                ,{field:'releaseTime', title:'发布时间',  sort: true}
+                ,{field:'content', title:'内容'}
+                ,{field:'authorEmail', title:'发布者', templet: function(res){
+                        return '<em>'+ res.authorEmail +'</em>'
+                    }}
+                ,{field:'releaseDate', title:'发布时间',  sort: true}
                 ,{field:'weight', title:'权重', sort: true}
+                ,{field:'views', title:"阅读量", sort: true}
                 ,{title:'操作', toolbar: '#bar'}
             ]]
             ,page: true
             ,parseData: function(res){
                 if(res.data != undefined){
                     res.data.forEach(function(element, index){
-                        element.publisherEmail = element.publisher.email;
-                        let d = new Date(element.releaseTime);
-                        element.releaseTime = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()} ${d.getHours()}:${d.getMinutes()}`;
+                        element.authorEmail = element.author.email;
+                        let d = new Date(element.releaseDate);
+                        element.releaseDate = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()} ${d.getHours()}:${d.getMinutes()}`;
                     });
                 }
             }
         };
         let tableIns1 = table.render(option1);
         //监听行工具事件
-        table.on('tool(helpTable)', function(obj){
+        table.on('tool(articleTable)', function(obj){
             let data = obj.data;
             switch (obj.event) {
                 case 'upgrade':{
                     let load = layer.load(2);
                     //增加援助请求权重回调
-                    $.post(contextPath + '/admin/helptable/upgrade',{id: data.id}, function (res) {
-                        layer.close(load);
-                        if(res.msg ==='success'){
-                            obj.update({
-                                weight: res.data
-                            });
-                        }else{
-                            layer.msg("服务器出现了点问题...");
+                    $.ajax({
+                        url: contextPath + '/admin/articletable/update',
+                        data: {ids: [data.id], order: 'upgrade'},
+                        dataType: "JSON",
+                        type: "POST",
+                        traditional:true,
+                        success: function (res) {
+                            layer.close(load);
+                            if(res.msg == 'success'){
+                                obj.update({
+                                    weight: res.data
+                                });
+                            }else{
+                                layer.msg("服务器出了点小问题...");
+                            }
+                        },
+                        error: function () {
+                            layer.msg("网络异常");
                         }
-                    }, "JSON");
+                    });
                     break;
                 }
                 case 'downgrade':{
                     //降级援助请求权重回调
                     let load = layer.load(2);
-                    $.post(contextPath + '/admin/helptable/downgrade',{id: data.id}, function (res) {
-                        layer.close(load);
-                        if(res.msg ==='success'){
-                            obj.update({
-                                weight: res.data
-                            });
-                        }else{
-                            layer.msg("服务器出现了点问题...");
+                    $.ajax({
+                        url: contextPath + '/admin/articletable/update',
+                        data: {ids: [data.id], order: 'downgrade'},
+                        dataType: "JSON",
+                        type: "POST",
+                        traditional:true,
+                        success: function (res) {
+                            layer.close(load);
+                            if(res.msg == 'success'){
+                                obj.update({
+                                    weight: res.data
+                                });
+                            }else{
+                                layer.msg("服务器出了点小问题...");
+                            }
+                        },
+                        error: function () {
+                            layer.msg("网络异常");
                         }
-                    },"JSON");
+                    });
                     break;
                 }
             }
         });
         //援助请求表格头部工具栏事件监听
-        table.on('toolbar(helpTable)', function (obj) {
-            var checkStatus = table.checkStatus(obj.config.id);
+        table.on('toolbar(articleTable)', function (obj) {
+            let checkStatus = table.checkStatus(obj.config.id);
             switch (obj.event) {
                 case 'allDel':{
                     //批量删除援助请求回调
@@ -86,8 +109,8 @@ $(function(){
                             ids.push(element.id);
                         });
                         $.ajax({
-                            url: contextPath + '/admin/helptable/delete',
-                            data: {ids: ids},
+                            url: contextPath + '/admin/articletable/update',
+                            data: {ids: ids, order: 'delete'},
                             dataType: "JSON",
                             type: "POST",
                             traditional:true,
@@ -103,28 +126,11 @@ $(function(){
                                 layer.msg("网络异常");
                             }
                         });
-                    })
-                    break;
-                }
-                case 'addEvent':{
-                    //发布援助请求回调
-                    layer.open({
-                        type: 2,
-                        title: '发布疫情援助请求',
-                        shadeClose: true,
-                        shade: false,
-                        maxmin: true, //开启最大化最小化按钮
-                        area: ['893px', '600px'],
-                        content: contextPath + '/admin/helptable/postaid',
-                        end: function () {
-                            location.reload();
-                        }
                     });
                     break;
                 }
             }
         });
-
         //内容查找时间监听
         $('div.tableSearch .layui-btn').click(function(){
             let content = $('div.tableSearch .layui-input').val();
@@ -136,16 +142,16 @@ $(function(){
 
         let tableIns2 = table.render({
             elem: '#recordTable'
-            ,url:contextPath + '/admin/helptable/record'
+            ,url:contextPath + '/admin/articletable/record'
             ,where: {onlyMine: false}
             ,title: '疫情援助请求操作记录表'
             ,method:"POST"
             ,cols: [[
                 {field:'id', title:'ID', unresize: true, sort: true}
                 ,{field:'admin', title:'管理员', templet: function(res){
-                    return '<em>'+ res.admin +'</em>'
-                }}
-                ,{field:'title', title:'援助标题'}
+                        return '<em>'+ res.admin +'</em>'
+                    }}
+                ,{field:'title', title:'资讯标题'}
                 ,{field:'recordTime', title:'操作时间', sort: true}
                 ,{field:'recordType', title:'操作类型'}
             ]]
@@ -156,7 +162,7 @@ $(function(){
                         let d = new Date(element.recordTime);
                         element.recordTime = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()} ${d.getHours()}:${d.getMinutes()}`;
                         element.admin = element.admin.email;
-                        element.title = element.aidInformation.title;
+                        element.title = element.msg.title;
                     });
                 }
             }

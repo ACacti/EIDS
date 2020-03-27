@@ -25,7 +25,13 @@
         where id=#{id}
     </update>
     <select id="getInformation" resultType="AidInformation" resultMap="AidInformation_Admin">
-        select * from aid_informaion order by weight DESC ,release_time DESC limit #{start}, #{length}
+        select * from aid_informaion
+        <where>
+            <if test="content != null">
+                content like concat('%', #{content}, '%')
+            </if>
+        </where>
+        order by weight DESC ,release_time DESC limit #{start}, #{length}
     </select>
     <select id="getInformationById" parameterType="string" resultType="AidInformation" resultMap="AidInformation_Admin">
         select * from aid_informaion where id=#{id}
@@ -39,7 +45,7 @@
         <association column="id" property="publisher" javaType="Admin" select="getAdmin"/>
     </resultMap>
     <select id="getAdmin" resultType="Admin">
-        select a.id id, a.email email, a.level level, a.password password from record_admin_aidinfo r inner join admin a on r.admin_id = a.id where r.aid_info_id=#{id} and record_type='发布'
+        select a.id id, a.email email from record_admin_aidinfo r inner join admin a on r.admin_id = a.id where r.aid_info_id=#{id} and record_type='发布'
     </select>
 
     <select id="getInformationByContent" resultMap="AidInformation_Admin">
@@ -47,7 +53,12 @@
     </select>
 
     <select id="getCount" resultType="int">
-        select count(*) from aid_informaion;
+        select count(*) from aid_informaion
+        <where>
+            <if test="content!=null">
+                content like concat('%', #{content}, '%')
+            </if>
+        </where>
     </select>
     <cache
             eviction="FIFO"

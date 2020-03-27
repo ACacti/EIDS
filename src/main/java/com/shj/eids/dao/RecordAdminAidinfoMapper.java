@@ -31,4 +31,15 @@ public interface RecordAdminAidinfoMapper {
      * @Date: 2020/3/5
      */
     public List<RecordAdminAidinfo> getRecords(Map<String, Object> args);
+
+    /*
+     * @Title: getCount
+     * @Description: key的值为数据库record_admin_aidinfo表的列名（转换为驼峰命名规则）
+     *              value为要查找的列名对应的值。
+     * @param args:
+     * @return java.lang.Integer
+     * @Author: ShangJin
+     * @Date: 2020/3/26
+     */
+    public Integer getCount(Map<String, Object> args);
 }

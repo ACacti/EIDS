@@ -2,6 +2,7 @@ package com.shj.eids.controller.admin;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.shj.eids.dao.RecordAdminAidinfoMapper;
 import com.shj.eids.domain.*;
 import com.shj.eids.service.*;
 import jdk.internal.vm.compiler.collections.EconomicMap;
@@ -29,9 +30,11 @@ public class AdminRestController {
     private EpidemicInfoService epidemicInfoService;
     @Autowired
     private EpidemicEventService epidemicEventService;
-
     @Autowired
     private AidInformationService aidInformationService;
+    @Autowired
+    private EpidemicMsgService epidemicMsgService;
+
     /*
      * 处理用户管理界面用户表分页显示的请求
      */
@@ -230,13 +233,14 @@ public class AdminRestController {
 
     @PostMapping("/admin/helptable/help")
     public String getAidInformation(@RequestParam("page") Integer page,
-                                    @RequestParam("limit") Integer limit){
+                                    @RequestParam("limit") Integer limit,
+                                    @RequestParam(value = "content", required = false) String content){
         HashMap<String, Object> res= new HashMap<>();
         try{
-            List<AidInformation> list = aidInformationService.getAidInformation((page - 1) * limit, limit);
+            List<AidInformation> list = aidInformationService.getAidInformation(content,(page - 1) * limit, limit);
             res.put("data", list);
             res.put("code", 0);
-            res.put("count",aidInformationService.getCount());
+            res.put("count",aidInformationService.getCount(content));
             return JSON.toJSONString(res, SerializerFeature.DisableCircularReferenceDetect);
         }catch (Exception e){
             e.printStackTrace();
@@ -310,4 +314,109 @@ public class AdminRestController {
         }
     }
 
+    @RequestMapping("/admin/helptable/record")
+    public String getRecordAdminAidInformation(@RequestParam("onlyMine") boolean onlyMine,
+                                               @RequestParam("page") Integer page,
+                                               @RequestParam("limit") Integer limit,
+                                               HttpSession seesion){
+        Map<String, Object> res = new HashMap<>();
+        List<RecordAdminAidinfo> data;
+        Integer count;
+        try {
+            if(onlyMine){
+                Admin admin = (Admin) seesion.getAttribute("loginAccount");
+                data = aidInformationService.getAdminAidinformationRecord(admin.getId(), (page - 1) * limit, limit);
+                count = aidInformationService.getRecordCount(admin.getId());
+            }else {
+                data = aidInformationService.getAdminAidinformationRecord(null,(page - 1) * limit, limit);
+                count = aidInformationService.getRecordCount(null);
+            }
+            res.put("code", 0);
+            res.put("count", count);
+            res.put("data", data);
+            return JSON.toJSONString(res, SerializerFeature.DisableCircularReferenceDetect);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("code", 1);
+            return JSON.toJSONString(res);
+        }
+    }
+
+    @RequestMapping("/admin/articletable/article")
+    public String getArticle(@RequestParam(value = "content", required = false) String content,
+                             @RequestParam("page") Integer page,
+                             @RequestParam("limit") Integer limit){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            List<EpidemicMsg> data = epidemicMsgService.getArticles(null, content, null, null, (page - 1) * limit, limit,0);
+            res.put("data", data);
+            res.put("code", 0);
+            res.put("count", epidemicMsgService.getCount(content,null, null));
+            return JSON.toJSONString(res, SerializerFeature.DisableCircularReferenceDetect);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("code", 1);
+            return JSON.toJSONString(res);
+        }
+    }
+
+    @RequestMapping("/admin/articletable/update")
+    public String getArticle(@RequestParam("ids") List<Integer> ids,
+                             @RequestParam("order") String order,
+                             HttpSession session){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            EpidemicMsg epidemicMsg = epidemicMsgService.getArticleById(ids.get(0));
+            Admin admin = (Admin) session.getAttribute("loginAccount");
+            Integer data = -1;
+            switch (order){
+                case "upgrade":
+                    data = epidemicMsgService.updateEpidemicMsg(epidemicMsg, admin, EpidemicMsgService.UPGRADE);
+                    break;
+                case "downgrade":
+                    data = epidemicMsgService.updateEpidemicMsg(epidemicMsg, admin, EpidemicMsgService.DOWNGRADE);
+                    break;
+                case "delete":
+                    for(Integer id: ids){
+                        epidemicMsgService.deleteEpidemicMsg(id);
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
+            res.put("data", data);
+            res.put("msg", "success");
+            return JSON.toJSONString(res);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("msg", "error");
+            return JSON.toJSONString(res);
+        }
+    }
+
+    @RequestMapping("/admin/articletable/record")
+    public String getArticleRecord(@RequestParam("page") Integer page,
+                             @RequestParam("limit") Integer limit,
+                             @RequestParam("onlyMine") Boolean onlyMine,
+                             HttpSession session){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            List<RecordAdminEpidemicMsg> data;
+            if(onlyMine){
+                Admin admin = (Admin) session.getAttribute("loginAccount");
+                data = epidemicMsgService.getRecord(admin.getId(), (page- 1) * limit, limit);
+                res.put("count", epidemicMsgService.getRecordCount(admin.getId()));
+            }else{
+                data = epidemicMsgService.getRecord(null, (page - 1) * limit, limit);
+                res.put("count", epidemicMsgService.getRecordCount(null));
+            }
+            res.put("data", data);
+            res.put("code", 0);
+            return JSON.toJSONString(res, SerializerFeature.DisableCircularReferenceDetect);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("msg", "error");
+            return JSON.toJSONString(res);
+    }
+    }
 }

@@ -6,12 +6,11 @@ import com.shj.eids.domain.Admin;
 import com.shj.eids.domain.AidInformation;
 import com.shj.eids.domain.RecordAdminAidinfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @ClassName: AidInformationService
@@ -24,6 +23,7 @@ public class AidInformationService {
 
     final static public int UPGRADE = 1;
     final static public int DOWNGRADE = 2;
+    final static public int DELETE = 3;
 
     @Autowired
     private AidInformationMapper aidInformationMapper;
@@ -41,6 +41,7 @@ public class AidInformationService {
 
     @Transactional
     public void deleteAidInformation(List<String> ids){
+        Date d = new Date();
         for(String id: ids){
             aidInformationMapper.deleteAidInformation(new AidInformation(id, null, null, null, null, null));
         }
@@ -52,8 +53,8 @@ public class AidInformationService {
         recordAdminAidinfoMapper.addRecord(new RecordAdminAidinfo(null, info.getPublisher(), info, info.getReleaseTime(), "发布"));
     }
 
-    public List<AidInformation> getAidInformation(Integer start, Integer length){
-        return aidInformationMapper.getInformation(start, length);
+    public List<AidInformation> getAidInformation(String content ,Integer start, Integer length){
+        return aidInformationMapper.getInformation(start, length, content);
     }
 
     @Transactional
@@ -84,7 +85,23 @@ public class AidInformationService {
         }
         return weight;
     }
-    public Integer getCount(){
-        return aidInformationMapper.getCount();
+    public Integer getCount(String content){
+        return aidInformationMapper.getCount(content);
+    }
+
+
+    public List<RecordAdminAidinfo> getAdminAidinformationRecord(@Nullable Integer adminId, Integer start, Integer length){
+        Map<String, Object> map = new HashMap<>();
+        map.put("adminId", adminId);
+        map.put("start", start);
+        map.put("length", length);
+        return recordAdminAidinfoMapper.getRecords(map);
+    }
+
+    public Integer getRecordCount(@Nullable Integer adminId){
+        Map<String, Object> map = new HashMap<>();
+        map.put("adminId", adminId);
+        return recordAdminAidinfoMapper.getCount(map);
+
     }
 }

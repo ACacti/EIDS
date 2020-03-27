@@ -82,10 +82,10 @@ $(function () {
                // {type: 'checkbox', fixed: 'left'}
                {field:'id', width: 110, title:'ID', unresize: true, sort: true}
                ,{field:'aemail', title:'管理员', templet: function(res){
-                       return '<em>'+ res.uemail +'</em>'
+                       return '<em>'+ res.aemail +'</em>'
                    }}
                ,{field:'uemail', title:'用户', templet: function(res){
-                       return '<em>'+ res.aemail +'</em>'
+                       return '<em>'+ res.uemail +'</em>'
                    }}
                ,{field:'recordTime', title:'时间', sort: true}
                ,{field:'recordType', title:'类型'}

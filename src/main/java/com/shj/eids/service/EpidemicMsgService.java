@@ -2,8 +2,11 @@ package com.shj.eids.service;
 
 import com.shj.eids.dao.AdminMapper;
 import com.shj.eids.dao.EpidemicMsgMapper;
+import com.shj.eids.dao.RecordAdminEpidemicmsgMapper;
 import com.shj.eids.dao.UserMapper;
+import com.shj.eids.domain.Admin;
 import com.shj.eids.domain.EpidemicMsg;
+import com.shj.eids.domain.RecordAdminEpidemicMsg;
 import com.shj.eids.domain.User;
 import com.shj.eids.exception.UserLevelException;
 import com.sun.mail.imap.protocol.INTERNALDATE;
@@ -11,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.net.Inet4Address;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +36,13 @@ public class EpidemicMsgService {
     private UserMapper userMapper;
     @Autowired
     private AdminMapper adminMapper;
+
+    @Autowired
+    private RecordAdminEpidemicmsgMapper recordAdminEpidemicmsgMapper;
+
+    final static public int UPGRADE = 1;
+    final static public int DOWNGRADE = 2;
+    final static public int DELETE = 3;
 
     public void publishArticle(@NonNull User u, @NonNull String title, String content) throws UserLevelException {
         if(u.getLevel() <= 1){
@@ -94,7 +106,49 @@ public class EpidemicMsgService {
         return epidemicMsgMapper.getCount(content, weight, authorId);
     }
 
-    public void updateEpidemicMsg(EpidemicMsg msg){
+    public void updateEpidemicMsg(@NonNull EpidemicMsg msg){
         epidemicMsgMapper.updateEpidemicMsg(msg);
+    }
+
+    @Transactional
+    public Integer updateEpidemicMsg(@NonNull EpidemicMsg msg, @NonNull Admin admin, @NonNull int method){
+        int weight = msg.getWeight();
+        switch (method){
+            case UPGRADE:
+                if(weight >= 2){
+                    return weight;
+                }
+                msg.setWeight(++weight);
+                epidemicMsgMapper.updateEpidemicMsg(msg);
+                recordAdminEpidemicmsgMapper.addRecord(new RecordAdminEpidemicMsg(null, admin, msg, new Date(), "升级"));
+                break;
+            case DOWNGRADE:
+                if(weight <= 1){
+                    return weight;
+                }
+                msg.setWeight(--weight);
+                epidemicMsgMapper.updateEpidemicMsg(msg);
+                recordAdminEpidemicmsgMapper.addRecord(new RecordAdminEpidemicMsg(null, admin, msg, new Date(), "降级"));
+                break;
+        }
+        return weight;
+    }
+
+    @Transactional
+    public void deleteEpidemicMsg(@NonNull Integer id){
+        EpidemicMsg article = getArticleById(id);
+        epidemicMsgMapper.deleteEpidemicMsg(article);
+    }
+
+    public List<RecordAdminEpidemicMsg> getRecord(@Nullable Integer adminId, @Nullable Integer start, @Nullable Integer length){
+        Map<String, Object> args = new HashMap<>();
+        args.put("adminId",adminId);
+        args.put("start", start);
+        args.put("length", length);
+        return recordAdminEpidemicmsgMapper.getRecords(args);
+    }
+
+    public Integer getRecordCount(@NonNull Integer adminId){
+        return null;
     }
 }

@@ -6,11 +6,28 @@
     <insert id="addRecord" parameterType="RecordAdminAidinfo">
         insert into record_admin_aidinfo(admin_id, aid_info_id, record_time, record_type) VALUES (#{admin.id}, #{aidInformation.id}, #{recordTime}, #{recordType});
     </insert>
+    <select id="getCount" parameterType="map" resultType="int">
+        select count(*) from record_admin_aidinfo
+        <where>
+            <if test="adminId!=null">
+                and admin_id=#{adminId}
+            </if>
+            <if test="aidInfoId!=null">
+                and aid_info_id=#{aidInfoId}
+            </if>
+            <if test="recordType!=null">
+                and record_type=#{recordType}
+            </if>
+            <if test="startDate != null and endDate!=null">
+                and (record_time between #{startDate} and #{endDate})
+            </if>
+        </where>
+    </select>
     <select id="getRecords" parameterType="map" resultType="RecordAdminAidinfo" resultMap="Record_Admin_AidInformation">
         select * from record_admin_aidinfo
         <where>
             <if test="adminId!=null">
-                and adminId=#{adminId}
+                and admin_id=#{adminId}
             </if>
             <if test="aidInfoId!=null">
                 and aid_info_id=#{aidInfoId}

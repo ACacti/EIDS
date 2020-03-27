@@ -733,7 +733,7 @@
         <Region Name="尚志市" Code="83" />
         <Region Name="五常市" Code="84" />
       </City>
-      <City Name="齐齐哈尔" Code="2">
+      <City Name="齐齐哈尔市" Code="2">
         <Region Name="龙沙区" Code="2" />
         <Region Name="建华区" Code="3" />
         <Region Name="铁锋区" Code="4" />
@@ -3341,7 +3341,7 @@
         <Region Name="徽　县" Code="27" />
         <Region Name="两当县" Code="28" />
       </City>
-      <City Name="临夏回族自治区" Code="29">
+      <City Name="临夏回族自治州" Code="29">
         <Region Name="临夏市" Code="1" />
         <Region Name="临夏县" Code="21" />
         <Region Name="康乐县" Code="22" />
@@ -3351,7 +3351,7 @@
         <Region Name="东乡族自治县" Code="26" />
         <Region Name="积石山保安族东乡族撒拉族自治县" Code="27" />
       </City>
-      <City Name="甘南藏族自治区" Code="30">
+      <City Name="甘南藏族自治州" Code="30">
         <Region Name="合作市" Code="1" />
         <Region Name="临潭县" Code="21" />
         <Region Name="卓尼县" Code="22" />
@@ -3468,6 +3468,10 @@
         <Region Name="米东区" Code="9" />
         <Region Name="乌鲁木齐县" Code="21" />
       </City>
+<!--      新增-->
+      <City Name="双河市" Code="3"/>
+      <!--      新增-->
+      <City Name="达克拉市" Code="4"/>
       <City Name="克拉玛依市" Code="2">
         <Region Name="独山子区" Code="2" />
         <Region Name="克拉玛依区" Code="3" />
@@ -3587,29 +3591,30 @@
       <City Name="北屯市" Code="95" />
     </State>
     <State Name="台湾" Code="71">
-      <City Name="台北市" Code="1" />
-      <City Name="高雄市" Code="2" />
-      <City Name="基隆市" Code="3" />
-      <City Name="台中市" Code="4" />
-      <City Name="台南市" Code="5" />
-      <City Name="新竹市" Code="6" />
-      <City Name="嘉义市" Code="7" />
-      <City Name="台北县" Code="8" />
-      <City Name="宜兰县" Code="9" />
-      <City Name="桃园县" Code="10" />
-      <City Name="新竹县" Code="11" />
-      <City Name="苗栗县" Code="12" />
-      <City Name="台中县" Code="13" />
-      <City Name="彰化县" Code="14" />
-      <City Name="南投县" Code="15" />
-      <City Name="云林县" Code="16" />
-      <City Name="嘉义县" Code="17" />
-      <City Name="台南县" Code="18" />
-      <City Name="高雄县" Code="19" />
-      <City Name="屏东县" Code="20" />
-      <City Name="台东县" Code="22" />
-      <City Name="花莲县" Code="23" />
-      <City Name="澎湖县" Code="21" />
+      <City Name="台湾省" Code="1"/>
+<!--      <City Name="台北市" Code="1" />-->
+<!--      <City Name="高雄市" Code="2" />-->
+<!--      <City Name="基隆市" Code="3" />-->
+<!--      <City Name="台中市" Code="4" />-->
+<!--      <City Name="台南市" Code="5" />-->
+<!--      <City Name="新竹市" Code="6" />-->
+<!--      <City Name="嘉义市" Code="7" />-->
+<!--      <City Name="台北县" Code="8" />-->
+<!--      <City Name="宜兰县" Code="9" />-->
+<!--      <City Name="桃园县" Code="10" />-->
+<!--      <City Name="新竹县" Code="11" />-->
+<!--      <City Name="苗栗县" Code="12" />-->
+<!--      <City Name="台中县" Code="13" />-->
+<!--      <City Name="彰化县" Code="14" />-->
+<!--      <City Name="南投县" Code="15" />-->
+<!--      <City Name="云林县" Code="16" />-->
+<!--      <City Name="嘉义县" Code="17" />-->
+<!--      <City Name="台南县" Code="18" />-->
+<!--      <City Name="高雄县" Code="19" />-->
+<!--      <City Name="屏东县" Code="20" />-->
+<!--      <City Name="台东县" Code="22" />-->
+<!--      <City Name="花莲县" Code="23" />-->
+<!--      <City Name="澎湖县" Code="21" />-->
     </State>
     <State Name="香港" Code="81">
       <City Name="中西区" Code="HCW" />

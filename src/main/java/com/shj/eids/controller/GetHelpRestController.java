@@ -28,10 +28,10 @@ public class GetHelpRestController {
     public String getArticle(@PathVariable("page") Integer page){
         Map<String, Object> res = new HashMap<>();
         try {
-            Integer num = aidInformationService.getCount();
+            Integer num = aidInformationService.getCount(null);
             Integer pageNum = num % 8 == 0 ? num / 8 : num / 8 + 1;//总页数
             res.put("pages", pageNum);
-            List<AidInformation> list = aidInformationService.getAidInformation((page - 1) * 8, 8);
+            List<AidInformation> list = aidInformationService.getAidInformation(null,(page - 1) * 8, 8);
             res.put("data",list);
             res.put("msg", "success");
             return JSON.toJSONString(res, SerializerFeature.DisableCircularReferenceDetect);
