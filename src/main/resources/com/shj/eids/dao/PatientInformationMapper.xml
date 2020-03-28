@@ -10,7 +10,7 @@
             readOnly="true"/>
 
     <insert id="addPatientInformation" parameterType="PatientInformation">
-        insert into patient_information(name, location_province, location_city, location_detail, face_data, reporting_time, epidemic_id, status, id_number)
+        insert into patient_information(name, location_province, location_city, location_detail, face_authentication, reporting_time, epidemic_id, status, id_number)
         VALUES(#{name}, #{locationProvince}, #{locationCity}, #{locationDetail}, #{faceData}, #{reportingTime}, #{epidemicEvent.id}, #{status}, #{idNumber});
 
     </insert>
@@ -43,8 +43,7 @@
     <select id="getPatientInformationByIdNumber" resultType="PatientInformation">
         select * from patient_information where id_number=#{idNumber}
     </select>
-    <select id="getPatientInformation" resultType="PatientInformation" parameterType="map" resultMap="PatientInformation_EpidemicEvent">
-        select * from patient_information
+    <sql id="where-if">
         <where>
             <if test="status!=null">
                 and
@@ -54,6 +53,9 @@
             </if>
             <if test="locationProvince!=null">
                 and location_province=#{locationProvince}
+            </if>
+            <if test="idNumber != null">
+                and id_numer=#{idNumber}
             </if>
             <if test="locationCity!=null">
                 and location_city=#{locationCity}
@@ -65,6 +67,10 @@
                 and epidemic_id=#{epidemicId}
             </if>
         </where>
+    </sql>
+    <select id="getPatientInformation" resultType="PatientInformation" parameterType="map" resultMap="PatientInformation_EpidemicEvent">
+        select * from patient_information
+        <include refid="where-if"></include>
         <if test="start!=null and length!=null">
             limit #{start}, #{length}
         </if>
@@ -85,26 +91,7 @@
     </select>
     <select id="getCount" parameterType="map" resultType="int">
         select count(*) from patient_information
-        <where>
-            <if test="status!=null">
-                and
-                <foreach collection="status" item="s" open="(" close=")" separator=" or ">
-                    status=#{s}
-                </foreach>
-            </if>
-            <if test="locationProvince!=null">
-                and location_province=#{locationProvince}
-            </if>
-            <if test="locationCity!=null">
-                and location_city=#{locationCity}
-            </if>
-            <if test="startTime!=null and endTime!=null">
-                and reporting_time between #{startTime} and #{endTime}
-            </if>
-            <if test="epidemicId!= null">
-                and epidemic_id=#{epidemicId}
-            </if>
-        </where>
+        <include refid="where-if"></include>
         <if test="start!=null and length!=null">
             limit #{start}, #{length}
         </if>

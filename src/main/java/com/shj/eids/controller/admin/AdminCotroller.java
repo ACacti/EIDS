@@ -31,4 +31,15 @@ public class AdminCotroller {
     private EpidemicInfoService infoService;
     @Autowired
     private EpidemicEventService epidemicEventService;
+
+    @RequestMapping("/admin/patientinfo/{event}")
+    public String toPatientInfoPage(@PathVariable("event") String eventName, Model model){
+        EpidemicEvent event = epidemicEventService.getEpidemicEventByName(eventName);
+        if(event == null){
+            return "redirect:admin/adminindex";
+        }
+        model.addAttribute("event", event);
+        model.addAttribute("provinces", EpidemicInfoService.provinces);
+        return "admin/patientinfo";
+    }
 }

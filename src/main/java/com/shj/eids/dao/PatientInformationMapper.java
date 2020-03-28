@@ -28,6 +28,7 @@ public interface PatientInformationMapper {
      *              locationProvin： 患者所在的省或直辖市
      *              locationCity: 患者所在的市（直辖市不填）
      *              startTime,endTime:患者确诊所在的时间区间
+     *              idNumber: 患者身份证号
      *              epidemicId: 患者对应的疫情事件ID
      *              start, length: 分页用的参数
      * @return java.util.List<com.shj.eids.domain.PatientInformation>: 返回的PatientInformation中未封epidemicEvent属性
@@ -44,6 +45,7 @@ public interface PatientInformationMapper {
      *              locationCity: 患者所在的市（直辖市不填）
      *              startTime,endTime:患者确诊所在的时间区间
      *              epidemicId: 患者对应的疫情事件ID
+     *              idNumber: 患者身份证号
      *              start, length: 分页用的参数
      * @return java.lang.Integer: 统计的符合条件的数目
      * @Author: ShangJin

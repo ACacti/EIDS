@@ -52,7 +52,7 @@ public class SearchPatientController {
         Integer index = limit * (page - 1);
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-        List<PatientInformation> list = patientInformationService.getPatientInformation(province, city, null, null, null, index, limit);
+        List<PatientInformation> list = patientInformationService.getPatientInformation(province, city, null, null, null, index, limit, null);
         List<Map<String, Object>> data = new ArrayList<>();
         for(PatientInformation p : list){
             Map<String, Object> m = new HashMap<>();

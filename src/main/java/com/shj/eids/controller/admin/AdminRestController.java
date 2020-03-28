@@ -35,6 +35,8 @@ public class AdminRestController {
     @Autowired
     private EpidemicMsgService epidemicMsgService;
 
+    @Autowired
+    private PatientInformationService patientInformationService;
     /*
      * 处理用户管理界面用户表分页显示的请求
      */
@@ -417,6 +419,55 @@ public class AdminRestController {
             e.printStackTrace();
             res.put("msg", "error");
             return JSON.toJSONString(res);
+        }
     }
+
+    @PostMapping("/admin/patienttable/patientinfo")
+    public String getPatientInfo(@RequestParam("eventId") Integer eventId,
+                                 @RequestParam(value = "province", required = false, defaultValue = "")String province,
+                                 @RequestParam(value = "city", required = false, defaultValue = "") String city,
+                                 @RequestParam(value = "idNumber", required = false, defaultValue = "") String idNumber,
+                                 @RequestParam("page") Integer page,
+                                 @RequestParam("limit") Integer limit){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            province = province.length()==0? null: province;
+            city = city.length()==0? null: city;
+            idNumber = idNumber.length()==0? null: idNumber;
+            List<PatientInformation> patienInfo = patientInformationService.getPatientInformation(province, city, null, null, eventId, (page - 1) * limit, limit, idNumber);
+            res.put("data", patienInfo);
+            res.put("code", 0);
+            res.put("count", patientInformationService.getPatientInformationCount(province, city, null, null, eventId, (page - 1) * limit, limit, idNumber));
+            return JSON.toJSONString(res, SerializerFeature.DisableCircularReferenceDetect);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("code",1);
+            return JSON.toJSONString(res);
+        }
+    }
+
+    @PostMapping("/admin/patienttable/update")
+    public String updatePatientInformation(@RequestParam("order") String order,
+                                           @RequestParam("ids") List<Integer> ids){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            switch (order){
+                case "delete":
+                    patientInformationService.deletePatientInformationById(ids);
+                    break;
+                case "edit":
+                    //更新患者信息
+
+                    break;
+                case "registerFace":
+                    break;
+            }
+            res.put("msg", "success");
+            return JSON.toJSONString(res);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("msg", "error");
+            return JSON.toJSONString(res);
+        }
     }
 }

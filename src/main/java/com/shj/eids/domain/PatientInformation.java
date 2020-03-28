@@ -24,7 +24,7 @@ public class PatientInformation {
     private String locationProvince;
     private String locationCity;
     private String locationDetail;
-    private String faceData;
+    private Boolean faceAuthentication;
     private Date reportingTime;
     private EpidemicEvent epidemicEvent;
     private String status;

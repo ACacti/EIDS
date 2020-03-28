@@ -42,7 +42,7 @@
                         <dd th:each="event:${application.events}"><a th:href="@{'/admin/patientinfo/' + ${event.name}}" th:text="${event.name}"></a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a th:href="@{/admin/help}">发布援助请求</a></li>
+                <li class="layui-nav-item"><a th:href="@{/admin/help}">援助请求管理</a></li>
                 <li class="layui-nav-item"><a th:href="@{/admin/article}">防疫资讯管理</a></li>
             </ul>
         </div>

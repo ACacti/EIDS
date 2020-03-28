@@ -26,7 +26,7 @@ $(function(){
                     element.publisherEmail = element.publisher.email;
                     element.count = res.supplement[index];
                     let d = new Date(element.releaseTime);
-                    element.releaseTime = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()} ${d.getHours()}:${d.getMinutes()}`;
+                    element.releaseTime = `${d.getFullYear()}-${d.getMonth().toString().padStart(2,'0')}-${d.getDay().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
                 });
             }
         });
@@ -37,7 +37,7 @@ $(function(){
             //console.log(obj)
             if(obj.event === 'del'){
                 //删除疫情事件回调
-                layer.confirm('确定要删除 <strong>' + data.name + '</strong> 疫情事件？', function(index){
+                layer.confirm('确定要删除 <strong>' + data.name + '</strong> 疫情事件？<br>该操作会删除此疫情事件下的所有患者信息！', function(index){
                     let load = layer.load(1);
                     $.get(contextPath + '/admin/eventtable/delete/' + data.id, function(res){
                         layer.close(load);

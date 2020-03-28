@@ -29,7 +29,7 @@ $(function(){
                     res.data.forEach(function(element, index){
                         element.publisherEmail = element.publisher.email;
                         let d = new Date(element.releaseTime);
-                        element.releaseTime = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()} ${d.getHours()}:${d.getMinutes()}`;
+                        element.releaseTime = `${d.getFullYear()}-${d.getMonth().toString().padStart(2,'0')}-${d.getDay().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
                     });
                 }
             }
@@ -125,7 +125,7 @@ $(function(){
             }
         });
 
-        //内容查找时间监听
+        //内容查找事件监听
         $('div.tableSearch .layui-btn').click(function(){
             let content = $('div.tableSearch .layui-input').val();
             option1.where = {content:content};

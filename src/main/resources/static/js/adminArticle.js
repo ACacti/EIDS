@@ -32,7 +32,7 @@ $(function(){
                     res.data.forEach(function(element, index){
                         element.authorEmail = element.author.email;
                         let d = new Date(element.releaseDate);
-                        element.releaseDate = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()} ${d.getHours()}:${d.getMinutes()}`;
+                        element.releaseDate = `${d.getFullYear()}-${d.getMonth().toString().padStart(2,'0')}-${d.getDay().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
                     });
                 }
             }
@@ -44,7 +44,7 @@ $(function(){
             switch (obj.event) {
                 case 'upgrade':{
                     let load = layer.load(2);
-                    //增加援助请求权重回调
+                    //增加防疫资讯权重回调
                     $.ajax({
                         url: contextPath + '/admin/articletable/update',
                         data: {ids: [data.id], order: 'upgrade'},
@@ -131,7 +131,7 @@ $(function(){
                 }
             }
         });
-        //内容查找时间监听
+        //内容查找事件监听
         $('div.tableSearch .layui-btn').click(function(){
             let content = $('div.tableSearch .layui-input').val();
             option1.where = {content:content};
