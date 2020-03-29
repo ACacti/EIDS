@@ -59,4 +59,12 @@ public class PatientInformationService {
             patientInformationMapper.deletePatientInformationById(id);
         }
     }
+
+    public PatientInformation getPatientInformationByIdNumber(String idNumber){
+        return patientInformationMapper.getPatientInformationByIdNumber(idNumber);
+    }
+
+    public void updatePatientInformation(PatientInformation info){
+        patientInformationMapper.updatePatientInformation(info);
+    }
 }

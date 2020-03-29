@@ -9,6 +9,12 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 10MB
+# RESTFul配置
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
 # Mybatis 配置
 mybatis:
   mapper-locations: classpath:com/shj/eids/dao/*.xml]

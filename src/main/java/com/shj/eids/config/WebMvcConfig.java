@@ -27,6 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private CookieLoginIntercepter cookieLoginIntercepter;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/uploadImage/**").addResourceLocations("classpath:/uploadImage/");
     }
 
     @Override

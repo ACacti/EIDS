@@ -448,7 +448,8 @@ public class AdminRestController {
 
     @PostMapping("/admin/patienttable/update")
     public String updatePatientInformation(@RequestParam("order") String order,
-                                           @RequestParam("ids") List<Integer> ids){
+                                           @RequestParam(value = "ids", required = false) List<Integer> ids,
+                                           HttpServletRequest request){
         Map<String, Object> res = new HashMap<>();
         try {
             switch (order){
@@ -456,11 +457,23 @@ public class AdminRestController {
                     patientInformationService.deletePatientInformationById(ids);
                     break;
                 case "edit":
-                    //更新患者信息
-
-                    break;
+                    String idNumber = request.getParameter("idNumber");
+                    String name = request.getParameter("name");
+                    String city = request.getParameter("city");
+                    String province = request.getParameter("province");
+                    String detail = request.getParameter("detail");
+                    String status = request.getParameter("status");
+                    PatientInformation info = patientInformationService.getPatientInformationByIdNumber(idNumber);
+                    info.setName(name);
+                    info.setLocationProvince(province);
+                    info.setLocationCity(city);
+                    info.setLocationDetail(detail);
+                    info.setStatus(status);
+                    patientInformationService.updatePatientInformation(info);
                 case "registerFace":
                     break;
+                default:
+                    throw new IllegalAccessException();
             }
             res.put("msg", "success");
             return JSON.toJSONString(res);
@@ -470,4 +483,24 @@ public class AdminRestController {
             return JSON.toJSONString(res);
         }
     }
+
+//    @PutMapping("/admin/patienttable/update")
+//    public void modifyPatientInformation(@RequestParam("idNumber") String idNumber,
+//                                           @RequestParam("name") String name,
+//                                           @RequestParam("province") String province,
+//                                           @RequestParam("city") String city,
+//                                           @RequestParam("locationDetail")String detail,
+//                                           @RequestParam("status") String status){
+//        try {
+//            PatientInformation info = patientInformationService.getPatientInformationByIdNumber(idNumber);
+//            info.setName(name);
+//            info.setLocationProvince(province);
+//            info.setLocationCity(city);
+//            info.setLocationDetail(detail);
+//            info.setStatus(status);
+//            patientInformationService.updatePatientInformation(info);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
 }

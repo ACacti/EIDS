@@ -16,7 +16,7 @@
         <div class="layui-logo"><a href="#" class="layui-logo"><strong>EIDS</strong>信息发布</a></div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
     </div>
-    <div class="layui-body" style="left: 0; padding-top: 30px;">
+    <div class="layui-body" style="left: 0; padding-top: 30px; bottom: 0">
         <div class="layui-container">
             <div class="layui-row">
                 <div class="layui-col-md12">
@@ -39,15 +39,20 @@
     layui.extend({
         tinymce: "[[${#servletContext.contextPath} + '/layui_exts/tinymce/tinymce']]"
     }).use(['tinymce', 'util', 'layer'], function () {
-        var tinymce = layui.tinymce;
-        var util = layui.util;
-        var edit = tinymce.render({
+        let tinymce = layui.tinymce;
+        let util = layui.util;
+        let edit = tinymce.render({
             elem: "#edit"
             , height: 600
         });
         util.event('lay-event', {
             getContent: function () {
-                layer.msg('发表中', {
+                let title = $('input[name=title]').val();
+                if(title === ''){
+                    layer.msg("标题不能为空");
+                    return;
+                }
+                let load = layer.msg('发表中', {
                     icon: 16
                     ,shade: 0.01
                 });
@@ -60,17 +65,22 @@
                     dataType:'JSON',
                     type:'POST',
                     success: function (data, status) {
+                        layer.close(load);
                         if(data.msg === 'success'){
-                            layer.msg("发表成功!本页面即将关闭...");
+                            layer.msg('发布成功，本界面即将关闭', {
+                                icon: 16
+                                ,shade: 0.01
+                            });
                             setTimeout(function () {
-                                window.close();
-                            }, 3000);
-
+                                let index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            }, 2000);
                         }else{
                             layer.msg(data.msg);
                         }
                     },
                     error: function () {
+                        layer.close(load);
                         layer.msg("服务器异常");
                     }
                 });

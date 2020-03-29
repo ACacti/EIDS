@@ -40,7 +40,7 @@ public class ArticleRestController {
     @PostMapping("/user/img/doUpload")
     public String imgUpload(@RequestParam("edit") MultipartFile file,
                             HttpServletRequest request){
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> res = new HashMap<>();
 //        String realPath =request.getServletContext().getRealPath("/");//未部署的情况下获取到的路径异常
         String realPath = getClass().getResource("/").getPath();
 //        String realPath = "C:\\Users\\ShangJin\\Desktop\\WorkSpace\\EpidemicInformationDisseminationSystem\\EIDS\\";
@@ -57,21 +57,26 @@ public class ArticleRestController {
                     //未登录
                     return "error";
                 }
-                imgLocation = TransferImageUtil.transferImage(file, realPath, contextPath, user.getId().toString(), 1);
+                imgLocation = TransferImageUtil.transferImage(file, realPath,"user/", contextPath, user.getId().toString());
             }else{
                 //登录的账号为管理员
                 Admin admin = (Admin) session.getAttribute("loginAccount");
                 if(admin == null){
                     return "error";
                 }
-                imgLocation = TransferImageUtil.transferImage(file, realPath, contextPath, admin.getId().toString(), 2);
+                imgLocation = TransferImageUtil.transferImage(file, realPath, "uploadImage/admin/",contextPath, admin.getId().toString());
             }
 
-            map.put("location", imgLocation);
-            return JSON.toJSONString(map);
+            res.put("code", 0);
+            Map<String, Object> data = new HashMap<>();
+            data.put("location", imgLocation);
+            res.put("data", data);
+            return JSON.toJSONString(res);
         } catch (Exception e) {
             e.printStackTrace();
-            return "error";
+            res.put("code", 1);
+            res.put("msg", "error");
+            return JSON.toJSONString(res);
         }
     }
 

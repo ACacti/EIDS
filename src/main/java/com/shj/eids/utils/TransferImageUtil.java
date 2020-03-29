@@ -13,7 +13,7 @@ import java.util.UUID;
  **/
 public class TransferImageUtil {
 
-    public static String transferImage(MultipartFile image, String basePath, String contextPath, String authorId, Integer type) throws Exception{
+    public static String transferImage(MultipartFile image, String basePath, String mid, String contextPath, String authorId) throws Exception{
         String ret = "";
 
         //生成uuid作为文件名称
@@ -26,26 +26,18 @@ public class TransferImageUtil {
         String imageName = uuid+"."+suffixName;
         //获取文件夹路径
         String direPath = null;
-        switch (type){
-            case 1:
-                direPath = basePath+"uploadImage\\log\\" + authorId;
-                break;
-            case 2:
-                direPath = basePath+"uploadImage\\log\\admin\\" + authorId;
-                break;
-        }
+        direPath = basePath + mid + authorId;
         File direFile = new File(direPath);
         //文件夹如果不存在，新建文件夹
         if(!direFile.exists() || !direFile.isDirectory()){
             direFile.mkdirs();
         }
         //得到文件路径
-        String path = direPath+"\\"+imageName;
+        String path = direPath+"/"+imageName;
 
         image.transferTo(new File(path));
-
-        ret= contextPath + "/uploadImage/log/"+authorId+"/" +imageName;
-
+        //返回给前台用于展示照片的链接地址
+        ret= contextPath + "/" + mid + authorId + "/" +imageName;
         return ret;
     }
 }

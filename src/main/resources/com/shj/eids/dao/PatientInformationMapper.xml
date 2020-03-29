@@ -11,7 +11,7 @@
 
     <insert id="addPatientInformation" parameterType="PatientInformation">
         insert into patient_information(name, location_province, location_city, location_detail, face_authentication, reporting_time, epidemic_id, status, id_number)
-        VALUES(#{name}, #{locationProvince}, #{locationCity}, #{locationDetail}, #{faceData}, #{reportingTime}, #{epidemicEvent.id}, #{status}, #{idNumber});
+        VALUES(#{name}, #{locationProvince}, #{locationCity}, #{locationDetail}, #{faceAuthentication}, #{reportingTime}, #{epidemicEvent.id}, #{status}, #{idNumber});
 
     </insert>
     <delete id="deletePatientInformationById" parameterType="int">
@@ -23,7 +23,7 @@
             <if test="name!=null">
                 name=#{name},
             </if>
-            <if test="location_province!=null">
+            <if test="locationProvince!=null">
                 location_province=#{locationProvince},
             </if>
             <if test="locationCity!=null">
@@ -32,8 +32,8 @@
             <if test="locationDetail!= null">
                 location_detail=#{locationDetail},
             </if>
-            <if test="faceDate!=null">
-                face_date=#{faceDate},
+            <if test="faceAuthentication!=null">
+                face_authentication=#{faceAuthentication},
             </if>
             <if test="status!=null">
                 status=#{status},
