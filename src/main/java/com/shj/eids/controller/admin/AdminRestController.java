@@ -5,13 +5,18 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.shj.eids.dao.RecordAdminAidinfoMapper;
 import com.shj.eids.domain.*;
 import com.shj.eids.service.*;
+import com.shj.eids.utils.AipFaceUtils;
+import com.shj.eids.utils.TransferImageUtil;
 import jdk.internal.vm.compiler.collections.EconomicMap;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -435,6 +440,11 @@ public class AdminRestController {
             city = city.length()==0? null: city;
             idNumber = idNumber.length()==0? null: idNumber;
             List<PatientInformation> patienInfo = patientInformationService.getPatientInformation(province, city, null, null, eventId, (page - 1) * limit, limit, idNumber);
+            for(PatientInformation info : patienInfo){
+                String temp = info.getIdNumber();
+                temp = temp.substring(0, temp.length() - 4) + "****";
+                info.setIdNumber(temp);
+            }
             res.put("data", patienInfo);
             res.put("code", 0);
             res.put("count", patientInformationService.getPatientInformationCount(province, city, null, null, eventId, (page - 1) * limit, limit, idNumber));
@@ -457,21 +467,19 @@ public class AdminRestController {
                     patientInformationService.deletePatientInformationById(ids);
                     break;
                 case "edit":
-                    String idNumber = request.getParameter("idNumber");
+                    Integer id = Integer.parseInt(request.getParameter("id"));
                     String name = request.getParameter("name");
                     String city = request.getParameter("city");
                     String province = request.getParameter("province");
                     String detail = request.getParameter("detail");
                     String status = request.getParameter("status");
-                    PatientInformation info = patientInformationService.getPatientInformationByIdNumber(idNumber);
+                    PatientInformation info = patientInformationService.getPatientInformationById(id);
                     info.setName(name);
                     info.setLocationProvince(province);
                     info.setLocationCity(city);
                     info.setLocationDetail(detail);
                     info.setStatus(status);
                     patientInformationService.updatePatientInformation(info);
-                case "registerFace":
-                    break;
                 default:
                     throw new IllegalAccessException();
             }
@@ -484,23 +492,36 @@ public class AdminRestController {
         }
     }
 
-//    @PutMapping("/admin/patienttable/update")
-//    public void modifyPatientInformation(@RequestParam("idNumber") String idNumber,
-//                                           @RequestParam("name") String name,
-//                                           @RequestParam("province") String province,
-//                                           @RequestParam("city") String city,
-//                                           @RequestParam("locationDetail")String detail,
-//                                           @RequestParam("status") String status){
-//        try {
-//            PatientInformation info = patientInformationService.getPatientInformationByIdNumber(idNumber);
-//            info.setName(name);
-//            info.setLocationProvince(province);
-//            info.setLocationCity(city);
-//            info.setLocationDetail(detail);
-//            info.setStatus(status);
-//            patientInformationService.updatePatientInformation(info);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//    }
+    @PostMapping("/admin/patienttable/registerFace")
+    public String registerFace(@RequestParam("img") MultipartFile img,
+                               @RequestParam("id") Integer patientId,
+                               HttpServletRequest request){
+        Map<String , Object> res= new HashMap<>();
+        try {
+            JSONObject jsonObject = patientInformationService.detectFace(img.getInputStream());
+            String msg = AipFaceUtils.check(jsonObject);
+            if(msg != null){
+                //照片面部信息不合格
+                res.put("msg",msg);
+                res.put("code", 2);
+                return JSON.toJSONString(res);
+            }
+            //照片通过检测，注册人脸
+            patientInformationService.registerFace(img.getInputStream(), patientId);
+            //将图片保存到本地
+            String realPath = getClass().getResource("/").getPath();
+            String url = TransferImageUtil.transferImage(img, realPath, "uploadImage/userface/", request.getContextPath(), patientId.toString());
+            //更新病人数据
+            PatientInformation info = patientInformationService.getPatientInformationById(patientId);
+            info.setFaceUrl(url);
+            patientInformationService.updatePatientInformation(info);
+            res.put("code", 0);
+            return JSON.toJSONString(res);
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.put("code", 1);
+            return JSON.toJSONString(res);
+        }
+    }
+
 }

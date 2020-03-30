@@ -1,12 +1,13 @@
 $(function(){
     let contextPath = $('p.contextpath').text();
     let eventId = $('p.eventId').text();
-    layui.use(['layer', 'element', 'table', 'form'], function () {
+    layui.use(['layer', 'element', 'table', 'form', 'upload'], function () {
 
         let layer = layui.layer;
         let element = layui.element;
         let form = layui.form;
         let table = layui.table;
+        let upload = layui.upload;
         let option = {
             elem: '#patientTable'
             ,url:contextPath + '/admin/patienttable/patientinfo'
@@ -24,7 +25,7 @@ $(function(){
                 ,{field:'idNumber', title:'身份证号', width: 170, align:"center"}
                 ,{field:'reportingTime', title:'确诊时间', width: 150, align:"center"}
                 ,{field:'status', title:'病情', width: 80, align:"center"}
-                ,{field:'faceAuthentication', title:'是否人脸认证', width: 130,align:"center"}
+                ,{field:'faceUrl', title:'是否人脸认证', width: 130,align:"center"}
                 ,{title:'操作', toolbar: '#bar', width: 170, align:"center"}
             ]]
             ,page: true
@@ -33,7 +34,11 @@ $(function(){
                     res.data.forEach(function(element, index){
                         let d = new Date(element.reportingTime);
                         element.reportingTime = `${d.getFullYear()}-${d.getMonth().toString().padStart(2,'0')}-${d.getDay().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
-                        element.faceAuthentication = element.faceAuthentication ? "是" : "否";
+                        if(element.faceUrl === undefined){
+                            element.faceUrl = "否";
+                        }else{
+                            element.faceUrl = `<a οnclick='window.open("${element.faceUrl}"))'>是<a/>`;
+                        }
                     });
                 }
             }
@@ -153,7 +158,7 @@ $(function(){
                                     url: contextPath + '/admin/patienttable/update',
                                     type: 'POST',
                                     data:{
-                                        idNumber: data.idNumber,
+                                        id: data.id,
                                         name: inputName,
                                         province: inputProvince,
                                         city: inputCity,
@@ -190,10 +195,45 @@ $(function(){
                     break;
                 //注册人脸事件
                 case 'registerFace':
+                    let confirm = layer.open({
+                        type: 1,
+                        content:$('#registerFaceBar').html(),
+                        area: ['400px', '240px'], //宽高
+                        success: function (layero, index){
+                            //组件弹出成功，给上传照片按钮绑定文件上传实例
+                            console.log("弹出成功，绑定事件");
+                            upload.render({
+                                elem: '#loadBtn',
+                                url: contextPath + '/admin/patienttable/registerFace',
+                                data: {
+                                    id: data.id
+                                },
+                                field: 'img',
+                                accept: "images",
+                                size: 1024 * 10,  //10M
+                                multiple: false,
+                                drag: true,
+                                done: function (res) {
+                                    layer.close(confirm);
+                                    switch (res.code) {
+                                        case 0: layer.msg("注册成功！");break;
+                                        case 1: layer.msg("服务器出了点小问题...");break;
+                                        case 2: layer.msg("面部信息不合格：" + res.msg);break
+                                    }
+                                },
+                                error:function () {
+                                    layer.msg("网络异常,请稍后再试...");
+                                }
+                            });
+                        }
+                    });
                     break;
 
             }
         });
+
+        //注册人脸按钮点击回调
+
 
         //表格头部工具栏事件监听
         table.on('toolbar(patientTable)', function (obj) {

@@ -130,19 +130,19 @@ class EidsApplicationTests {
     }
 
 //    @Test
-    public void faceApiTest() throws IOException {
-        //人脸注册
-        String path = "C:\\Users\\ShangJin\\Desktop\\1.jpg";
-        File img = new File(path);
-        String base64Code = Base64Util.encode(img);
-        System.out.println(base64Code);
-        HashMap<String, String> options = new HashMap<>();
-        options.put("user_info", "网络图片");
-        AipFace client = AipFaceUtils.getClient();
-
-        JSONObject res = client.addUser(base64Code, "BASE64", "TestFaceRepository", "webImage1", options);
-        System.out.println(res.toString(2));
-        //人脸搜索
-    }
+//    public void faceApiTest() throws IOException {
+//        //人脸注册
+//        String path = "C:\\Users\\ShangJin\\Desktop\\1.jpg";
+//        File img = new File(path);
+//        String base64Code = Base64Util.encode(img);
+//        System.out.println(base64Code);
+//        HashMap<String, String> options = new HashMap<>();
+//        options.put("user_info", "网络图片");
+//        AipFace client = AipFaceUtils.getClient();
+//
+//        JSONObject res = client.addUser(base64Code, "BASE64", "TestFaceRepository", "webImage1", options);
+//        System.out.println(res.toString(2));
+//        //人脸搜索
+//    }
 
 }

@@ -49,8 +49,12 @@
     <!--        数据表格行工具栏组件 -->
     <script type="text/html" id="bar">
         <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="registerFace">注册人脸</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="registerFace" id="registerFace">注册人脸</a>
     </script>
+    <script type="text/html" id="faceBar">
+        <a class="layui-btn layui-btn-xs" lay-event="showFace">修改</a>
+    </script>
+
     <!--        数据表格头部工具栏组件   -->
     <script type="text/html" id="toolbar">
         <div class="layui-btn-container">
@@ -121,6 +125,25 @@
             </div>
         </form>
     </script>
+
+    <!-- 注册人脸按钮弹出部分 -->
+    <script type="text/html" id="registerFaceBar">
+        <div style="padding: 10px 20px">
+            <p style="padding-bottom: 10px">
+                注册人脸照片需满足条件：<br>
+                &nbsp; &nbsp; &nbsp; &nbsp; 1. 五官无遮挡<br>
+                &nbsp; &nbsp; &nbsp; &nbsp; 2. 画面清晰<br>
+                &nbsp; &nbsp; &nbsp; &nbsp; 3. 人脸大小建议长宽像素值范围:80*80~200*200<br>
+                &nbsp; &nbsp; &nbsp; &nbsp; 4. 照片大小小于10M<br>
+                &nbsp; &nbsp; &nbsp; &nbsp; 5. 光照充足<br>
+                点击按钮上传照片<br>
+            </p>
+            <button type="button" class="layui-btn layui-btn-sm" id="loadBtn">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+    </script>
+
     <div class="layui-body">
         <!-- 内容主体区域 -->
         <div style="padding:15px">

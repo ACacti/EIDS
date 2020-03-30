@@ -20,6 +20,7 @@ public interface PatientInformationMapper {
     public void deletePatientInformationById(Integer id);
     public void updatePatientInformation(PatientInformation information);
     public PatientInformation getPatientInformationByIdNumber(String idNumber);
+    public PatientInformation getPatientInformationById(Integer id);
     /*
      * @Title: getPatientInformation
      * @Description:

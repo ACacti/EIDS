@@ -10,8 +10,8 @@
             readOnly="true"/>
 
     <insert id="addPatientInformation" parameterType="PatientInformation">
-        insert into patient_information(name, location_province, location_city, location_detail, face_authentication, reporting_time, epidemic_id, status, id_number)
-        VALUES(#{name}, #{locationProvince}, #{locationCity}, #{locationDetail}, #{faceAuthentication}, #{reportingTime}, #{epidemicEvent.id}, #{status}, #{idNumber});
+        insert into patient_information(name, location_province, location_city, location_detail, face_url, reporting_time, epidemic_id, status, id_number)
+        VALUES(#{name}, #{locationProvince}, #{locationCity}, #{locationDetail}, #{faceUrl}, #{reportingTime}, #{epidemicEvent.id}, #{status}, #{idNumber});
 
     </insert>
     <delete id="deletePatientInformationById" parameterType="int">
@@ -32,8 +32,8 @@
             <if test="locationDetail!= null">
                 location_detail=#{locationDetail},
             </if>
-            <if test="faceAuthentication!=null">
-                face_authentication=#{faceAuthentication},
+            <if test="faceUrl!=null">
+                face_url=#{faceUrl},
             </if>
             <if test="status!=null">
                 status=#{status},
@@ -42,6 +42,9 @@
     </update>
     <select id="getPatientInformationByIdNumber" resultType="PatientInformation">
         select * from patient_information where id_number=#{idNumber}
+    </select>
+    <select id="getPatientInformationById" resultType="PatientInformation">
+        select * from patient_information where id = #{id}
     </select>
     <sql id="where-if">
         <where>

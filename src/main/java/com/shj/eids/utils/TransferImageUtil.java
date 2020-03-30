@@ -15,7 +15,6 @@ public class TransferImageUtil {
 
     public static String transferImage(MultipartFile image, String basePath, String mid, String contextPath, String authorId) throws Exception{
         String ret = "";
-
         //生成uuid作为文件名称
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         //获得文件类型，如果不是图片，禁止上传

@@ -3646,6 +3646,10 @@
       <City Name="风顺堂区" Code="LAZ" />
       <City Name="路凼填海区" Code="CLN" />
     </State>
+<!--    新加 南海诸岛-->
+    <State Name="南海诸岛" Code="83">
+      <City Name="南海诸岛" Code="1"/>
+    </State>
   </CountryRegion>
   <CountryRegion Name="阿尔巴尼亚" Code="ALB">
     <State>

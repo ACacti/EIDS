@@ -10,8 +10,8 @@ import java.util.Base64;
  * @Create: 2020-03-19 11:37
  **/
 public class Base64Util {
-    public static String encode(File file) throws IOException {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
+    public static String encode(InputStream inputStream) throws IOException {
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
         byte[] b = new byte[bufferedInputStream.available()];
         bufferedInputStream.read(b);
         bufferedInputStream.close();
