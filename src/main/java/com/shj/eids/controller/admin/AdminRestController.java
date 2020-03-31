@@ -1,11 +1,14 @@
 package com.shj.eids.controller.admin;
 
+import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.shj.eids.dao.RecordAdminAidinfoMapper;
 import com.shj.eids.domain.*;
 import com.shj.eids.service.*;
 import com.shj.eids.utils.AipFaceUtils;
+import com.shj.eids.utils.FileDownloadUtil;
+import com.shj.eids.utils.PatientInformationExcelListener;
 import com.shj.eids.utils.TransferImageUtil;
 import jdk.internal.vm.compiler.collections.EconomicMap;
 import org.json.JSONObject;
@@ -15,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -480,6 +485,7 @@ public class AdminRestController {
                     info.setLocationDetail(detail);
                     info.setStatus(status);
                     patientInformationService.updatePatientInformation(info);
+                    break;
                 default:
                     throw new IllegalAccessException();
             }
@@ -522,6 +528,31 @@ public class AdminRestController {
             res.put("code", 1);
             return JSON.toJSONString(res);
         }
+    }
+
+    @RequestMapping("/admin/patienttable/getExcelTemplet")
+    public void getExcelTemplet(HttpServletRequest request, HttpServletResponse response){
+        String realPath = getClass().getResource("/public/demo.xlsx").getPath();
+        File file = new File(realPath);
+        FileDownloadUtil.doDownload(request, response, file);
+    }
+
+    @RequestMapping("/admin/patienttable/import")
+    public String importPatientInformation(@RequestParam("file") MultipartFile file,
+                                         HttpSession session){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            Admin admin = (Admin) session.getAttribute("loginAccount");
+            //读取Excel文件信息，导入导入数据库
+            EasyExcel.read(file.getInputStream(), PatientInformationExcelModel.class, new PatientInformationExcelListener(admin, patientInformationService)).sheet().doRead();
+            res.put("code", 0);
+            return JSON.toJSONString(res);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("code", 1);
+            return JSON.toJSONString(res);
+        }
+
     }
 
 }

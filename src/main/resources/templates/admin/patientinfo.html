@@ -51,18 +51,24 @@
         <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="registerFace" id="registerFace">注册人脸</a>
     </script>
+
+    <!-- 用于存储患者照片的HTML片段 -->
     <script type="text/html" id="faceBar">
-        <a class="layui-btn layui-btn-xs" lay-event="showFace">修改</a>
+        <div id="faceDiv">
+            <img layer-pid="" layer-src="" src="" alt="" id="photo">
+        </div>
     </script>
 
     <!--        数据表格头部工具栏组件   -->
     <script type="text/html" id="toolbar">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="delete">删除选中</button>
-            <button class="layui-btn layui-btn-sm" lay-event="import">导入患者信息</button>
+            <button class="layui-btn layui-btn-sm" lay-event="import" id="import">导入患者信息</button>
+            <button class="layui-btn layui-btn-sm" lay-event="getTemplate" id="getTemplate">获取信息导入模板</button>
         </div>
     </script>
 
+    <!-- 点击修改患者信息时的弹出部分 -->
     <script type="text/html" id="patientInfoForm">
         <form class="layui-form layui-form-pane" th:action="@{/admin/patienttable/update}" lay-filter="patientInfoForm" style="padding: 15px 20px" id="layerForm" method="post">
             <input type="text" name="idNumber" value="" style="display: none">

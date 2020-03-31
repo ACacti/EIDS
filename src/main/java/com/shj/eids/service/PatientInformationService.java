@@ -3,6 +3,7 @@ package com.shj.eids.service;
 import com.baidu.aip.face.AipFace;
 import com.shj.eids.dao.PatientInformationMapper;
 import com.shj.eids.domain.PatientInformation;
+import com.shj.eids.domain.PatientInformationExcelModel;
 import com.shj.eids.utils.AipFaceUtils;
 import com.shj.eids.utils.Base64Util;
 import com.shj.eids.utils.TransferImageUtil;
@@ -90,7 +91,19 @@ public class PatientInformationService {
         String imageCode = Base64Util.encode(img);
         AipFace client = AipFaceUtils.getClient();
         HashMap<String, String> options = new HashMap<>();
-        options.put("face_field", "quality");//质量检测
+        options.put("face_field", "quality,face_type");//质量检测
         return client.detect(imageCode, "BASE64", options);
     }
+
+    /*
+     * 批量导入患者信息
+     */
+    @Transactional
+    public void addPatientInformationByExcelModel(List<PatientInformationExcelModel> list){
+        for(PatientInformationExcelModel model : list){
+            patientInformationMapper.addPatientInformationByExcelModel(model);
+        }
+    }
+
+
 }

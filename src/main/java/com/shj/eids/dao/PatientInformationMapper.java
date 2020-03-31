@@ -1,6 +1,7 @@
 package com.shj.eids.dao;
 
 import com.shj.eids.domain.PatientInformation;
+import com.shj.eids.domain.PatientInformationExcelModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,7 @@ import java.util.Map;
 @Mapper
 public interface PatientInformationMapper {
     public void addPatientInformation(PatientInformation information);
+    public void addPatientInformationByExcelModel(PatientInformationExcelModel model);
     public void deletePatientInformationById(Integer id);
     public void updatePatientInformation(PatientInformation information);
     public PatientInformation getPatientInformationByIdNumber(String idNumber);

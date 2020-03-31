@@ -14,6 +14,11 @@
         VALUES(#{name}, #{locationProvince}, #{locationCity}, #{locationDetail}, #{faceUrl}, #{reportingTime}, #{epidemicEvent.id}, #{status}, #{idNumber});
 
     </insert>
+
+    <insert id="addPatientInformationByExcelModel" parameterType="PatientInformationExcelModel">
+        insert into patient_information(name, location_province, location_city, location_detail, reporting_time, epidemic_id, status, id_number)
+        VALUES (#{name}, #{locationProvince}, #{locationCity}, #{locationDetail}, #{reportingTime}, #{eventId}, #{status}, #{idNumber})
+    </insert>
     <delete id="deletePatientInformationById" parameterType="int">
         delete from patient_information where id=#{id};
     </delete>
