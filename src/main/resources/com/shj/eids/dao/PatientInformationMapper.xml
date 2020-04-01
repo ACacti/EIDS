@@ -48,7 +48,7 @@
     <select id="getPatientInformationByIdNumber" resultType="PatientInformation">
         select * from patient_information where id_number=#{idNumber}
     </select>
-    <select id="getPatientInformationById" resultType="PatientInformation">
+    <select id="getPatientInformationById" resultType="PatientInformation" resultMap="PatientInformation_EpidemicEvent">
         select * from patient_information where id = #{id}
     </select>
     <sql id="where-if">

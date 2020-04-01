@@ -13,6 +13,7 @@ import com.shj.eids.service.EpidemicMsgService;
 import com.shj.eids.service.EveryDayCountService;
 import com.shj.eids.utils.AipFaceUtils;
 import com.shj.eids.utils.Base64Util;
+import com.shj.eids.utils.EmailUtil;
 import com.shj.eids.utils.LocalUtil;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -50,6 +52,8 @@ class EidsApplicationTests {
     EpidemicMsgService msgService;
     @Autowired
     DefaultKaptcha defaultKaptcha;
+    @Autowired
+    EmailUtil emailUtil;
 
 //    @Test
     void localUtilTest(){

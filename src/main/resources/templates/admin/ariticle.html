@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>疫情信息展示系统|援助请求管理</title>
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/layui/src/css/layui.css}"/>
     <script th:src="@{/webjars/layui/src/layui.js}"></script>
     <script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
@@ -11,7 +13,7 @@
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <div class="layui-logo"><a th:href="@{/index}" class="layui-logo"><strong>EIDS</strong>信息发布</a></div>
+        <div class="layui-logo"><a th:href="@{/admin}" class="layui-logo"><strong>EIDS</strong>信息管理</a></div>
         <!-- 头部区域（可配合layui已有的水平导航） -->>
 
         <ul class="layui-nav layui-layout-right">
@@ -33,15 +35,15 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
-                <li class="layui-nav-item "><a th:href="@{/admin}">用户管理</a></li>
-                <li class="layui-nav-item"><a th:href="@{/admin/event}">疫情事件管理</a></li>
+                <li class="layui-nav-item"><a th:href="@{/admin}">援助请求管理</a></li>
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;">疫情数据管理</a>
                     <dl class="layui-nav-child">
                         <dd th:each="event:${application.events}"><a th:href="@{'/admin/patientinfo/' + ${event.name}}" th:text="${event.name}"></a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a th:href="@{/admin/help}">援助请求管理</a></li>
+                <li class="layui-nav-item "><a th:href="@{/admin/user}">用户管理</a></li>
+                <li class="layui-nav-item"><a th:href="@{/admin/event}">疫情事件管理</a></li>
                 <li class="layui-nav-item layui-this"><a th:href="@{/admin/article}">防疫资讯管理</a></li>
             </ul>
         </div>
@@ -91,7 +93,7 @@
 
     <div class="layui-footer">
         <!-- 底部固定区域 -->
-        © layui.com - 底部固定区域
+        © EIDS - 疫情信息发布系统
     </div>
 </div>
 <p class="contextpath" style="display:none" th:text="${#servletContext.contextPath}"></p>

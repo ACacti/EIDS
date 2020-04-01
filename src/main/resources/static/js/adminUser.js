@@ -19,7 +19,7 @@ $(function () {
                         return '<em>'+ res.email +'</em>'
                     }}
                 ,{field:'level', title:'权限等级', sort: true}
-                ,{field:'introduction', title:'简介'}
+                ,{field:'introduction', title:'认证名'}
                 ,{fixed: 'right', title:'权限操作', toolbar: '#barMethod'}
             ]]
             ,page: true
@@ -30,35 +30,68 @@ $(function () {
        //监听行工具事件
        table.on('tool(tablefilter)', function(obj){
            let data = obj.data;
-           if(obj.event === 'upgrade'){
-               console.log("tool时间监听");
-                //升级权限
-               let index = layer.load(2);
-               $.post(contextPath + '/admin/usertable/upgrade/' + data.id, function (res) {
-                    layer.close(index);
-                   if(res.msg == 'error'){
-                       layer.msg("服务器出了点小问题");
-                       return;
+           switch (obj.event) {
+               case 'upgrade':
+                   if (data.level === 1) {
+                       layer.prompt({
+                           formType: 0,
+                           value: "请输入认证名",
+                           title: '提升为防疫资讯作者',
+                       }, function (value, index) {
+                            //检查输入的认证名长度
+                           if(value.length >= 20){
+                               layer.msg("认证名最大长度为20个字符");
+                               return;
+                           }
+                           //通过检测，异步请求后台修改用户信息
+                           let load = layer.load(2);
+                           $.post(contextPath + '/admin/usertable/upgrade', {
+                               id: data.id,
+                               introduction: value
+                           }, function (res) {
+                               layer.close(load);
+                               if (res.msg === 'error') {
+                                   layer.msg("服务器出了点小问题");
+                                   return;
+                               }
+                               layer.close(index);
+                               //更新服务器传回的数据
+                               obj.update({
+                                   level: res.level,
+                                   introduction: value
+                               });
+                           }, "JSON");
+                       });
+                   }else{
+                       $.post(contextPath + '/admin/usertable/upgrade',{id: data.id}, function (res) {
+                           layer.close(index);
+                           if(res.msg === 'error'){
+                               layer.msg("服务器出了点小问题");
+                               return;
+                           }
+                           //更新服务器传回的数据
+                           obj.update({
+                               level:res.level,
+                               introduction: value
+                           });
+                       }, "JSON");
                    }
-                    //更新服务器传回的数据
-                    obj.update({
-                        level:res.level
-                    });
-               }, "JSON")
-           } else if(obj.event === 'downgrade'){
-               let index = layer.load(2);
-               //降级权限
-               $.post(contextPath + '/admin/usertable/downgrade/' + data.id, function (res) {
-                   layer.close(index);
-                   if(res.msg == 'error'){
-                       layer.msg("服务器出了点小问题");
-                       return;
-                   }
-                   //更新服务器传回的数据
-                   obj.update({
-                       level:res.level
-                   });
-               }, "JSON")
+                   break;
+               case 'downgrade':
+                   let load = layer.load(2);
+                   //降级权限
+                   $.post(contextPath + '/admin/usertable/downgrade/' + data.id, function (res) {
+                       layer.close(load);
+                       if (res.msg === 'error') {
+                           layer.msg("服务器出了点小问题");
+                           return;
+                       }
+                       //更新服务器传回的数据
+                       obj.update({
+                           level: res.level,
+                           introduction: ""
+                       });
+                   }, "JSON")
            }
        });
        //邮箱查找用户监听事件

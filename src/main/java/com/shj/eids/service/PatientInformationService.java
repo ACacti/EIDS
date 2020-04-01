@@ -9,6 +9,7 @@ import com.shj.eids.utils.Base64Util;
 import com.shj.eids.utils.TransferImageUtil;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,20 +80,39 @@ public class PatientInformationService {
         patientInformationMapper.updatePatientInformation(info);
     }
 
-    public JSONObject registerFace(InputStream img, Integer patientId) throws IOException {
-        String imageCode = Base64Util.encode(img);
-        AipFace client = AipFaceUtils.getClient();
-        HashMap<String, String> options = new HashMap<>();
-        options.put("action_type ", "REPLACE");
-        return client.addUser(imageCode, "BASE64", AipFaceUtils.GROUP_ID, patientId.toString(),options);
+    /*
+     * @Title: registerFace
+     * @Description: 获取人脸照片的输入流，完成注册人脸功能，返回一个注册结果
+     * @param img: 人脸照片输入流
+     * @param patientId: 要注册的患者ID信息
+     * @return org.json.JSONObject：注册结果
+     * @Author: ShangJin
+     * @Date: 2020/4/1
+     */
+    public JSONObject registerFace(InputStream img, Integer patientId, Integer eventId) throws IOException {
+        return AipFaceUtils.registerFace(img, patientId.toString(), eventId.toString());
     }
 
+    /*
+     * @Title: detectFace
+     * @Description: 获取人脸照片输入流，检查人脸照片是否合格
+     * @param img: 人脸照片输入流
+     * @return org.json.JSONObject：检测结果
+     * @Author: ShangJin
+     * @Date: 2020/4/1
+     */
     public JSONObject detectFace(InputStream img) throws IOException {
-        String imageCode = Base64Util.encode(img);
-        AipFace client = AipFaceUtils.getClient();
-        HashMap<String, String> options = new HashMap<>();
-        options.put("face_field", "quality,face_type");//质量检测
-        return client.detect(imageCode, "BASE64", options);
+        return AipFaceUtils.detectFace(img);
+    }
+
+    public List<PatientInformation> faceSearch(InputStream file, List<String> eventIds, @Nullable List<Double> score) throws Exception {
+
+        List<String> patientIdList =  AipFaceUtils.faceSearch(file, eventIds, score);
+        List<PatientInformation> res = new ArrayList<>();
+        for(String id: patientIdList){
+            res.add(patientInformationMapper.getPatientInformationById(Integer.parseInt(id)));
+        }
+        return res;
     }
 
     /*

@@ -37,10 +37,9 @@ public class LoginRestController {
     @PostMapping("/login/m-identify")
     public String loginIdentify(@RequestParam("email") String email,
                                 @RequestParam("password") String password,
-                                @RequestParam("isAdmin") String[] isAdmin){
+                                @RequestParam("isAdmin") Boolean isAdmin){
         boolean result = false;
-        boolean isAdmin1 = "true".equals(isAdmin[0]);
-        if(isAdmin1){
+        if(isAdmin){
             result = adminService.loginIdentify(email, password);
         }else {
             result = userService.loginIdentify(email, password);

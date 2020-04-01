@@ -53,4 +53,5 @@ public class RegisterRestController {
         }
         return rawcaptcha.equals(captcha) ? "true":"false";
     }
+
 }

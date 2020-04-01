@@ -4,11 +4,9 @@ import com.shj.eids.dao.AdminMapper;
 import com.shj.eids.dao.EpidemicMsgMapper;
 import com.shj.eids.dao.RecordAdminEpidemicmsgMapper;
 import com.shj.eids.dao.UserMapper;
-import com.shj.eids.domain.Admin;
-import com.shj.eids.domain.EpidemicMsg;
-import com.shj.eids.domain.RecordAdminEpidemicMsg;
-import com.shj.eids.domain.User;
+import com.shj.eids.domain.*;
 import com.shj.eids.exception.UserLevelException;
+import com.shj.eids.utils.EmailUtil;
 import com.sun.mail.imap.protocol.INTERNALDATE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -16,6 +14,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.net.Inet4Address;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,6 +36,8 @@ public class EpidemicMsgService {
     @Autowired
     private AdminMapper adminMapper;
 
+    @Autowired
+    private EmailUtil emailUtil;
     @Autowired
     private RecordAdminEpidemicmsgMapper recordAdminEpidemicmsgMapper;
 
@@ -135,9 +136,13 @@ public class EpidemicMsgService {
     }
 
     @Transactional
-    public void deleteEpidemicMsg(@NonNull Integer id){
+    public void deleteEpidemicMsg(@NonNull Integer id, Admin admin) throws MessagingException {
         EpidemicMsg article = getArticleById(id);
         epidemicMsgMapper.deleteEpidemicMsg(article);
+        //因为发送邮件操作较为缓慢，将其放到一个异步任务中
+        String text = "EIDS防疫资讯创作者，您的标题为<strong>" + article.getTitle() + "</strong> 的文章被管理员删除，" +
+                "若有疑问请联系管理员邮箱<em>" + admin.getEmail() + "</em>";
+        emailUtil.sendComplexEmailByAsynchronousMode(text, article.getAuthor().getEmail(), "文章删除");
     }
 
     public List<RecordAdminEpidemicMsg> getRecord(@Nullable Integer adminId, @Nullable Integer start, @Nullable Integer length){

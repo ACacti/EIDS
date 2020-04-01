@@ -31,7 +31,7 @@ $(function () {
                     data:{'email': email, 'password': password, 'isAdmin':isAdmin.prop("checked")},
                     timeout: 2000,
                     success: function (data, status) {
-                        console.log("身份验证成功，验证结果：" + data);
+                        console.log("身份验证成功，验证结果：" + JSON.stringify(data));
                         if(data['identification']){
                             passwordInput.val(password);
                             flag = true;
@@ -51,14 +51,31 @@ $(function () {
         });
 
         form.on("submit(fsubmit)", function (data) {
-            if(flag){
-                return true;
-            }else{
-                layer.msg("密码错误或邮箱未注册");
-                return false;
-            }
-        });
+            let load = layer.load(2);
+            passwordInput.val(hex_md5(rawPasswordInput.val()));
+            $.ajax({
+                url: contextPath + "/login/m-identify",
+                data:{email: emailInput.val(), password: passwordInput.val(), isAdmin: isAdmin.prop("checked")},
+                dataType: "JSON",
+                type: "POST",
+                timeout: 2000,
+                async: false,
+                success: function (data) {
+                    layer.close(load);
+                    if(data.identification){
+                        flag = true;
+                    }else{
+                        layer.msg("账号不存在或密码错误");
+                    }
+                },
+                error: function () {
+                    layer.close(load);
+                    layer.msg("网络异常,请稍后再试");
+                }
+            });
+            return flag;
 
+        });
 
         $("#forgetpass").click(function () {
             layer.prompt({title: '输入注册邮箱', formType: 0}, function(email, index){

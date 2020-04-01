@@ -41,7 +41,7 @@ public class GenerateData {
      * @Author: ShangJin
      * @Date: 2020/3/13
      */
-    @Test
+//    @Test
     void generate(){
         String[]provinces = EpidemicInfoService.provinces;
         String[]status = EpidemicInfoService.status;

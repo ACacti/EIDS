@@ -1,12 +1,12 @@
 package com.shj.eids.utils;
 
-import org.springframework.boot.web.servlet.ServletComponentScan;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * @ClassName: FileDownloadUtil
@@ -40,7 +40,6 @@ public class FileDownloadUtil {
                     e.printStackTrace();
                 }
             }
-
         }
 
     }

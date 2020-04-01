@@ -1,5 +1,7 @@
 package com.shj.eids.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -12,7 +14,7 @@ import java.util.UUID;
  * @Create: 2020-03-16 16:34
  **/
 public class TransferImageUtil {
-
+    private static Logger logger = LoggerFactory.getLogger(TransferImageUtil.class);
     public static String transferImage(MultipartFile image, String basePath, String mid, String contextPath, String authorId) throws Exception{
         String ret = "";
         //生成uuid作为文件名称
@@ -37,6 +39,7 @@ public class TransferImageUtil {
         image.transferTo(new File(path));
         //返回给前台用于展示照片的链接地址
         ret= contextPath + "/" + mid + authorId + "/" +imageName;
+        logger.info("存储图片，存储位置：" + path);
         return ret;
     }
 }

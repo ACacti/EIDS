@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>疫情信息展示系统|发布援助请求</title>
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/layui/src/css/layui.css}"/>
     <link rel="stylesheet" href="http://at.alicdn.com/t/font_1687011_w335yuvfmm.css" type="text/css">
     <script th:src="@{/webjars/layui/src/layui.js}"></script>
@@ -13,7 +15,7 @@
 
     <!-- header 开始 -->
     <div class="layui-header layui-bg-cyan">
-        <div class="layui-logo"><a href="#" class="layui-logo"><strong>EIDS</strong>信息发布</a></div>
+        <div class="layui-logo"><a th:href="@{/admin}" class="layui-logo"><strong>EIDS</strong>信息管理</a></div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
     </div>
     <div class="layui-body" style="left: 0; padding-top: 30px; bottom: 0">

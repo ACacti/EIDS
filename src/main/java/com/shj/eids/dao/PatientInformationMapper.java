@@ -34,7 +34,7 @@ public interface PatientInformationMapper {
      *              idNumber: 患者身份证号
      *              epidemicId: 患者对应的疫情事件ID
      *              start, length: 分页用的参数
-     * @return java.util.List<com.shj.eids.domain.PatientInformation>: 返回的PatientInformation中未封epidemicEvent属性
+     * @return java.util.List<com.shj.eids.domain.PatientInformation>:
      * @Author: ShangJin
      * @Date: 2020/3/10
      */

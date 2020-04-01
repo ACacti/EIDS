@@ -3,9 +3,11 @@ package com.shj.eids.service;
 import com.shj.eids.dao.EpidemicEventMapper;
 import com.shj.eids.domain.Admin;
 import com.shj.eids.domain.EpidemicEvent;
+import com.shj.eids.utils.AipFaceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.validation.constraints.Null;
@@ -51,13 +53,24 @@ public class EpidemicEventService {
         return eventMapper.getCount();
     }
 
-    public void addEpidemicEvent(Admin admin, String name){
+    @Transactional
+    public void addEpidemicEvent(Admin admin, String name) throws Exception {
         EpidemicEvent event = new EpidemicEvent(null, name, new Date(), admin);
         eventMapper.addEpidemicEvent(event);
+        Map<String, Object> args = new HashMap<>();
+        args.put("name", name);
+        //获取刚刚添加的事件的ID(因为事件ID是数据库自增，创建后才能获取...当初设计的失败)
+        Integer eventId = eventMapper.getEpidemicEvents(args).get(0).getId();
+        //新建人脸库
+        AipFaceUtils.addGroup(eventId.toString());
+
     }
 
-    public void deleteEpidemicEventById(Integer id){
+    @Transactional
+    public void deleteEpidemicEventById(Integer id) throws Exception {
         eventMapper.deleteEpidemicEventById(id);
+        //删除人脸库
+        AipFaceUtils.deleteGroup(id.toString());
     }
 
     public void updateEpidemicEvent(EpidemicEvent epidemicEvent){

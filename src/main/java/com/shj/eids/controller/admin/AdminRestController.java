@@ -6,10 +6,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.shj.eids.dao.RecordAdminAidinfoMapper;
 import com.shj.eids.domain.*;
 import com.shj.eids.service.*;
-import com.shj.eids.utils.AipFaceUtils;
-import com.shj.eids.utils.FileDownloadUtil;
-import com.shj.eids.utils.PatientInformationExcelListener;
-import com.shj.eids.utils.TransferImageUtil;
+import com.shj.eids.utils.*;
 import jdk.internal.vm.compiler.collections.EconomicMap;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,8 @@ import java.util.*;
  **/
 @RestController
 public class AdminRestController {
+    @Autowired
+    private EmailUtil emailUtil;
     @Autowired
     private UserService userService;
     @Autowired
@@ -71,19 +70,22 @@ public class AdminRestController {
         }
     }
 
-    @PostMapping("/admin/usertable/upgrade/{id}")
-    public String upgrade(@PathVariable("id") Integer id,
+    @PostMapping("/admin/usertable/upgrade")
+    public String upgrade(HttpServletRequest request,
                           HttpSession session){
         Map<String, Object> res = new HashMap<>();
         try{
+            Integer id = Integer.parseInt(request.getParameter("id"));
             Admin admin = (Admin) session.getAttribute("loginAccount");
             User u = userService.getUserById(id);
             Integer level = u.getLevel();
             if(level >= 2){
+                //目前设计用户等级最高为2，超过2不予升级
                 res.put("level", level);
             }
             else{
-                adminService.upgradeUser(admin, u);
+                String introduction = request.getParameter("introduction");
+                adminService.upgradeUser(admin, u, introduction);
                 res.put("level", level + 1);
             }
             return JSON.toJSONString(res);
@@ -297,10 +299,12 @@ public class AdminRestController {
     }
 
     @PostMapping("/admin/helptable/delete")
-    public String deleteAidInformation(@RequestParam("ids") List<String> ids){
+    public String deleteAidInformation(@RequestParam("ids") List<String> ids,
+                                       HttpSession session){
         Map<String, Object> res = new HashMap<>();
         try {
-            aidInformationService.deleteAidInformation(ids);
+            Admin admin = (Admin) session.getAttribute("loginAccount");
+            aidInformationService.deleteAidInformation(ids, admin);
             res.put("msg", "success");
             return JSON.toJSONString(res);
         }catch (Exception e){
@@ -390,7 +394,7 @@ public class AdminRestController {
                     break;
                 case "delete":
                     for(Integer id: ids){
-                        epidemicMsgService.deleteEpidemicMsg(id);
+                        epidemicMsgService.deleteEpidemicMsg(id, admin);
                     }
                     break;
                 default:
@@ -501,6 +505,7 @@ public class AdminRestController {
     @PostMapping("/admin/patienttable/registerFace")
     public String registerFace(@RequestParam("img") MultipartFile img,
                                @RequestParam("id") Integer patientId,
+                               @RequestParam("eventId") Integer eventId,
                                HttpServletRequest request){
         Map<String , Object> res= new HashMap<>();
         try {
@@ -513,7 +518,7 @@ public class AdminRestController {
                 return JSON.toJSONString(res);
             }
             //照片通过检测，注册人脸
-            patientInformationService.registerFace(img.getInputStream(), patientId);
+            patientInformationService.registerFace(img.getInputStream(), patientId,eventId);
             //将图片保存到本地
             String realPath = getClass().getResource("/").getPath();
             String url = TransferImageUtil.transferImage(img, realPath, "uploadImage/userface/", request.getContextPath(), patientId.toString());

@@ -13,18 +13,18 @@ $(function(){
             ,toolbar:'#toolbar'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'}
-                ,{field:'id', title:'ID', unresize: true, sort: true}
+                ,{field:'id', title:'ID', unresize: true, sort: true, width: 80}
                 ,{field:'title', title:'标题',templet: function(res){
                         return `<a href="${contextPath}/user/article/display/${res.id}" class="layui-table-link">` + res.title +'</a>'
-                    }}
+                    }, width: 150}
                 ,{field:'content', title:'内容'}
                 ,{field:'authorEmail', title:'发布者', templet: function(res){
                         return '<em>'+ res.authorEmail +'</em>'
-                    }}
-                ,{field:'releaseDate', title:'发布时间',  sort: true}
-                ,{field:'weight', title:'权重', sort: true}
-                ,{field:'views', title:"阅读量", sort: true}
-                ,{title:'操作', toolbar: '#bar'}
+                    }, width: 190}
+                ,{field:'releaseDate', title:'发布时间',  sort: true, width: 160}
+                ,{field:'weight', title:'权重', sort: true, width: 80}
+                ,{field:'views', title:"阅读量", sort: true, width: 115}
+                ,{title:'操作', toolbar: '#bar', width: 130}
             ]]
             ,page: true
             ,parseData: function(res){

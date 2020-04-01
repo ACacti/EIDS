@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>疫情信息展示系统|查找患者</title>
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/layui/src/css/layui.css}"/>
     <script th:src="@{/webjars/layui/src/layui.js}"></script>
     <script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
@@ -64,18 +66,18 @@
                     <button class="layui-btn" id="confirm">确定</button>
                 </div>
                 <div class="layui-input-inline" style="margin-left: 50px">
-                    <button class="layui-btn layui-btn-radius layui-btn-normal" id="btn-face-recognition">人脸识别</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal" id="btn-face-recognition">人脸查找</button>
                 </div>
             </div>
             <hr class="layui-bg-gray">
         </div>
         <!-- 数据表格 -->
-        <div style="width: 1075px; margin: 0 auto">
+        <div style="width: 1155px; margin: 0 auto">
             <table id="dataTable" lay-filter="dateTable"></table>
         </div>
         <div class="layui-footer" style="left: 0">
             <!-- 底部固定区域 -->
-            © layui.com - 底部固定区域
+            © EIDS - 疫情信息发布系统
         </div>
     </div>
 </div>

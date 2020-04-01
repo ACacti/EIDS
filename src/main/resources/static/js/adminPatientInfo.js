@@ -47,6 +47,7 @@ $(function(){
                 ,{field:'reportingTime', title:'确诊时间', width: 150, align:"center"}
                 ,{field:'status', title:'病情', width: 80, align:"center"}
                 ,{field:'faceUrl', title:'是否人脸认证', width: 130,align:"center"}
+                ,{filed:"eventId", title:"疫情事件ID", hide:true}
                 ,{title:'操作', toolbar: '#bar', width: 170, align:"center"}
             ]]
             ,page: true
@@ -61,6 +62,7 @@ $(function(){
                             // element.faceUrl = `<a onclick="layerPhoto(${element.faceUrl})"><span class="layui-badge layui-bg-orange">是</span></a>`;
                             element.faceUrl = `<a onclick="showPhoto(layer, '${element.faceUrl}')"><span class="layui-badge layui-bg-blue">是</span></a>`;
                         }
+                        element.eventId = element.epidemicEvent.id;
                     });
                 }
             }
@@ -213,7 +215,8 @@ $(function(){
                                 elem: '#loadBtn',
                                 url: contextPath + '/admin/patienttable/registerFace',
                                 data: {
-                                    id: data.id
+                                    id: data.id,
+                                    eventId: data.eventId
                                 },
                                 field: 'img',
                                 accept: "images",

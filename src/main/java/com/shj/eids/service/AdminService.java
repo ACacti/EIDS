@@ -52,8 +52,9 @@ public class AdminService {
     }
 
     @Transactional
-    public void upgradeUser(Admin admin, User user){
+    public void upgradeUser(Admin admin, User user, String introduction){
         user.setLevel(user.getLevel() + 1);
+        user.setIntroduction(introduction);
         userMapper.updateUser(user);
         RecordAdminUser record = new RecordAdminUser(null, admin, user, new Date(), "提升权限");
         recordAdminUserMapper.addRecord(record);
@@ -62,6 +63,7 @@ public class AdminService {
     @Transactional
     public void downgradeUser(Admin admin, User user){
         user.setLevel(user.getLevel() - 1);
+        user.setIntroduction("");
         userMapper.updateUser(user);
         RecordAdminUser record = new RecordAdminUser(null, admin, user, new Date(), "降低权限");
         recordAdminUserMapper.addRecord(record);

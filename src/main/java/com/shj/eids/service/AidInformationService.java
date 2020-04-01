@@ -5,11 +5,15 @@ import com.shj.eids.dao.RecordAdminAidinfoMapper;
 import com.shj.eids.domain.Admin;
 import com.shj.eids.domain.AidInformation;
 import com.shj.eids.domain.RecordAdminAidinfo;
+import com.shj.eids.utils.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import javax.validation.constraints.Email;
 import java.util.*;
 
 /**
@@ -31,6 +35,9 @@ public class AidInformationService {
     @Autowired
     private RecordAdminAidinfoMapper recordAdminAidinfoMapper;
 
+    @Autowired
+    private EmailUtil emailUtil;
+
     public void addAidInformation(AidInformation info){
         aidInformationMapper.addAidInformation(info);
     }
@@ -40,13 +47,17 @@ public class AidInformationService {
     }
 
     @Transactional
-    public void deleteAidInformation(List<String> ids){
-        Date d = new Date();
+    public void deleteAidInformation(List<String> ids, Admin admin) throws MessagingException {
         for(String id: ids){
-            aidInformationMapper.deleteAidInformation(new AidInformation(id, null, null, null, null, null));
+            AidInformation temp = aidInformationMapper.getInformationById(id);
+            aidInformationMapper.deleteAidInformation(temp);
+            String text = "EIDS管理员，您的标题为<strong>" + temp.getTitle() + "</strong>的援助请求被管理员删除，" +
+                    "若有疑问请联系管理员邮箱<em> " + admin.getEmail() + " </em>";
+            //发送邮件费时，所以放到异步任务中
+            emailUtil.sendComplexEmailByAsynchronousMode(text, temp.getPublisher().getEmail(), "援助请求删除");
         }
     }
-
+    
     @Transactional
     public void postAidInformation(AidInformation info){
         aidInformationMapper.addAidInformation(info);
@@ -102,6 +113,5 @@ public class AidInformationService {
         Map<String, Object> map = new HashMap<>();
         map.put("adminId", adminId);
         return recordAdminAidinfoMapper.getCount(map);
-
     }
 }
