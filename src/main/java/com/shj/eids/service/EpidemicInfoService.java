@@ -31,11 +31,11 @@ public class EpidemicInfoService {
     private EveryDayCountMapper everyDayCountMapper;
     Logger loger = LoggerFactory.getLogger(getClass());
 
-    final static public String []provinces={"南海诸岛", "北京", "天津", "上海", "重庆", "河北",
+    final static public String []provinces={"北京", "天津", "上海", "重庆", "河北",
     "河南", "云南", "辽宁", "黑龙江", "湖南", "安徽", "山东","新疆", "江苏", "浙江", "江西",
     "湖北", "广西", "甘肃", "山西", "内蒙古", "陕西", "吉林", "福建", "贵州", "广东", "青海", "西藏",
-    "四川", "宁夏", "海南", "台湾", "香港", "澳门"};
-    final static public String []status = {"治愈", "轻微", "危重", "死亡"};
+    "四川", "宁夏", "海南", "台湾", "香港", "澳门","南海诸岛"};
+    final static public String []status = {"危重", "治愈" , "死亡", "轻微",};
 
     /*
      * @Title: getPresentPatientCount
@@ -223,6 +223,35 @@ public class EpidemicInfoService {
             res.add(line);
             i++;
             s.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        return res;
+    }
+
+    /*
+     * regionName 为空： 获取全国各省的累计、当前患者人数
+     * reginName 为具体省名： 获取该省各市的累计、当前患者人数
+     */
+    public List<List<Object>> getRegionPatientCountData(Integer epidemicId, @Nullable String regionName){
+        List<List<Object>> res = new ArrayList<>();
+        if (regionName == null){
+            //获取全国各省的
+            for(String province: provinces){
+                List<Object> line = new ArrayList<>();
+                line.add(province);
+                line.add(getPatientCountByStatus(epidemicId, province, null,  Arrays.asList("死亡", "治愈", "危重", "轻微")));//累计人数
+                line.add(getPatientCountByStatus(epidemicId, province, null, Arrays.asList("危重", "轻微")));//当前人数
+                res.add(line);
+            }
+        }else{
+            //获取该省各市的患者人数
+            List<String> cities = LocalUtil.getInstance().getCities("中国", regionName);
+            for(String city: cities){
+                List<Object> line = new ArrayList<>();
+                line.add(city);
+                line.add(getPatientCountByStatus(epidemicId, regionName, city, Arrays.asList("死亡", "治愈", "危重", "轻微")));//某市累计人数
+                line.add(getPatientCountByStatus(epidemicId, regionName, city, Arrays.asList("危重", "轻微")));//某市现有人数
+                res.add(line);
+            }
         }
         return res;
     }

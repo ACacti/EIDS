@@ -3,12 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shj.eids.dao.PatientInformationMapper">
-    <cache
-            eviction="FIFO"
-            flushInterval="60000"
-            size="512"
-            readOnly="true"/>
-
     <insert id="addPatientInformation" parameterType="PatientInformation">
         insert into patient_information(name, location_province, location_city, location_detail, face_url, reporting_time, epidemic_id, status, id_number)
         VALUES(#{name}, #{locationProvince}, #{locationCity}, #{locationDetail}, #{faceUrl}, #{reportingTime}, #{epidemicEvent.id}, #{status}, #{idNumber});
@@ -44,6 +38,7 @@
                 status=#{status},
             </if>
         </set>
+            where id = #{id}
     </update>
     <select id="getPatientInformationByIdNumber" resultType="PatientInformation">
         select * from patient_information where id_number=#{idNumber}

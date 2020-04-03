@@ -4,17 +4,14 @@ $(function () {
         let element = layui.element;
         let layer = layui.layer;
 
-        //图标绘制部分
+        //图表绘制部分
         let contextPath = $("p.contextpath").text();
         let epidemicId = $("p.epidemicId").text();
         let epidemicName = $('p.epidemicName').text();
         let regionName = $('p.regionName').text();
-        let mapDom1 = $("#map1").get(0);
-        let mapDom2 = $("#map2").get(0);
-        let pieDom = $("#pie").get(0);
-        let lineAndBarDom = $("#lineAndBar").get(0);
-        let mapChart1 = echarts.init(mapDom1);
-        mapChart1.showLoading();
+
+
+        //开始渲染疫情地图部分
         let mapOption = {
             title:{
                 show:true,
@@ -79,8 +76,9 @@ $(function () {
                 }
 
         };
-
-        //开始渲染疫情地图部分
+        let mapDom1 = $("#map1").get(0);
+        let mapChart1 = echarts.init(mapDom1);
+        mapChart1.showLoading();
         let mapData = null;
         mapChart1.showLoading();
         //请求疫情地图数据
@@ -96,7 +94,7 @@ $(function () {
                 mapChart1.hideLoading();
                 mapChart1.setOption(mapOption);
                 //全国地图可以点击进入省级地图
-                if (regionName == 'china') {
+                if (regionName === 'china') {
                     mapChart1.on('click', function (params) {
                         layer.msg('查看' + epidemicName + '在' + params.name + '的详细疫情信息？', {
                             time: 0 //不自动关闭
@@ -120,9 +118,9 @@ $(function () {
             }
         });//ajax 疫情地图;
         // 点解标签栏切换地图数据
-        element.on('tab(docDemoTabBrief)', function(data){
-            mapOption.series.data = mapData[data.index];
-            if(data.index===0){
+        element.on('tab(docDemoTabBrief)', function(tabData){
+            mapOption.series.data = mapData[tabData.index];
+            if(tabData.index===0){
                 mapOption.title.text = "累计确诊人数地理分布";
                 mapOption.series.name = "累计确诊";
             }else{
@@ -132,6 +130,8 @@ $(function () {
             mapChart1.setOption(mapOption);
         });
 
+        //饼图部分
+        let pieDom = $("#pie").get(0);
         let pieChart = echarts.init(pieDom);
         pieChart.showLoading();
         //请求饼图数据
@@ -166,7 +166,14 @@ $(function () {
                             data: data,
                             roseType: 'angle'
                         }
-                    ]
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
                 });            // pieChart.setOption(option);
 
             },//success
@@ -181,6 +188,8 @@ $(function () {
             }
         });//ajax 疫情饼图;
 
+        //折线图和柱状图部分
+        let lineAndBarDom = $("#lineAndBar").get(0);
         let lineAndBarChart = echarts.init(lineAndBarDom);
         lineAndBarChart.showLoading();
         //请求折线图和柱状图数据
@@ -201,7 +210,7 @@ $(function () {
                     },
                     dataset: {
                         source: data,
-                        sourceHeader: true,//第一行是维度名
+                        sourceHeader: false,//第一行不是维度名，直接开始数据
                     },
                     legend: {
                         // type:'scroll',
@@ -243,6 +252,7 @@ $(function () {
                         },
                         showDetail: true,
                         showDataShadow: true,
+                        filterMode: 'filter'
                     },
                     series: [{
                         type: 'line',
@@ -304,6 +314,86 @@ $(function () {
                 lineAndBarChart.setOption(option);
             }
         });
+
+
+
+        //各地累计/当前患者数目柱状图配置
+        let regionLineGraphicOption = {
+            title:{
+                show: true,
+                text: '各地患者数量'
+            },
+            tooltip:{
+            },
+            dataset:{
+                sourceHeader:false //无维度名， 直接开始数据
+            },
+            legend:{show:true},
+            xAxis:{
+                name: '城市',
+                type: "category"
+            },
+            yAxis:{
+                name: '患者数量',
+                type: 'value'
+            },
+            series:[
+                {
+                    type: 'bar',
+                    name: '累计数量',
+                    encode:{
+                        x: 0,
+                        y: 1
+                    }
+                },
+                {
+                    type: 'bar',
+                    name: '现有数量',
+                    encode: {
+                        x: 0,
+                        y: 2
+                    }
+                }
+            ],
+            dataZoom: {
+                type: 'slider',
+                show: true,
+                xAxisIndex: [0],
+                dataBackground: {
+                    lineStyle:{
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            colorStops: [{
+                                offset: 0, color: 'red' // 0% 处的颜色
+                            }, {
+                                offset: 1, color: 'blue' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        }
+                    }
+                },
+                showDetail: true,
+                showDataShadow: true,
+                filterMode: 'filter'
+            },
+        };
+        let regionLineGraphicDom = $('#line').get(0);
+        let regionLineChart = echarts.init(regionLineGraphicDom);
+        regionLineChart.showLoading();
+        //请求各地区累计患者数目和当前患者数目
+        $.ajax({
+            url: contextPath + "/graphic/lineGraphic/" + epidemicId + '/' + regionName,
+            type: "POST",
+            dataType: "JSON",
+            timeout: 2000,
+            success:function (data) {
+                regionLineGraphicOption.dataset.source = data;
+                regionLineChart.hideLoading();
+                regionLineChart.setOption(regionLineGraphicOption);
+            }
+        })
     })
 
 });

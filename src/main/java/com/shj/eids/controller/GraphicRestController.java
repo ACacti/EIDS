@@ -54,10 +54,10 @@ public class GraphicRestController {
         String province = (regionName.equals("china")? null:regionName);
         ArrayList<DataItem> res = new ArrayList<>();
         epidemicInfoService.getPatientCountByStatus(epidemicId, null, null, "死亡");
-        res.add(new DataItem("死亡人数",  epidemicInfoService.getPatientCountByStatus(epidemicId, province, null, "死亡")));
-        res.add(new DataItem("治愈人数",  epidemicInfoService.getPatientCountByStatus(epidemicId, province, null, "治愈")));
-        res.add(new DataItem("危重人数",  epidemicInfoService.getPatientCountByStatus(epidemicId, province, null, "危重")));
-        res.add(new DataItem("轻微人数",  epidemicInfoService.getPatientCountByStatus(epidemicId, province, null, "轻微")));
+        res.add(new DataItem("死亡",  epidemicInfoService.getPatientCountByStatus(epidemicId, province, null, "死亡")));
+        res.add(new DataItem("治愈",  epidemicInfoService.getPatientCountByStatus(epidemicId, province, null, "治愈")));
+        res.add(new DataItem("危重",  epidemicInfoService.getPatientCountByStatus(epidemicId, province, null, "危重")));
+        res.add(new DataItem("轻微",  epidemicInfoService.getPatientCountByStatus(epidemicId, province, null, "轻微")));
         return JSON.toJSONString(res);
     }
 
@@ -67,9 +67,16 @@ public class GraphicRestController {
     @PostMapping("/graphic/lineAndBarGraphic/{epidemicId}/{regionName}")
     public String getBarAndLineGraphicData(@PathVariable("epidemicId") Integer epidemicId,
                                            @PathVariable("regionName") String regionName){
-        final Date startTime = epidemicInfoService.getStartTime(epidemicId);
         String province = ("china".equals(regionName)? null: regionName);
         List<List<Object>> res = epidemicInfoService.getLineAndBarGraphicData(epidemicId, province);
+        return JSON.toJSONString(res);
+    }
+
+    @PostMapping("/graphic/lineGraphic/{epidemicId}/{regionName}")
+    public String getRegionPatientCount(@PathVariable("epidemicId") Integer epidemicId,
+                                        @PathVariable("regionName") String regionName){
+        String province = ("china".equals(regionName)? null: regionName);
+        List<List<Object>> res = epidemicInfoService.getRegionPatientCountData(epidemicId, province);
         return JSON.toJSONString(res);
     }
 }
