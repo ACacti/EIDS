@@ -37,7 +37,37 @@ $(function(){
                 }
             }
         };
+        //防疫资讯表格渲染
         let tableIns1 = table.render(option1);
+        //操作记录表格渲染
+        let tableIns2 = table.render({
+            elem: '#recordTable'
+            ,url:contextPath + '/admin/articletable/record'
+            ,where: {onlyMine: false}
+            ,title: '疫情援助请求操作记录表'
+            ,method:"POST"
+            ,cols: [[
+                {field:'id', title:'ID', unresize: true, sort: true}
+                ,{field:'admin', title:'管理员', templet: function(res){
+                        return '<em>'+ res.admin +'</em>'
+                    }}
+                ,{field:'title', title:'资讯标题'}
+                ,{field:'recordTime', title:'操作时间', sort: true}
+                ,{field:'recordType', title:'操作类型'}
+            ]]
+            ,page: true
+            ,parseData: function(res){
+                if(res.data != undefined){
+                    res.data.forEach(function(element, index){
+                        let d = new Date(element.recordTime);
+                        element.recordTime = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()} ${d.getHours()}:${d.getMinutes()}`;
+                        element.admin = element.admin.email;
+                        element.title = element.msg.title;
+                    });
+                }
+            }
+        });
+
         //监听行工具事件
         table.on('tool(articleTable)', function(obj){
             let data = obj.data;
@@ -53,10 +83,11 @@ $(function(){
                         traditional:true,
                         success: function (res) {
                             layer.close(load);
-                            if(res.msg == 'success'){
+                            if(res.msg === 'success'){
                                 obj.update({
                                     weight: res.data
                                 });
+                                tableIns2.reload();
                             }else{
                                 layer.msg("服务器出了点小问题...");
                             }
@@ -78,10 +109,11 @@ $(function(){
                         traditional:true,
                         success: function (res) {
                             layer.close(load);
-                            if(res.msg == 'success'){
+                            if(res.msg === 'success'){
                                 obj.update({
                                     weight: res.data
                                 });
+                                tableIns2.reload();
                             }else{
                                 layer.msg("服务器出了点小问题...");
                             }
@@ -116,7 +148,7 @@ $(function(){
                             traditional:true,
                             success: function (res) {
                                 layer.close(load);
-                                if(res.msg == 'success'){
+                                if(res.msg === 'success'){
                                     tableIns1.reload();
                                 }else{
                                     layer.msg("服务器出了点小问题...");
@@ -138,34 +170,6 @@ $(function(){
             option1.page = {curr: 1};
             //表格重载
             tableIns1.reload(option1);
-        });
-
-        let tableIns2 = table.render({
-            elem: '#recordTable'
-            ,url:contextPath + '/admin/articletable/record'
-            ,where: {onlyMine: false}
-            ,title: '疫情援助请求操作记录表'
-            ,method:"POST"
-            ,cols: [[
-                {field:'id', title:'ID', unresize: true, sort: true}
-                ,{field:'admin', title:'管理员', templet: function(res){
-                        return '<em>'+ res.admin +'</em>'
-                    }}
-                ,{field:'title', title:'资讯标题'}
-                ,{field:'recordTime', title:'操作时间', sort: true}
-                ,{field:'recordType', title:'操作类型'}
-            ]]
-            ,page: true
-            ,parseData: function(res){
-                if(res.data != undefined){
-                    res.data.forEach(function(element, index){
-                        let d = new Date(element.recordTime);
-                        element.recordTime = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()} ${d.getHours()}:${d.getMinutes()}`;
-                        element.admin = element.admin.email;
-                        element.title = element.msg.title;
-                    });
-                }
-            }
         });
 
         //只看我 事件监听

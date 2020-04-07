@@ -34,7 +34,36 @@ $(function(){
                 }
             }
         };
+        //援助请求表
         let tableIns1 = table.render(option1);
+        //操作记录表
+        let tableIns2 = table.render({
+            elem: '#recordTable'
+            ,url:contextPath + '/admin/helptable/record'
+            ,where: {onlyMine: false}
+            ,title: '疫情援助请求操作记录表'
+            ,method:"POST"
+            ,cols: [[
+                {field:'id', title:'ID', unresize: true, sort: true}
+                ,{field:'admin', title:'管理员', templet: function(res){
+                        return '<em>'+ res.admin +'</em>'
+                    }}
+                ,{field:'title', title:'援助标题'}
+                ,{field:'recordTime', title:'操作时间', sort: true}
+                ,{field:'recordType', title:'操作类型'}
+            ]]
+            ,page: true
+            ,parseData: function(res){
+                if(res.data != undefined){
+                    res.data.forEach(function(element, index){
+                        let d = new Date(element.recordTime);
+                        element.recordTime = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()} ${d.getHours()}:${d.getMinutes()}`;
+                        element.admin = element.admin.email;
+                        element.title = element.aidInformation.title;
+                    });
+                }
+            }
+        });
         //监听行工具事件
         table.on('tool(helpTable)', function(obj){
             let data = obj.data;
@@ -48,6 +77,8 @@ $(function(){
                             obj.update({
                                 weight: res.data
                             });
+                            tableIns2.reload();
+
                         }else{
                             layer.msg("服务器出现了点问题...");
                         }
@@ -63,6 +94,7 @@ $(function(){
                             obj.update({
                                 weight: res.data
                             });
+                            tableIns2.reload();
                         }else{
                             layer.msg("服务器出现了点问题...");
                         }
@@ -71,6 +103,9 @@ $(function(){
                 }
             }
         });
+
+
+
         //援助请求表格头部工具栏事件监听
         table.on('toolbar(helpTable)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
@@ -95,6 +130,7 @@ $(function(){
                                 layer.close(load);
                                 if(res.msg == 'success'){
                                     tableIns1.reload();
+                                    tableIns2.reload();
                                 }else{
                                     layer.msg("服务器出了点小问题...");
                                 }
@@ -117,7 +153,8 @@ $(function(){
                         area: ['893px', '600px'],
                         content: contextPath + '/admin/helptable/postaid',
                         end: function () {
-                            location.reload();
+                            tableIns1.reload();
+                            tableIns2.reload();
                         }
                     });
                     break;
@@ -134,33 +171,7 @@ $(function(){
             tableIns1.reload(option1);
         });
 
-        let tableIns2 = table.render({
-            elem: '#recordTable'
-            ,url:contextPath + '/admin/helptable/record'
-            ,where: {onlyMine: false}
-            ,title: '疫情援助请求操作记录表'
-            ,method:"POST"
-            ,cols: [[
-                {field:'id', title:'ID', unresize: true, sort: true}
-                ,{field:'admin', title:'管理员', templet: function(res){
-                    return '<em>'+ res.admin +'</em>'
-                }}
-                ,{field:'title', title:'援助标题'}
-                ,{field:'recordTime', title:'操作时间', sort: true}
-                ,{field:'recordType', title:'操作类型'}
-            ]]
-            ,page: true
-            ,parseData: function(res){
-                if(res.data != undefined){
-                    res.data.forEach(function(element, index){
-                        let d = new Date(element.recordTime);
-                        element.recordTime = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()} ${d.getHours()}:${d.getMinutes()}`;
-                        element.admin = element.admin.email;
-                        element.title = element.aidInformation.title;
-                    });
-                }
-            }
-        });
+
 
         //只看我 事件监听
         form.on('switch(onlyMine)', function(data){
