@@ -18,7 +18,17 @@ import java.util.Map;
 @Mapper
 public interface EpidemicMsgMapper {
     public void addEpidemicMsg(EpidemicMsg msg);
-    public void deleteEpidemicMsg(EpidemicMsg msg);
+    /*
+     * @Title: deleteEpidemicMsg
+     * @Description: 按作者Id或者文章id删除文章
+     * @param args: key的类型可以为：
+     *              id: 要删除的文章id
+     *              authorId: 要删除的作者id
+     * @return void
+     * @Author: ShangJin
+     * @Date: 2020/4/7
+     */
+    public void deleteEpidemicMsg(Map<String, Object> args);
     public void updateEpidemicMsg(EpidemicMsg msg);
     /*
      * @Title: getEpidemicMsg

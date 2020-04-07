@@ -46,6 +46,7 @@
                 <li class="layui-nav-item layui-this"><a th:href="@{/admin/user}">用户管理</a></li>
                 <li class="layui-nav-item"><a th:href="@{/admin/event}">疫情事件管理</a></li>
                 <li class="layui-nav-item "><a th:href="@{/admin/article}">防疫资讯管理</a></li>
+                <li class="layui-nav-item" th:if="${session.loginAccount?.level >= 2}"><a th:href="@{/admin/adminManagement}">管理员管理</a></li>
             </ul>
         </div>
     </div>
@@ -60,7 +61,7 @@
             <div class="layui-tab-content">
 <!--                用户信息表-->
                 <div class="layui-tab-item layui-show">
-                    <div style="margin: 0 auto; width: 1150px; padding-top: 20px">
+                    <div style="width: 1150px; margin-left: 15px; padding-top: 20px">
                         <!--            数据表格-->
                         <div class="tableSearch" style="right: 10px">
                             搜索邮箱：
@@ -80,7 +81,7 @@
 
 <!--                管理员操作记录表-->
                 <div class="layui-tab-item">
-                    <div style="margin: 0 auto; width: 1150px; padding-top: 20px">
+                    <div style="width: 1150px; margin-left: 15px; padding-top: 20px">
                         <!--            数据表格-->
                         <div class="recordSearch" style="right: 10px">
                             搜索用户：

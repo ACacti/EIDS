@@ -50,6 +50,7 @@ public interface PatientInformationMapper {
      *              epidemicId: 患者对应的疫情事件ID
      *              idNumber: 患者身份证号
      *              start, length: 分页用的参数
+     *              name: 患者名字
      * @return java.lang.Integer: 统计的符合条件的数目
      * @Author: ShangJin
      * @Date: 2020/3/10

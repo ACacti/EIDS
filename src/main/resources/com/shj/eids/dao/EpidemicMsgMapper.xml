@@ -11,8 +11,16 @@
     <insert id="addEpidemicMsg" parameterType="EpidemicMsg">
         insert into epidemic_msg(title, content, release_date, weight, author_id) VALUES (#{title}, #{content}, #{releaseDate}, #{weight}, #{author.id})
     </insert>
-    <delete id="deleteEpidemicMsg" parameterType="EpidemicMsg">
-        delete from epidemic_msg where id=#{id};
+    <delete id="deleteEpidemicMsg" parameterType="map">
+        delete from epidemic_msg
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="authorId != null">
+                and author_id = #{authorId}
+            </if>
+        </where>
     </delete>
     <update id="updateEpidemicMsg" parameterType="EpidemicMsg">
         update epidemic_msg
@@ -41,7 +49,7 @@
                 and content like CONCAT('%', #{content}, '%')
             </if>
             <if test="authorId!=null">
-                and author_id=#{author}
+                and author_id=#{authorId}
             </if>
             <if test="weight!=null">
                 and weight=#{weight}
@@ -84,7 +92,7 @@
                 and content like CONCAT('%', #{content}, '%')
             </if>
             <if test="authorId!=null">
-                and author_id=#{author}
+                and author_id=#{authorId}
             </if>
             <if test="weight!=null">
                 and weight=#{weight}

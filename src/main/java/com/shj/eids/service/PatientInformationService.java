@@ -29,7 +29,7 @@ public class PatientInformationService {
     private PatientInformationMapper patientInformationMapper;
 
     public List<PatientInformation> getPatientInformation(String province, String city, Date startTime, Date endTime,
-                                                          Integer epidemicId, Integer start, Integer length, String idNumber, String ...status){
+                                                          Integer epidemicId, Integer start, Integer length, String name, String idNumber, String ...status){
         Map<String, Object> args = new HashMap<>();
         args.put("locationProvince", province);
         args.put("locationCity", city);
@@ -39,6 +39,7 @@ public class PatientInformationService {
         args.put("start", start);
         args.put("length", length);
         args.put("idNumber", idNumber);
+        args.put("name", name);
         if(status.length != 0){
             args.put("status", Arrays.asList(status));
         }

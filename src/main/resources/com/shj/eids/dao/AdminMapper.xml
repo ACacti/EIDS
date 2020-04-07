@@ -30,12 +30,23 @@
                 level=#{level},
             </if>
         </set>
+        where id = #{id}
     </update>
     <select id="getAdminById" parameterType="int" resultType="Admin">
         select * from admin where id=#{id}
     </select>
     <select id="getAdminByEmail" parameterType="string" resultType="Admin">
         select * from admin where email = #{email}
+    </select>
+    <select id="getAllAdmin" resultType="Admin">
+        <![CDATA[ select id, email, level from admin where level <= #{levelFilter} ]]>
+        <if test="offset != null and length != null">
+            limit #{offset}, #{length}
+        </if>
+    </select>
+    <select id="getCount" resultType="int">
+        <![CDATA[select count(*) from admin where  level <= #{levelFilter} ]]>
+
     </select>
     <cache
             eviction="FIFO"

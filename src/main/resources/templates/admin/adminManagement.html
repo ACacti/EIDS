@@ -2,13 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>疫情信息展示系统|援助请求管理</title>
+    <title>疫情信息展示系统|管理员管理</title>
     <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/layui/src/css/layui.css}"/>
     <script th:src="@{/webjars/layui/src/layui.js}"></script>
     <script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
-    <script th:src="@{/js/adminHelp.js}"></script>
+    <script th:src="@{/js/md5.js}"></script>
+    <script th:src="@{/js/adminManagement.js}"></script>
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
@@ -35,7 +36,7 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
-                <li class="layui-nav-item layui-this"><a th:href="@{/admin}">援助请求管理</a></li>
+                <li class="layui-nav-item"><a th:href="@{/admin}">援助请求管理</a></li>
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;">疫情数据管理</a>
                     <dl class="layui-nav-child">
@@ -45,21 +46,20 @@
                 <li class="layui-nav-item "><a th:href="@{/admin/user}">用户管理</a></li>
                 <li class="layui-nav-item"><a th:href="@{/admin/event}">疫情事件管理</a></li>
                 <li class="layui-nav-item "><a th:href="@{/admin/article}">防疫资讯管理</a></li>
-                <li class="layui-nav-item" th:if="${session.loginAccount?.level >= 2}"><a th:href="@{/admin/adminManagement}">管理员管理</a></li>
+                <li class="layui-nav-item layui-this" th:if="${session.loginAccount?.level >= 2}"><a th:href="@{/admin/adminManagement}">管理员管理</a></li>
             </ul>
         </div>
     </div>
 
     <!--        数据表格行工具栏组件 -->
     <script type="text/html" id="bar">
-        <a class="layui-btn layui-btn-xs" lay-event="upgrade">升级</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="downgrade">降级</a>
+        <a class="layui-btn layui-btn-xs" lay-event="modifyPassword">修改密码</a>
     </script>
     <!--        数据表格头部工具栏组件   -->
     <script type="text/html" id="toolbar">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="allDel">删除选中</button>
-            <button class="layui-btn layui-btn-sm" lay-event="addEvent">发布援助请求</button>
+            <button class="layui-btn layui-btn-sm" lay-event="addAdmin">添加管理员</button>
         </div>
     </script>
 
@@ -67,27 +67,26 @@
         <!-- 内容主体区域 -->
         <div class="layui-tab">
             <ul class="layui-tab-title">
-                <li class="layui-this">援助请求管理</li>
+                <li class="layui-this">管理员管理</li>
                 <li>操作记录</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
-                    <div class="tableSearch" style="right: 10px">
-                        搜索内容：
-                        <div class="layui-inline">
-                            <input class="layui-input" style="height: 30px" name="id" autocomplete="off">
-                        </div>
-                        <button class="layui-btn layui-btn-sm" data-type="reload">搜索</button>
+                    <div style="width: 1150px; margin-left: 15px; padding-top: 20px">
+                        <table class="layui-hide" id="adminTable" lay-filter="adminTable"></table>
                     </div>
-                    <table class="layui-hide" id="helpTable" lay-filter="helpTable"></table>
                 </div>
                 <div class="layui-tab-item">
-                    <div id="toolbar2" class="layui-form" style="left: 0">
-                        <!-- 这里的 checked 的状态只是演示 -->
-                        <label class="layui-form-label" style="text-align: left">只看我</label>
-                        <input type="checkbox" lay-skin="switch" lay-text="开|关" lay-filter="onlyMine" checked>
+                    <div style="width: 1150px; margin-left: 15px; padding-top: 20px">
+                        <div class="tableSearch" style="right: 10px">
+                            搜索被操作者邮箱：
+                            <div class="layui-inline">
+                                <input class="layui-input" style="height: 30px" name="id" autocomplete="off">
+                            </div>
+                            <button class="layui-btn layui-btn-sm" data-type="reload" id="search">搜索</button>
+                        </div>
+                        <table class="layui-hide" id="recordTable" lay-filter="recordTable"></table>
                     </div>
-                    <table class="layui-hide" id="recordTable" lay-filter="recordTable"></table>
                 </div>
             </div>
         </div>

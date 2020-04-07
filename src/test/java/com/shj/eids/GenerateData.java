@@ -123,6 +123,7 @@ public class GenerateData {
             start.add(Calendar.DAY_OF_YEAR, 1);
         }
     }
+
     //模拟向数据库从开始时间start到结束时间end, 每天减少当前确诊人数n, 每天增加确诊人数m
     void part2Data(Calendar start, Calendar end, EpidemicEvent event, int n, int m){
         //遍历时间
@@ -151,6 +152,7 @@ public class GenerateData {
             start.add(Calendar.DAY_OF_YEAR, 1);
         }
     }
+
     PatientInformation createOneInformation(Calendar time, EpidemicEvent event){
         //生成患者姓名
         String name = defaultKaptcha.createText();

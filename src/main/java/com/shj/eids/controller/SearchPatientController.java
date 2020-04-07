@@ -58,7 +58,7 @@ public class SearchPatientController {
                                  @RequestParam("city") String city){
         Map<String, Object> res = new HashMap<>();
         Integer index = limit * (page - 1);
-        List<PatientInformation> list = patientInformationService.getPatientInformation(province, city, null, null, null, index, limit, null);
+        List<PatientInformation> list = patientInformationService.getPatientInformation(province, city, null, null, null, index, limit,null, null);
         //将身份证号设为空
         for(PatientInformation info : list){
             info.setIdNumber("");

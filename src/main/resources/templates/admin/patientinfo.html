@@ -45,6 +45,7 @@
                 <li class="layui-nav-item"><a th:href="@{/admin/user}">用户管理</a></li>
                 <li class="layui-nav-item"><a th:href="@{/admin/event}">疫情事件管理</a></li>
                 <li class="layui-nav-item"><a th:href="@{/admin/article}">防疫资讯管理</a></li>
+                <li class="layui-nav-item" th:if="${session.loginAccount?.level >= 2}"><a th:href="@{/admin/adminManagement}">管理员管理</a></li>
             </ul>
         </div>
     </div>
@@ -173,6 +174,9 @@
 
                     <div class="layui-input-inline">
                         <input type="text" name="idNumber" placeholder="患者身份证号" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" placeholder="姓名" autocomplete="off" class="layui-input">
                     </div>
                     <div class="layui-input-inline">
                         <button class="layui-btn" id="confirm">确定</button>

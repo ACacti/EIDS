@@ -79,19 +79,30 @@ $(function () {
                    break;
                case 'downgrade':
                    let load = layer.load(2);
+                   //请求函数
+                   let post = function () {
+                       $.post(contextPath + '/admin/usertable/downgrade/' + data.id, function (res) {
+                           layer.close(load);
+                           if (res.msg === 'error') {
+                               layer.msg("服务器出了点小问题");
+                               return;
+                           }
+                           //更新服务器传回的数据
+                           obj.update({
+                               level: res.level,
+                               introduction: ""
+                           });
+                       }, "JSON")
+                   };
                    //降级权限
-                   $.post(contextPath + '/admin/usertable/downgrade/' + data.id, function (res) {
-                       layer.close(load);
-                       if (res.msg === 'error') {
-                           layer.msg("服务器出了点小问题");
-                           return;
-                       }
-                       //更新服务器传回的数据
-                       obj.update({
-                           level: res.level,
-                           introduction: ""
-                       });
-                   }, "JSON")
+                   if(data.id == 2){
+                       layer.confirm("该用户权限级别为2，降级此用户会删除此用户发布的全部文章，确定要降级吗？", function () {
+                           post();
+                       })
+                   }else{
+                       post();
+                   }
+
            }
        });
        //邮箱查找用户监听事件

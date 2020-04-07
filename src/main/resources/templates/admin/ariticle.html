@@ -45,6 +45,7 @@
                 <li class="layui-nav-item "><a th:href="@{/admin/user}">用户管理</a></li>
                 <li class="layui-nav-item"><a th:href="@{/admin/event}">疫情事件管理</a></li>
                 <li class="layui-nav-item layui-this"><a th:href="@{/admin/article}">防疫资讯管理</a></li>
+                <li class="layui-nav-item" th:if="${session.loginAccount?.level >= 2}"><a th:href="@{/admin/adminManagement}">管理员管理</a></li>
             </ul>
         </div>
     </div>

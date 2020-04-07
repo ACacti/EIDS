@@ -137,8 +137,11 @@ public class EpidemicMsgService {
 
     @Transactional
     public void deleteEpidemicMsg(@NonNull Integer id, Admin admin) throws MessagingException {
+
         EpidemicMsg article = getArticleById(id);
-        epidemicMsgMapper.deleteEpidemicMsg(article);
+        HashMap<String, Object> args = new HashMap<>();
+        args.put("id", id);
+        epidemicMsgMapper.deleteEpidemicMsg(args);
         //因为发送邮件操作较为缓慢，将其放到一个异步任务中
         String text = "EIDS防疫资讯创作者，您的标题为<strong>" + article.getTitle() + "</strong> 的文章被管理员删除，" +
                 "若有疑问请联系管理员邮箱<em>" + admin.getEmail() + "</em>";

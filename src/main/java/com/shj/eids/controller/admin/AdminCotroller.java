@@ -1,5 +1,6 @@
 package com.shj.eids.controller.admin;
 
+import com.shj.eids.domain.Admin;
 import com.shj.eids.domain.EpidemicEvent;
 import com.shj.eids.service.AdminService;
 import com.shj.eids.service.EpidemicEventService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
@@ -41,5 +43,20 @@ public class AdminCotroller {
         model.addAttribute("event", event);
         model.addAttribute("provinces", EpidemicInfoService.provinces);
         return "admin/patientinfo";
+    }
+
+    @RequestMapping("/admin/adminManagement")
+    public String toAdminManagementPage(HttpSession session){
+        try {
+            Admin admin = (Admin) session.getAttribute("loginAccount");
+            if(admin.getLevel() <= 1){
+                return "forward:/admin";
+            }else{
+                return "admin/adminManagement";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return "forward:/admin";
+        }
     }
 }

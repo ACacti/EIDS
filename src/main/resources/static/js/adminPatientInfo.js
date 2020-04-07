@@ -39,11 +39,11 @@ $(function(){
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'}
                 ,{field:'id', title:'ID', unresize: true, sort: true, width:70, align:"center"}
-                ,{field:'name', title:'名字',width: 120, align:"center"}
-                ,{field:'locationProvince', title:'所在省', align:"center"}
-                ,{field:'locationCity', title:'所在市', align:"center"}
-                ,{field:'locationDetail', title:'详细地址', width: 190, align:"center"}
-                ,{field:'idNumber', title:'身份证号', width: 170, align:"center"}
+                ,{field:'name', title:'名字',width: 100, align:"center"}
+                ,{field:'locationProvince', title:'所在省', width:120 ,align:"center"}
+                ,{field:'locationCity', title:'所在市', width: 150,align:"center"}
+                ,{field:'locationDetail', title:'详细地址', align:"center"}
+                ,{field:'idNumber', title:'身份证号', width: 150, align:"center"}
                 ,{field:'reportingTime', title:'确诊时间', width: 150, align:"center"}
                 ,{field:'status', title:'病情', width: 80, align:"center"}
                 ,{field:'faceUrl', title:'是否人脸认证', width: 130,align:"center"}
@@ -105,11 +105,13 @@ $(function(){
             let province = $('select[name=province]').val();
             let city = $('select[name=city]').val();
             let idNumber = $('input[name=idNumber]').val();
+            let name = $('input[name=name]').val();
             let where = {};
             where.province = province;
             where.city = city;
             where.idNumber = idNumber;
             where.eventId = eventId;
+            where.name = name;
             tableIns.reload({where:where});
         });
 

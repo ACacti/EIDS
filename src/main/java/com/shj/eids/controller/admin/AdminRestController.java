@@ -3,16 +3,21 @@ package com.shj.eids.controller.admin;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.shj.eids.dao.RecordAdminAidinfoMapper;
 import com.shj.eids.domain.*;
 import com.shj.eids.service.*;
 import com.shj.eids.utils.*;
 import jdk.internal.vm.compiler.collections.EconomicMap;
+import org.apache.ibatis.annotations.Param;
 import org.json.JSONObject;
+import org.springframework.beans.CachedIntrospectionResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +49,8 @@ public class AdminRestController {
     @Autowired
     private EpidemicMsgService epidemicMsgService;
 
+    @Autowired
+    private DefaultKaptcha defaultKaptcha;
     @Autowired
     private PatientInformationService patientInformationService;
     /*
@@ -85,7 +92,7 @@ public class AdminRestController {
             }
             else{
                 String introduction = request.getParameter("introduction");
-                adminService.upgradeUser(admin, u, introduction);
+                userService.upgradeUser(admin, u, introduction);
                 res.put("level", level + 1);
             }
             return JSON.toJSONString(res);
@@ -108,7 +115,7 @@ public class AdminRestController {
                 res.put("level", level);
             }
             else{
-                adminService.downgradeUser(admin, u);
+                userService.downgradeUser(admin, u);
                 res.put("level", level - 1);
             }
             return JSON.toJSONString(res);
@@ -441,6 +448,7 @@ public class AdminRestController {
                                  @RequestParam(value = "province", required = false, defaultValue = "")String province,
                                  @RequestParam(value = "city", required = false, defaultValue = "") String city,
                                  @RequestParam(value = "idNumber", required = false, defaultValue = "") String idNumber,
+                                 @RequestParam(value = "name", required = false, defaultValue = "") String name,
                                  @RequestParam("page") Integer page,
                                  @RequestParam("limit") Integer limit){
         Map<String, Object> res = new HashMap<>();
@@ -448,7 +456,8 @@ public class AdminRestController {
             province = province.length()==0? null: province;
             city = city.length()==0? null: city;
             idNumber = idNumber.length()==0? null: idNumber;
-            List<PatientInformation> patienInfo = patientInformationService.getPatientInformation(province, city, null, null, eventId, (page - 1) * limit, limit, idNumber);
+            name = name.length() == 0 ? null:name;
+            List<PatientInformation> patienInfo = patientInformationService.getPatientInformation(province, city, null, null, eventId, (page - 1) * limit, limit,name, idNumber);
             for(PatientInformation info : patienInfo){
                 String temp = info.getIdNumber();
                 temp = temp.substring(0, temp.length() - 4) + "****";
@@ -456,7 +465,8 @@ public class AdminRestController {
             }
             res.put("data", patienInfo);
             res.put("code", 0);
-            res.put("count", patientInformationService.getPatientInformationCount(province, city, null, null, eventId, (page - 1) * limit, limit, idNumber));
+            res.put("count", patientInformationService.getPatientInformationCount(province, city, null, null, eventId, null, null, idNumber));
+            System.out.println("------------------返回参数：" + res.get("data") + "-" + res.get("count"));
             return JSON.toJSONString(res, SerializerFeature.DisableCircularReferenceDetect);
         }catch (Exception e){
             e.printStackTrace();
@@ -559,5 +569,142 @@ public class AdminRestController {
         }
 
     }
+
+    @PostMapping("/admin/adminManagement/admintable/admin")
+    public String getAdmins(@RequestParam("page") Integer page,
+                            @RequestParam("limit") Integer limit){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            List<Admin> adminList = adminService.getAdmins((page - 1) * limit, limit, 1);
+            res.put("data", adminList);
+            res.put("code", 0);
+            res.put("count", adminService.getAdminCount(1));
+            return JSON.toJSONString(res, SerializerFeature.DisableCircularReferenceDetect);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("code", 1);
+            return JSON.toJSONString(res);
+        }
+    }
+
+    @PostMapping("/admin/adminManagement/adminTable/modifyPassword")
+    public String modifyPassword(@RequestParam("id") Integer id,
+                                 @RequestParam("newPass") String newPass,
+                                 HttpSession session){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            Admin admin = (Admin) session.getAttribute("loginAccount");
+            if (admin.getLevel() < 2){
+                res.put("msg", "权限不足");
+                return JSON.toJSONString(res);
+            }
+            adminService.modifyPassword(admin, id, newPass);
+            res.put("msg", "success");
+            return JSON.toJSONString(res);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("msg", "error");
+            return JSON.toJSONString(res);
+        }
+    }
+
+    @PostMapping("/admin/adminManagement/adminTable/delete")
+    public String deleteAdmin(@RequestParam("ids") Integer []ids,
+                              HttpSession session){
+        Map<String, Object> res = new HashMap<>();
+        try{
+            Admin admin = (Admin) session.getAttribute("loginAccount");
+            if(admin.getLevel() < 2){
+                res.put("msg", "权限不足");
+                return JSON.toJSONString(res);
+            }
+            adminService.deleteAdmin(ids);
+            res.put("msg", "success");
+            return JSON.toJSONString(res);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("msg", "error");
+            return JSON.toJSONString(res);
+        }
+    }
+
+    @PostMapping("/admin/adminManagement/adminTable/sendCaptcha")
+    public String sendCaptcha(@RequestParam("email") String email,
+                              HttpSession session){
+        HashMap<String, Object> res = new HashMap<>();
+        try {
+            String captcha = adminService.sendRegisterCaptcha(email);
+            res.put("msg", "success");
+            session.setAttribute("captcha", captcha);
+            return JSON.toJSONString(res);
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.put("msg", "error");
+            return JSON.toJSONString(res);
+        }
+    }
+
+    @PostMapping("/admin/adminManagement/adminTable/verifyCaptcha")
+    public String verifyCaptcha(@RequestParam("captcha") String rawCaptcha,
+                                HttpSession session){
+        Map<String, Object> res = new HashMap<>();
+        String realCaptcha = (String) session.getAttribute("captcha");
+        try{
+            if(realCaptcha != null && realCaptcha.equals(rawCaptcha)){
+                res.put("msg", "success");
+            }else{
+                res.put("msg", "false");
+            }
+            return JSON.toJSONString(res);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("msg", "error");
+            return JSON.toJSONString(res);
+        }
+    }
+
+    @PostMapping("/admin/adminManagement/adminTable/addAdmin")
+    public String addAdmin(@RequestParam("email") String email,
+                           @RequestParam("password") String password,
+                           HttpSession session){
+        Map<String, Object> res = new HashMap<>();
+        try{
+            Admin admin = (Admin)session.getAttribute("loginAccount");
+            adminService.registerAdmin(email, password, admin);
+            res.put("msg", "success");
+            return JSON.toJSONString(res);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("msg", "error");
+            return JSON.toJSONString(res);
+        }
+    }
+
+    @PostMapping("/admin/adminManagement/adminTable/record")
+    public String getAdminManagementRecord(@RequestParam(value = "managedEmail", required = false) String managedEmail,
+                                           @RequestParam("page") Integer page,
+                                           @RequestParam("limit") Integer limit){
+        Map<String, Object> res = new HashMap<>();
+        try{
+            List<RecordAdminManagement> data;
+            int count;
+            if(managedEmail == null){
+                data = adminService.getAllAdminManagementRecord((page - 1) * limit, limit);
+                count = adminService.getAdminManagementRecordCount();
+            }else{
+                data = adminService.getAdminManagementRecordByManagedEmail(managedEmail, (page - 1) * limit, limit);
+                count = adminService.getAdminManagementRecordCountByManagedEmail(managedEmail);
+            }
+            res.put("data", data);
+            res.put("code", 0);
+            res.put("count", count);
+            return JSON.toJSONString(res, SerializerFeature.DisableCircularReferenceDetect);
+        }catch (Exception e){
+            e.printStackTrace();
+            res.put("code", 1);
+            return JSON.toJSONString(res);
+        }
+    }
+
 
 }
