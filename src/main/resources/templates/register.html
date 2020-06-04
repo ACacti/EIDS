@@ -26,14 +26,14 @@
             <div style="width: 150px; min-width: 150px; margin: 0 auto"><b>EIDS</b>用户注册</div>
         </div>
         <!-- 内容主体区域 -->
-        <form class="layui-form formstyle" th:action="@{/register/m-register}" lay-filter="rform" method="post">
+        <form class="layui-form formstyle" th:action="@{/register/m-register}" lay-filter="rform" method="post" id="registerInfo">
             <input type="password" th:name="password" style="display: none" id="submitedPassword">
             <div class="layui-form-item" pane>
                 <label class="layui-form-label">
                     注册邮箱
                 </label>
                 <div class="layui-input-block"  style="width: 60%">
-                    <input  name="email" placeholder="注册邮箱地址" autocomplete="off" class="layui-input" required lay-verify="registeremail" lay-reqText="请输入合法的邮箱地址">
+                    <input name="email" placeholder="注册邮箱地址" autocomplete="off" type="email" class="layui-input" required lay-reqText="请输入合法的邮箱地址">
                 </div>
                 <span id="emailtip" class="tips" style="position: relative; left: 110px; top:10px; font-size:12px; color:red"></span>
             </div>
@@ -75,7 +75,7 @@
             <div style="height: 50px"></div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="fsubmit">立即提交</button>
+                    <button class="layui-btn" type="button" id="registersubmitebtn">立即提交</button>
                     <div class="layui-inline" style="width: 50px"></div>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>

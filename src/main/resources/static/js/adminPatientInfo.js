@@ -147,8 +147,8 @@ $(function(){
                             //表单提交检查
                             dom.find('#fsubmit').click(function () {
                                 let inputName = name.val();
-                                if(inputName.length >= 20){
-                                   layer.msg("名字过长");
+                                if(inputName.length >= 20 || inputName.length == 0){
+                                   layer.msg("名字必须为0~20个字符！");
                                    return;
                                 }
                                 let inputProvince = dom.find('select[name=province]').val();
