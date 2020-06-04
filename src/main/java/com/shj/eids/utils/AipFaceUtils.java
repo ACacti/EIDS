@@ -35,8 +35,8 @@ public class AipFaceUtils {
     public static final double OCCLUSION_LEFT_CHECK = 0.4;
     public static final double OCCLUSION_RIGHT_CHECK = 0.4;
     public static final double OCCLUSION_CHIN_CONTOUR = 0.4;
-    public static final double BLUR = 0.4;
-    public static final double ILLUMINATION = 40;
+    public static final double BLUR = 0.2;
+    public static final double ILLUMINATION = 80;
     public static final double[] values = {OCCLUSION_LEFT_EYE, OCCLUSION_RIGHT_EYE, OCCLUSION_NOSE, OCCLUSION_MOUTH,
             OCCLUSION_LEFT_CHECK, OCCLUSION_RIGHT_CHECK, OCCLUSION_CHIN_CONTOUR, BLUR, ILLUMINATION};
     public static final String[] msgs = {"左眼遮挡", "右眼遮挡", "鼻子遮挡", "嘴巴遮挡", "左脸遮挡", "右脸遮挡", "下巴遮挡", "照片模糊", "照片过暗", "检测非真实人脸"};
@@ -87,14 +87,16 @@ public class AipFaceUtils {
         }
         double t;
         t = quality.getDouble("blur");
+        System.out.println("--------------------blur:" + t);
         if(t > values[7]){
             return msgs[7];
         }
         t = quality.getDouble("illumination");
+        System.out.println("--------------------illumination:" + t);
         if(t < values[8]){
             return msgs[8];
         }
-
+        System.out.println("--------------------probability:" + probability);
         if(probability <= 0.8){
             return msgs[9];
         }

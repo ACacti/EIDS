@@ -33,6 +33,10 @@ public class ArticleController {
 
     @RequestMapping("/user/article/edit")
     public String toPublish(HttpSession session){
+        boolean isAdmin = (boolean) session.getAttribute("isAdmin");
+        if(isAdmin){
+            return "redirect:/index";
+        }
         User u = (User) session.getAttribute("loginAccount");
         if(u == null || u.getLevel() < 2){
             return "redirect:/index";
