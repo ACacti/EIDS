@@ -228,6 +228,7 @@ public class EpidemicInfoService {
     }
 
     /*
+     * 该方法为各地患者数量图提供数据
      * regionName 为空： 获取全国各省的累计、当前患者人数
      * reginName 为具体省名： 获取该省各市的累计、当前患者人数
      */

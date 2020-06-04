@@ -12,7 +12,7 @@ import org.dom4j.io.SAXReader;
 
 /**
  * 选择地区工具，包含全国各地省级市级
- * @author LiuJinan
+ * @author ShangJin
  *
  */
 public class LocalUtil {
@@ -58,7 +58,7 @@ public class LocalUtil {
 
     /**
      *
-     * @author		LiuJinan
+     * @author		ShangJin
      * @TODO		功能：	根据国家名获取该国所有省份
      * @time		2016-8-26 上午9:07:21
      * @param countryName	国家名，从getCountry()从取出
@@ -81,7 +81,7 @@ public class LocalUtil {
 
     /**
      *
-     * @author		LiuJinan
+     * @author		ShangJin
      * @TODO		功能：	根据国家名获取该国所有省份
      * @time		2016-8-26 上午9:07:21
      * @param countryName	国家名，从getCountry()从取出
@@ -98,7 +98,7 @@ public class LocalUtil {
 
     /**
      *
-     * @author		LiuJinan
+     * @author		ShangJin
      * @TODO		功能：根据国家名和省份名，获取该省城市名列表
      * @time		2016-8-26 上午9:15:24
      * @param : province
@@ -123,7 +123,7 @@ public class LocalUtil {
 
     /**
      *
-     * @author		LiuJinan
+     * @author		ShangJin
      * @TODO		功能：根据国家名和省份名获取城市列表
      * @time		2016-8-26 下午4:55:55
      * @param countryName

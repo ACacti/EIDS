@@ -34,6 +34,11 @@ public class CookieLoginIntercepter implements HandlerInterceptor {
             logger.debug("session已经登录，无需检查cookie");
         }else {
             Cookie[] cookies = request.getCookies();
+            if(cookies == null){
+                //本地无cookie，无需检查
+                logger.debug("本地无cookie，无需检查");
+                return true;
+            }
             String[] info = null;
             logger.debug("查询本地Cookies");
             for (Cookie cookie : cookies) {
