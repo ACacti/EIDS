@@ -33,7 +33,7 @@ $(function(){
             elem: '#patientTable'
             ,url:contextPath + '/admin/patienttable/patientinfo'
             ,where:{eventId: eventId}
-            ,title: '疫情事件数据表'
+            ,title: '患者信息表'
             ,method:"POST"
             ,toolbar:'#toolbar'
             ,cols: [[
@@ -112,6 +112,8 @@ $(function(){
             where.idNumber = idNumber;
             where.eventId = eventId;
             where.name = name;
+            where.page = 1;
+            where.limit=10;
             tableIns.reload({where:where});
         });
 

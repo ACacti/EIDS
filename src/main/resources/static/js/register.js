@@ -24,7 +24,7 @@ $(function () {
             flag2=true;
         }else {
             flag2=false;
-            $("#passwordtip1").text("密码必须6到12位,为包括下划线在内的的任何单词字符.");
+            $("#passwordtip1").text("密码必须6到12位,为包括下划线在内的任意单词字符.");
             return '密码必须6到12位,为包括下划线在内的的任何单词字符';
         }
     };

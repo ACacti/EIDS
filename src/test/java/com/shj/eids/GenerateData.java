@@ -33,7 +33,7 @@ public class GenerateData {
     @Autowired
     DefaultKaptcha defaultKaptcha;
 
-    static Long count = 37132419970808L;//累加模拟身份证号
+    static Long count = 37132419976009L;//累加模拟身份证号
 
     //可供选择的省信息和患者状态信息
     static String[] provinces = EpidemicInfoService.provinces;//34省+ 南海诸岛 一共35个
@@ -63,21 +63,21 @@ public class GenerateData {
         Date startTime = event.getReleaseTime();
         Calendar start = Calendar.getInstance();
         start.setTime(startTime);
-        //part1 模拟疫情爆发阶段时间,为疫情事件发布时间到当前时间的20天前
+        //part1 模拟疫情爆发阶段时间,为疫情事件发布时间到当前时间的10天前
         Calendar part1 = Calendar.getInstance();
-        part1.add(Calendar.DAY_OF_YEAR, -20);
+        part1.add(Calendar.DAY_OF_YEAR, -10);
         // part2 模拟疫情消退阶段，为当前时间10天前到当前
         Calendar part2 = Calendar.getInstance();
 
         //爆发阶段模拟
-        part1Data(start, part1, 200,event);
+        part1Data(start, part1, 250,event);
 
         part1.add(Calendar.DAY_OF_YEAR, 1);
 //        消退阶段模拟
         part2Data(part1, part2, event, 150, 100);
 
     }
-    //用二次函数模拟类似正态分布的数据
+    //用二次函数模拟类似正态分布的数据,n为最大数
     static int getIndex(int n){
         int mid = (n % 2 == 0 ? n / 2: n / 2 + 1);
         if(mid <= 0){

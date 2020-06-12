@@ -95,7 +95,7 @@ layui.define(['jquery'],function (exports) {
                 },
                 error: function (res) {
 
-                    failFun("网络错误：" + res.status);
+                    failFun("上传错误：请检查文章字数低于20000" + res.status);
 
                 }
             };
